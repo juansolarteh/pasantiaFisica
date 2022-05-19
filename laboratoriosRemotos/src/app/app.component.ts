@@ -11,11 +11,10 @@ export class AppComponent implements OnInit{
   constructor(private readonly router: Router){}
 
   ngOnInit(): void {
-    if (true){
+    if (false){
       this.router.navigate(['home'])
     }else{
       this.router.navigate(['sesion'])
     }
   }
-
 }

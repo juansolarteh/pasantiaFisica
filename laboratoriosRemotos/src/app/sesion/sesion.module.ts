@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SesionRoutingModule } from './sesion-routing.module';
 import { SesionComponent } from './sesion.component';
+import { MaterialModule } from '../compartido/material.module';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { SesionComponent } from './sesion.component';
   ],
   imports: [
     CommonModule,
-    SesionRoutingModule
+    SesionRoutingModule,
+    MaterialModule
   ]
 })
 export class SesionModule { }
