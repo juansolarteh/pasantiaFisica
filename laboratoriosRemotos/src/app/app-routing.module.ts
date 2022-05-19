@@ -5,7 +5,8 @@ import { AppComponent } from './app.component';
 const routes: Routes = [
   { path: '', component: AppComponent, pathMatch: 'full' },
   { path: 'sesion', loadChildren: () => import('./sesion/sesion.module').then(m => m.SesionModule) },
-  { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) },
+  { path: 'userDashboard', loadChildren: () => import('./user-dashboard/user-dashboard.module').then(m => m.UserDashboardModule) },
+  { path: 'managerDashboard', loadChildren: () => import('./manager-dashboard/manager-dashboard.module').then(m => m.ManagerDashboardModule) },
   { path: '**', component: AppComponent }
 ];
 

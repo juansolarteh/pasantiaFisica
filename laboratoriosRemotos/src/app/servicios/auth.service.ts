@@ -59,17 +59,15 @@ export class AuthService {
     }
   }
 
-  setLocal(email: string, name: string, key: string) {
+  private setLocal(email: string, name: string, key: string) {
     localStorage.setItem('email', email)
     localStorage.setItem('name', name)
     localStorage.setItem('key', key)
-    console.log('login => ', localStorage.getItem('key'))
   }
 
-  removeLocal(){
+  private removeLocal(){
     localStorage.removeItem('email')
     localStorage.removeItem('name')
     localStorage.removeItem('key')
-    console.log('logout => ', localStorage.getItem('key'))
   }
 }

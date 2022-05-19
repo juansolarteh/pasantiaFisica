@@ -12,7 +12,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     if (false){
-      this.router.navigate(['home'])
+      this.router.navigate(['userDashboard'])
     }else{
       this.router.navigate(['sesion'])
     }
