@@ -16,9 +16,10 @@ export class SesionComponent{
   async login() {
     const response = await this.authService.loginGoogle()
     if (response.approved) {
-      this.router.navigate([''])
+      this.router.navigate(['app'])
+    }else{
+      this.openSnackBar(response.message)
     }
-    this.openSnackBar(response.message)
   }
 
   async openSnackBar(message: string) {

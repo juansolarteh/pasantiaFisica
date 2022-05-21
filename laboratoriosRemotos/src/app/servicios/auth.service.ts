@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 
 export interface respService {
   approved: boolean
@@ -23,13 +24,12 @@ export class AuthService {
       const promesaLogin = this.afauth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
       const usuario = (await promesaLogin).user
       const dominio = usuario?.email?.split('@')[1].toString()
-      if (dominio == "unicauca.edu.co" && usuario?.email != null && usuario?.displayName != null && usuario?.uid != null) {
+      if (dominio == "unicauca.edu.co" && usuario?.email != null && usuario?.displayName != null && usuario?.getIdToken() != null) {
         result = {
           approved: true,
           message: 'Login exitoso'
         }
-        localStorage.setItem('email', usuario?.email)
-        this.setLocal(usuario.email, usuario.displayName, usuario.uid);
+        this.setLocal(usuario.email, usuario.displayName, await usuario.getIdToken());
       } else {
         (await promesaLogin).user?.delete()
         result = {
@@ -45,7 +45,7 @@ export class AuthService {
   async logout() {
     var result: respService = {
       approved: false,
-      message: 'Error de conexiòn, intente de nuevo'
+      message: 'Error al realizar la opercaión, intente de nuevo'
     }
     try {
       const a = this.afauth.signOut()
@@ -59,15 +59,31 @@ export class AuthService {
     }
   }
 
-  private setLocal(email: string, name: string, key: string) {
-    localStorage.setItem('email', email)
-    localStorage.setItem('name', name)
-    localStorage.setItem('key', key)
+  async isLogged() {
+    const obs = this.afauth.authState
+    const user = await firstValueFrom(obs)
+    if (user) {
+      if (user?.email && user?.displayName && user.email == localStorage.getItem('email')
+        && user.displayName == localStorage.getItem('name')) {
+        const token = user.getIdToken()
+        if ((await token) == localStorage.getItem('token')) {
+          return true
+        }
+      }
+    }
+    this.removeLocal()
+    return false
   }
 
-  private removeLocal(){
+  private setLocal(email: string, name: string, token: any) {
+    localStorage.setItem('email', email)
+    localStorage.setItem('name', name)
+    localStorage.setItem('token', token)
+  }
+
+  private removeLocal() {
     localStorage.removeItem('email')
     localStorage.removeItem('name')
-    localStorage.removeItem('key')
+    localStorage.removeItem('token')
   }
 }
