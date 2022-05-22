@@ -3,19 +3,21 @@ import { CommonModule } from '@angular/common';
 
 import { UserDashboardRoutingModule } from './user-dashboard-routing.module';
 import { UserDashboardComponent } from './user-dashboard.component';
-import { NavbarComponent } from "../compartido/navbar/NavbarComponent";
 import { MaterialModule } from '../compartido/material.module';
+import { CompartidoModule } from '../compartido/compartido/compartido.module';
+import { TabDocenteComponent } from './docente/tab-docente/tab-docente.component';
 
 
 @NgModule({
   declarations: [
     UserDashboardComponent,
-    NavbarComponent
+    TabDocenteComponent,
   ],
   imports: [
     CommonModule,
     UserDashboardRoutingModule,
-    MaterialModule
+    MaterialModule,
+    CompartidoModule
   ]
 })
 export class UserDashboardModule { }

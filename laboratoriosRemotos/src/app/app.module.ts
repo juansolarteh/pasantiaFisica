@@ -8,8 +8,6 @@ import { AngularFireModule } from '@angular/fire/compat'
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatButtonModule} from '@angular/material/button';
-
 @NgModule({
   declarations: [
     AppComponent
