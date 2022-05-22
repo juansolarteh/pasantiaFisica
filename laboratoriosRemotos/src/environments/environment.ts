@@ -4,14 +4,14 @@
 
 export const environment = {
   production: false,
-  firebaseConfig : {
+  firebaseConfig: {
     apiKey: "AIzaSyB2UcVJzO_EmJXjxsUG-AIjLTXgUiNIXzo",
     authDomain: "pasantiafisica-ab063.firebaseapp.com",
     projectId: "pasantiafisica-ab063",
     storageBucket: "pasantiafisica-ab063.appspot.com",
     messagingSenderId: "667170844614",
     appId: "1:667170844614:web:6f7237843f76d0adf38cc7"
-  }
+  },
 };
 
 /*

@@ -9,7 +9,7 @@ import { UserService } from './servicios/user.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-
+  title='LabboratoriosRemotos'
   constructor(private readonly router: Router, private authService: AuthService, private userSvc: UserService) { }
 
   async ngOnInit() {
