@@ -1,0 +1,15 @@
+#middle_wrap_list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#wrap_list{
+    width: 50rem;
+}
+
+.wrap_button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

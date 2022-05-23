@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../servicios/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';

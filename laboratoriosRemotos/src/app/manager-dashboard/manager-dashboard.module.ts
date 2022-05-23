@@ -5,11 +5,14 @@ import { ManagerDashboardRoutingModule } from './manager-dashboard-routing.modul
 import { ManagerDashboardComponent } from './manager-dashboard.component';
 import { MaterialModule } from '../compartido/material.module';
 import { CompartidoModule } from '../compartido/compartido/compartido.module';
-
+import { PersonListComponent } from './person-list/person-list.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @NgModule({
   declarations: [
     ManagerDashboardComponent,
+    PersonListComponent,
+    DeleteDialogComponent
   ],
   imports: [
     CommonModule,

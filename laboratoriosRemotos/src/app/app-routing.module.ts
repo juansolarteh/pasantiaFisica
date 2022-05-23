@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { LoggedGuard } from './guards/logged.guard';
 import { PermissionNewSessionGuard } from './guards/permission-new-session.guard';
+import { WorkersResolverService } from './resolvers/workers-resolver-service';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
   {
     path: 'managerDashboard',
     loadChildren: () => import('./manager-dashboard/manager-dashboard.module').then(m => m.ManagerDashboardModule),
-    canActivate: [LoggedGuard]
+    canActivate: [LoggedGuard],
+    resolve: { workers: WorkersResolverService}
   },
   {
     path: 'userDashboard',
