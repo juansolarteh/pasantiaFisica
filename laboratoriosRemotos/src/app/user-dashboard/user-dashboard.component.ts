@@ -15,11 +15,6 @@ export class UserDashboardComponent implements OnInit {
     
   }
 
-  renderizado(){
-    console.log("render user-dashboard")
-    return true
-  }
-
   getRol(): string{
     const rol = localStorage.getItem('rol')
     if (rol){

@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
       this.router.navigate(['/'])
       return
     }
-
+    
     await this.userSvc.defineRol(emailUser)
     const rol = localStorage.getItem('rol')
     if(rol){

@@ -2,15 +2,18 @@
 <div></div>
 <div id="middle_wrap_list">
     <div id="wrap_list">
-        <app-person-list [titleList]="'Docentes'" [personList]="docentes"></app-person-list>
+        <app-person-list [titleList]="'Docentes'" [personList]="docentes" (deletePerson)="deleteUser($event)">
+        </app-person-list>
         <br>
         <div class="wrap_button">
-            <button mat-button color="primary">
+            <button mat-button color="primary" (click)="onAddUser()">
                 <mat-icon>add</mat-icon>Añadir Docente
             </button>
         </div>
         <br>
-        <app-person-list [titleList]="'Laboratoristas'" [personList]="laboratoristas"></app-person-list>
+        <app-person-list [titleList]="'Laboratoristas'" [personList]="laboratoristas"
+            (deletePerson)="deleteUser($event)" (click)="onAddUser()">
+        </app-person-list>
         <br>
         <div class="wrap_button">
             <button mat-button color="primary">
