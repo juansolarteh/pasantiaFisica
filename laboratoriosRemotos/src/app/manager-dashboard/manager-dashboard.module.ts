@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ManagerDashboardRoutingModule } from './manager-dashboard-routing.module';
 import { ManagerDashboardComponent } from './manager-dashboard.component';
 import { MaterialModule } from '../compartido/material.module';
-import { CompartidoModule } from '../compartido/compartido/compartido.module';
 import { PersonListComponent } from './person-list/person-list.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { ComponentesModule } from '../compartido/componentes/componentes.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
     CommonModule,
     ManagerDashboardRoutingModule,
     MaterialModule,
-    CompartidoModule
+    ComponentesModule
   ]
 })
 export class ManagerDashboardModule { }

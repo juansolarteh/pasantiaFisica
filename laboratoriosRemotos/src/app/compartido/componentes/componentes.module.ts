@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar/NavbarComponent';
 import { MaterialModule } from '../material.module';
 
+
+
 @NgModule({
   declarations: [
     NavbarComponent
@@ -15,4 +17,4 @@ import { MaterialModule } from '../material.module';
     NavbarComponent
   ]
 })
-export class CompartidoModule { }
+export class ComponentesModule { }
