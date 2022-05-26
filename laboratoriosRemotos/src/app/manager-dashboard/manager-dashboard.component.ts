@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../modelos/user';
-import { UserService } from '../servicios/user.service';
+import { UserService } from '../servicios/usuario.service';
 
 @Component({
   selector: 'app-manager-dashboard',

@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { deleteDoc, setDoc } from '@firebase/firestore';
+import { Diccionario } from '../modelos/diccionario';
 import { User } from '../modelos/user';
+import { CursoService } from './curso.service';
+import { PracticaService } from './practica.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,7 @@ export class UserService {
 
   col = this.firestr.firestore.collection('Usuarios');
 
-  constructor(private firestr: AngularFirestore) { }
+  constructor(private firestr: AngularFirestore, private cursoSvc: CursoService, private practicaSvc: PracticaService) { }
 
   async defineRol(correo: string) {
     const querySnapShot = this.col.where('correo', '==', correo).get();
@@ -44,11 +47,13 @@ export class UserService {
       const querySnapShot = this.col.where('correo', '==', correo).get();
       (await querySnapShot).forEach((doc) => {
         if (rol === 'Docente') {
-          const materias: Map<string, DocumentReference> = doc.data()['materias']
-          materias.forEach(refMateria =>{
-            
-          })
-          console.log(materias)
+          const materias: Diccionario<DocumentReference> = doc.data()['materias']
+          console.log(materias['Mecanica'])
+   //       materias.forEach((refMateria) =>{
+     //       console.log(refMateria)
+       //     this.practicaSvc.deleteFromCursoReference(refMateria)
+         //   this.cursoSvc.deleteFromReference(refMateria)
+         // })
         }
         //deleteDoc(doc.ref)
         return true

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Resolve } from "@angular/router";
 import { Observable } from "rxjs";
 import { User } from "../modelos/user";
-import { UserService } from "../servicios/user.service";
+import { UserService } from "../servicios/usuario.service";
 
 @Injectable({ providedIn: 'root' })
 export class WorkersResolverService implements Resolve<User[]>{

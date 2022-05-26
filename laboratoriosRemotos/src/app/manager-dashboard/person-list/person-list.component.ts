@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from 'src/app/modelos/user';
-import { UserService } from 'src/app/servicios/user.service';
+import { UserService } from 'src/app/servicios/usuario.service';
 
 @Component({
   selector: 'app-person-list',
