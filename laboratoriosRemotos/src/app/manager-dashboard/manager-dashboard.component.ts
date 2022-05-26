@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Usuario } from '../modelos/usuario';
-import { UserService } from '../servicios/usuario.service';
+import { UsuarioService } from '../servicios/usuario.service';
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -13,7 +13,7 @@ export class ManagerDashboardComponent implements OnInit {
   docentes: Usuario[] = []
   laboratoristas: Usuario[] = []
 
-  constructor(private readonly route: ActivatedRoute, private userSvc: UserService) { }
+  constructor(private readonly route: ActivatedRoute, private userSvc: UsuarioService) { }
 
   ngOnInit(): void {
     const workers: Usuario[] = this.route.snapshot.data['workers']

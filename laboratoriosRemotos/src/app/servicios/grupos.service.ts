@@ -5,13 +5,16 @@ import { deleteDoc } from '@firebase/firestore';
 @Injectable({
   providedIn: 'root'
 })
-export class CursoService {
+export class GruposService {
 
-  colGrupos = this.firestr.firestore.collection('Materias');
+  nameColletion = 'Grupos'
 
   constructor(private firestr: AngularFirestore) { }
 
-  async deleteFromReference(refCurso: DocumentReference){
-    deleteDoc(refCurso)
+  async deleteGrupos(refCurso: DocumentReference){
+    const a = refCurso.collection(this.nameColletion).get();
+    (await a).forEach((doc) => {
+      deleteDoc(doc.ref)
+    })
   }
 }

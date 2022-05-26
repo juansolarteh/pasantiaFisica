@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './servicios/auth.service';
-import { UserService } from './servicios/usuario.service';
+import { UsuarioService } from './servicios/usuario.service';
 
 @Component({
   selector: 'app-root',
   template: '<router-outlet></router-outlet>'
 })
 export class AppComponent implements OnInit {
-  constructor(private readonly router: Router, private authService: AuthService, private userSvc: UserService) { }
+  constructor(private readonly router: Router, private authService: AuthService, private userSvc: UsuarioService) { }
 
   async ngOnInit() {
     const emailUser: string | null = localStorage.getItem('email')

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Usuario } from 'src/app/modelos/usuario';
-import { UserService } from 'src/app/servicios/usuario.service';
+import { UsuarioService } from 'src/app/servicios/usuario.service';
 
 @Component({
   selector: 'app-person-list',
@@ -19,7 +19,7 @@ export class PersonListComponent{
     rol: ''
   }
 
-  constructor(public dialog: MatDialog, private userSvc: UserService) {}
+  constructor(public dialog: MatDialog, private userSvc: UsuarioService) {}
 
 
   delete(contentDialog: any, person: Usuario) {
@@ -27,7 +27,6 @@ export class PersonListComponent{
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        
         this.userSvc.deleteUser(this.deletedPerson['correo'], this.deletedPerson['rol']).then(res => {
           if (res) {
             this.deletePerson.emit(this.deletedPerson)

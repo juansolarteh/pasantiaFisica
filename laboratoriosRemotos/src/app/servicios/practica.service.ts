@@ -14,9 +14,11 @@ export class PracticaService {
 
   async deleteFromCursoReference(refCurso: DocumentReference){
     const querySnapShot = this.col.where('materia', '==', refCurso).get();
+    var refCurso: DocumentReference
     (await querySnapShot).forEach((doc) => {
-      this.agendaSvc.deleteFromPracticaReference(doc.ref)
-      //deleteDoc(doc.ref)
+      refCurso = doc.ref
+      deleteDoc(doc.ref)
     })
+    await this.agendaSvc.deleteFromPracticaReference(refCurso)
   }
 }

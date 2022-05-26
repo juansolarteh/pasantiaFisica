@@ -14,7 +14,7 @@ export class AgendaService {
   async deleteFromPracticaReference(refPractica: DocumentReference){
     const querySnapShot = this.col.where('practica', '==', refPractica).get();
     (await querySnapShot).forEach((doc) => {
-      //deleteDoc(doc.ref)
+      deleteDoc(doc.ref)
     })
   }
 }
