@@ -3,8 +3,8 @@
     <mat-divider id="title-divider"></mat-divider>
     <mat-list-item *ngFor="let person of personList; last as last" id="{{person}}">
         <mat-icon mat-list-icon>person</mat-icon>
-        <h4 mat-line>{{person['name']}}</h4>
-        <p mat-line>{{person['email']}} </p>
+        <h4 mat-line>{{person['nombre']}}</h4>
+        <p mat-line>{{person['correo']}} </p>
         <button mat-icon-button color="primary" (click)="delete(deleteMessage, person)">
             <mat-icon>delete</mat-icon>
         </button>

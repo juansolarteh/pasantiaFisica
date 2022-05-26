@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { deleteDoc, setDoc } from '@firebase/firestore';
 import { Diccionario } from '../modelos/diccionario';
-import { User } from '../modelos/user';
+import { Usuario } from '../modelos/usuario';
 import { CursoService } from './curso.service';
 import { PracticaService } from './practica.service';
 
@@ -17,24 +17,40 @@ export class UserService {
 
   async defineRol(correo: string) {
     const querySnapShot = this.col.where('correo', '==', correo).get();
-    (await querySnapShot).forEach((doc) =>{
+    (await querySnapShot).forEach((doc) => {
+      console.log('nooo entra')
       localStorage.setItem('rol', doc.data()['rol'])
-      if (doc.data()['nombre'] == undefined || doc.data()['nombre'] == ''){
-        setDoc(doc.ref, {nombre: localStorage.getItem('nombre')})
+      if (doc.data()['nombre'] == undefined || doc.data()['nombre'] == '') {
+        setDoc(doc.ref, { nombre: localStorage.getItem('nombre') })
       }
       return
     })
+    if ((await querySnapShot).size < 1) {
+      const nombre = localStorage.getItem('name')
+      const email = localStorage.getItem('email')
+      console.log(nombre);
+      console.log(email);
+      localStorage.setItem('rol', 'Estudiante')
+      if (nombre && email) {
+        const user: Usuario = {
+          nombre: nombre,
+          correo: email,
+          rol: 'Estudiante'
+        }
+        this.addUser(user)
+      }
+    }
   }
 
   async getWorkers() {
-    var listWorkers: User[] = []
+    var listWorkers: Usuario[] = []
     const querySnapShot = this.col.where('rol', 'in', ['Docente', 'Laboratorista']).get();
     (await querySnapShot).forEach((doc) => {
       const us = doc.data()
       listWorkers.push(
         {
-          name: us['nombre'],
-          email: us['correo'],
+          nombre: us['nombre'],
+          correo: us['correo'],
           rol: us['rol']
         }
       )
@@ -49,11 +65,11 @@ export class UserService {
         if (rol === 'Docente') {
           const materias: Diccionario<DocumentReference> = doc.data()['materias']
           console.log(materias['Mecanica'])
-   //       materias.forEach((refMateria) =>{
-     //       console.log(refMateria)
-       //     this.practicaSvc.deleteFromCursoReference(refMateria)
-         //   this.cursoSvc.deleteFromReference(refMateria)
-         // })
+          //       materias.forEach((refMateria) =>{
+          //       console.log(refMateria)
+          //     this.practicaSvc.deleteFromCursoReference(refMateria)
+          //   this.cursoSvc.deleteFromReference(refMateria)
+          // })
         }
         //deleteDoc(doc.ref)
         return true
@@ -64,11 +80,7 @@ export class UserService {
     }
   }
 
-  addUser(user: User) {
-    this.col.add({
-      name: 'prueba',
-      email: 'prueba',
-      rol: 'Docente'
-    })
+  addUser(user: Usuario) {
+    this.col.add(user)
   }
 }

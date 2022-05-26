@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../modelos/user';
+import { Usuario } from '../modelos/usuario';
 import { UserService } from '../servicios/usuario.service';
 
 @Component({
@@ -10,13 +10,13 @@ import { UserService } from '../servicios/usuario.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManagerDashboardComponent implements OnInit {
-  docentes: User[] = []
-  laboratoristas: User[] = []
+  docentes: Usuario[] = []
+  laboratoristas: Usuario[] = []
 
   constructor(private readonly route: ActivatedRoute, private userSvc: UserService) { }
 
   ngOnInit(): void {
-    const workers: User[] = this.route.snapshot.data['workers']
+    const workers: Usuario[] = this.route.snapshot.data['workers']
     workers.forEach(worker => {
       if (worker['rol'] === 'Docente') {
         this.docentes.push(worker)
@@ -34,7 +34,7 @@ export class ManagerDashboardComponent implements OnInit {
     return ''
   }
 
-  deleteUser(user: User){
+  deleteUser(user: Usuario){
     if (user['rol'] === 'Docente'){
       this.docentes = this.docentes.filter((i) => i !== user);
     }else{
@@ -43,8 +43,8 @@ export class ManagerDashboardComponent implements OnInit {
   }
   onAddUser(){
     this.userSvc.addUser({
-      name: 'prueba',
-      email: 'prueba',
+      nombre: 'prueba',
+      correo: 'prueba',
       rol: 'Docente'
     })
   }

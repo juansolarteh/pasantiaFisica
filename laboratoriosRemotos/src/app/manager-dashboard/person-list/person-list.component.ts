@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { User } from 'src/app/modelos/user';
+import { Usuario } from 'src/app/modelos/usuario';
 import { UserService } from 'src/app/servicios/usuario.service';
 
 @Component({
@@ -11,24 +11,24 @@ import { UserService } from 'src/app/servicios/usuario.service';
 })
 export class PersonListComponent{
   @Input() titleList: string = ''
-  @Input() personList: User[] = []
-  @Output () deletePerson: EventEmitter<User> = new EventEmitter();
-  deletedPerson: User = {
-    name: '',
-    email: '',
+  @Input() personList: Usuario[] = []
+  @Output () deletePerson: EventEmitter<Usuario> = new EventEmitter();
+  deletedPerson: Usuario = {
+    nombre: '',
+    correo: '',
     rol: ''
   }
 
   constructor(public dialog: MatDialog, private userSvc: UserService) {}
 
 
-  delete(contentDialog: any, person: User) {
+  delete(contentDialog: any, person: Usuario) {
     this.deletedPerson = person
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         
-        this.userSvc.deleteUser(this.deletedPerson['email'], this.deletedPerson['rol']).then(res => {
+        this.userSvc.deleteUser(this.deletedPerson['correo'], this.deletedPerson['rol']).then(res => {
           if (res) {
             this.deletePerson.emit(this.deletedPerson)
           }

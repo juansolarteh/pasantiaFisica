@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { User } from 'src/app/modelos/user';
+import { Usuario } from 'src/app/modelos/usuario';
 
 @Component({
   selector: 'app-delete-dialog',
@@ -7,9 +7,9 @@ import { User } from 'src/app/modelos/user';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeleteDialogComponent{
-  @Input() person: User = {
-    name: '',
-    email: '',
+  @Input() person: Usuario = {
+    nombre: '',
+    correo: '',
     rol: ''
   }
 }
