@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Diccionario } from 'src/app/modelos/diccionario';
-import { CursoService } from 'src/app/servicios/curso.service';
+import { DocumentData } from '@angular/fire/compat/firestore';
 import { UsuarioService } from 'src/app/servicios/usuario.service';
-import { DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-tab-estudiante',
@@ -11,15 +9,16 @@ import { DocumentData, DocumentReference } from '@angular/fire/compat/firestore'
 })
 export class TabEstudianteComponent implements OnInit {
 
-  constructor(private subjSvc: CursoService, private userSvc: UsuarioService) { }
+  constructor(private userSvc: UsuarioService) { }
 
-  ngOnInit(){
+  async ngOnInit(){
     const id = localStorage.getItem('idUsuario')
     if (id){
-      const obs = this.userSvc.getUser(id)
-      obs.subscribe(doc => {
-        console.log(doc.data())
-      })
+      const doc = this.userSvc.getUser(id);
+      const a: DocumentData | undefined = (await doc)
+      if (a){
+        console.log(a['materias'])
+      }
     }
   }
 }

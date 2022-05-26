@@ -44,9 +44,9 @@ export class UsuarioService {
     }
   }
 
-  getUser(idUser: string){
-    const path = this.col.doc(idUser).path
-    return this.firestr.doc(path).get()
+  async getUser(idUser: string){
+    const documentSnapShot = this.col.doc(idUser).get();
+    return (await documentSnapShot).data()
   }
 
   async getWorkers() {
