@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { Diccionario } from '../modelos/diccionario';
+import { ResultadoServicio } from '../modelos/resultadoServicio';
 import { Usuario } from '../modelos/usuario';
 import { CursoService } from './curso.service';
 import { GruposService } from './grupos.service';
@@ -18,14 +19,16 @@ export class UsuarioService {
 
   async defineRol(correo: string) {
     const querySnapShot = this.col.where('correo', '==', correo).get();
+    var flat = true;
     (await querySnapShot).forEach((doc) => {
+      flat = false
       localStorage.setItem('rol', doc.data()['rol'])
       if (doc.data()['nombre'] == undefined || doc.data()['nombre'] == '') {
-        this.firestr.doc(doc.ref).set({ nombre: localStorage.getItem('nombre') })
+        this.firestr.doc(doc.ref).update({ nombre: localStorage.getItem('name') })
       }
       return
     })
-    if ((await querySnapShot).size < 1) {
+    if (flat) {
       const nombre = localStorage.getItem('name')
       const email = localStorage.getItem('email')
       localStorage.setItem('rol', 'Estudiante')
@@ -77,7 +80,35 @@ export class UsuarioService {
     }
   }
 
-  addUser(user: Usuario) {
-    this.col.add(user)
+  async addUser(user: Usuario) {
+    var result: ResultadoServicio = {
+      approved: false,
+      message: 'Fallo de conexion, intente de nuevo'
+    }
+    const dominio = user.correo.split('@')[1].toString()
+    try {
+      if (dominio == "unicauca.edu.co") {
+        const querySnapShot = this.col.where('correo', '==', user.correo).get();
+        if ((await querySnapShot).size == 0) {
+          this.col.add(user)
+          result = {
+            approved: true,
+            message: 'Usuario registardo exitosamente'
+          }
+        } else {
+          result = {
+            approved: false,
+            message: 'El usuario con correo ' + user.correo + ' ya se encuentra registrado'
+          }
+        }
+      } else {
+        result = {
+          approved: false,
+          message: 'El dominio no pertenece a @unicauca.edu.co'
+        }
+      }
+    } finally {
+      return result
+    }
   }
 }

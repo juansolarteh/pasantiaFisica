@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import firebase from 'firebase/compat/app';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
+import { ResultadoServicio } from '../modelos/resultadoServicio';
 
 export interface respService {
   approved: boolean
@@ -16,7 +17,7 @@ export class AuthService {
   constructor(private afauth: AngularFireAuth) { }
 
   async loginGoogle() {
-    var result: respService = {
+    var result: ResultadoServicio = {
       approved: false,
       message: "Error al autenticar, intente de nuevo"
     }
@@ -43,7 +44,7 @@ export class AuthService {
   }
 
   async logout() {
-    var result: respService = {
+    var result: ResultadoServicio = {
       approved: false,
       message: 'Error al realizar la opercaión, intente de nuevo'
     }

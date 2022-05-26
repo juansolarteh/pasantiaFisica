@@ -6,19 +6,22 @@
         </app-person-list>
         <br>
         <div class="wrap_button">
-            <button mat-button color="primary" (click)="onAddUser()">
+            <button mat-button color="primary" (click)="onAddUser(addMessage, 'Docente')">
                 <mat-icon>add</mat-icon>Añadir Docente
             </button>
         </div>
         <br>
-        <app-person-list [titleList]="'Laboratoristas'" [personList]="laboratoristas"
-            (deletePerson)="deleteUser($event)" (click)="onAddUser()">
+        <app-person-list [titleList]="'Laboratoristas'" [personList]="laboratoristas" (deletePerson)="deleteUser($event)">
         </app-person-list>
         <br>
         <div class="wrap_button">
-            <button mat-button color="primary">
+            <button mat-button color="primary" (click)="onAddUser(addMessage, 'Laboratorista')">
                 <mat-icon>add</mat-icon>Añadir Laboratorista
             </button>
         </div>
     </div>
 </div>
+
+<ng-template #addMessage>
+    <app-add-dialog [rol]="addUserRol" (addUser)="closeAddDialog($event)"></app-add-dialog>
+</ng-template>

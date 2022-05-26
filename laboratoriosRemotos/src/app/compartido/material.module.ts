@@ -9,6 +9,8 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatListModule} from '@angular/material/list';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [],
@@ -24,7 +26,9 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatTabsModule,
     MatListModule,
     MatDividerModule,
-    MatDialogModule
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class MaterialModule { }

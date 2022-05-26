@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Usuario } from '../modelos/usuario';
 import { UsuarioService } from '../servicios/usuario.service';
@@ -12,40 +13,40 @@ import { UsuarioService } from '../servicios/usuario.service';
 export class ManagerDashboardComponent implements OnInit {
   docentes: Usuario[] = []
   laboratoristas: Usuario[] = []
+  addUserRol = ''
+  dialogRef: MatDialogRef<unknown, any> | undefined
 
-  constructor(private readonly route: ActivatedRoute, private userSvc: UsuarioService) { }
+  constructor(public dialog: MatDialog, private readonly route: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     const workers: Usuario[] = this.route.snapshot.data['workers']
-    workers.forEach(worker => {
-      if (worker['rol'] === 'Docente') {
-        this.docentes.push(worker)
-      } else {
-        this.laboratoristas.push(worker)
-      }
-    })
+    this.docentes = workers.filter((i) => i.rol !== 'Laboratorista')
+    this.laboratoristas = workers.filter((i) => i.rol !== 'Docente')
   }
 
-  getRol(): string {
-    const rol = localStorage.getItem('rol')
-    if (rol) {
-      return rol
-    }
-    return ''
-  }
-
-  deleteUser(user: Usuario){
-    if (user['rol'] === 'Docente'){
+  deleteUser(user: Usuario) {
+    if (user['rol'] === 'Docente') {
       this.docentes = this.docentes.filter((i) => i !== user);
-    }else{
+    } else {
       this.laboratoristas = this.laboratoristas.filter((i) => i !== user);
     }
   }
-  onAddUser(){
-    this.userSvc.addUser({
-      nombre: 'prueba',
-      correo: 'prueba',
-      rol: 'Docente'
-    })
+
+  onAddUser(contentDialog: any, rol: string) {
+    this.addUserRol = rol
+    this.dialogRef = this.dialog.open(contentDialog);
+  }
+
+  closeAddDialog(usuario: Usuario) {
+    const falsoUsuario: Usuario = new Usuario()
+    this.dialogRef?.close()
+    if (this.addUserRol === 'Docente'){
+      this.docentes.push(usuario)
+      this.docentes = this.docentes.filter((i) => i !== falsoUsuario);
+    }else{
+      this.laboratoristas.push(usuario)
+      this.laboratoristas = this.laboratoristas.filter((i) => i !== falsoUsuario);
+    }
+    this.changeDetector.markForCheck();
   }
 }

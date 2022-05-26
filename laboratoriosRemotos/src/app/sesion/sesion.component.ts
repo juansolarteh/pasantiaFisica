@@ -25,9 +25,4 @@ export class SesionComponent{
   async openSnackBar(message: string) {
     this._snackBar.open(message)._dismissAfter(5000)
   }
-
-  prueba(){
-    console.log('render sesion')
-    return true
-  }
 }
