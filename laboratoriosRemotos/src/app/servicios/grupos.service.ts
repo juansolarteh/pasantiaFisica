@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { deleteDoc } from '@firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +13,7 @@ export class GruposService {
   async deleteGrupos(refCurso: DocumentReference){
     const a = refCurso.collection(this.nameColletion).get();
     (await a).forEach((doc) => {
-      deleteDoc(doc.ref)
+      this.firestr.doc(doc.ref).delete()
     })
   }
 }

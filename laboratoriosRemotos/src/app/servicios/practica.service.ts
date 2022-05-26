@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { deleteDoc } from '@firebase/firestore';
 import { AgendaService } from './agenda.service';
 
 @Injectable({
@@ -14,11 +13,9 @@ export class PracticaService {
 
   async deleteFromCursoReference(refCurso: DocumentReference){
     const querySnapShot = this.col.where('materia', '==', refCurso).get();
-    var refCurso: DocumentReference
     (await querySnapShot).forEach((doc) => {
-      refCurso = doc.ref
-      deleteDoc(doc.ref)
+      this.agendaSvc.deleteFromPracticaReference(doc.ref)
+      this.firestr.doc(doc.ref).delete()
     })
-    await this.agendaSvc.deleteFromPracticaReference(refCurso)
   }
 }
