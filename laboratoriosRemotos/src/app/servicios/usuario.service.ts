@@ -11,7 +11,7 @@ import { PracticaService } from './practica.service';
   providedIn: 'root'
 })
 export class UsuarioService {
-
+  
   col = this.firestr.firestore.collection('Usuarios');
 
   constructor(private firestr: AngularFirestore, private cursoSvc: CursoService,
@@ -19,16 +19,17 @@ export class UsuarioService {
 
   async defineRol(correo: string) {
     const querySnapShot = this.col.where('correo', '==', correo).get();
-    var flat = true;
+    var flag = true;
     (await querySnapShot).forEach((doc) => {
-      flat = false
+      flag = false
       localStorage.setItem('rol', doc.data()['rol'])
       if (doc.data()['nombre'] == undefined || doc.data()['nombre'] == '') {
         this.firestr.doc(doc.ref).update({ nombre: localStorage.getItem('name') })
       }
+      localStorage.setItem('idUsuario', doc.id)
       return
     })
-    if (flat) {
+    if (flag) {
       const nombre = localStorage.getItem('name')
       const email = localStorage.getItem('email')
       localStorage.setItem('rol', 'Estudiante')
@@ -41,6 +42,11 @@ export class UsuarioService {
         this.addUser(user)
       }
     }
+  }
+
+  getUser(idUser: string){
+    const path = this.col.doc(idUser).path
+    return this.firestr.doc(path).get()
   }
 
   async getWorkers() {

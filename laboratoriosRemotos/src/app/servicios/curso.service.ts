@@ -6,7 +6,7 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firest
 })
 export class CursoService {
 
-  colGrupos = this.firestr.firestore.collection('Materias');
+  col = this.firestr.firestore.collection('Materias');
 
   constructor(private firestr: AngularFirestore) { }
 
