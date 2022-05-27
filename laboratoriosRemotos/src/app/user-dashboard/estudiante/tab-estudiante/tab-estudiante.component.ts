@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DocumentData } from '@angular/fire/compat/firestore';
+import { CursoService } from 'src/app/servicios/curso.service';
 import { UsuarioService } from 'src/app/servicios/usuario.service';
 
 @Component({
@@ -8,16 +9,22 @@ import { UsuarioService } from 'src/app/servicios/usuario.service';
   styleUrls: ['./tab-estudiante.component.css']
 })
 export class TabEstudianteComponent implements OnInit {
+  
 
-  constructor(private userSvc: UsuarioService) { }
-
+  constructor(private userSvc: UsuarioService, private cursoService : CursoService) { }
+  materias: any[] = [];
+  
   async ngOnInit(){
     const id = localStorage.getItem('idUsuario')
-    if (id){
-      const doc = this.userSvc.getUser(id);
-      const a: DocumentData | undefined = (await doc)
-      if (a){
-        console.log(a['materias'])
+    console.log("Id", id)
+    if (id != null) {
+      const doc = await this.userSvc.getUser(id)
+      if (doc != undefined) {
+        this.cursoService.getSubjectsFromStudent(doc).then(res=>{
+          this.materias = res
+        }).catch(e =>{
+          console.log("Error", e)
+        })
       }
     }
   }
