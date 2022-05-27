@@ -6,13 +6,13 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firest
 })
 export class GruposService {
 
-  nameColletion = 'Grupos'
+  subcollection = 'Grupos'
 
   constructor(private firestr: AngularFirestore) { }
 
-  async deleteGrupos(refCurso: DocumentReference){
-    const a = refCurso.collection(this.nameColletion).get();
-    (await a).forEach((doc) => {
+  async deleteGrupos(refSubject: DocumentReference){
+    const querySnapShot = refSubject.collection(this.subcollection).get();
+    (await querySnapShot).forEach((doc) => {
       this.firestr.doc(doc.ref).delete()
     })
   }

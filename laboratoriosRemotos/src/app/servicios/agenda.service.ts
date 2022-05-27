@@ -10,8 +10,8 @@ export class AgendaService {
 
   constructor(private firestr: AngularFirestore) { }
 
-  async deleteFromPracticaReference(refPractica: DocumentReference){
-    const querySnapShot = this.col.where('practica', '==', refPractica).get();
+  async deleteFromPracticaReference(practiceRef: DocumentReference){
+    const querySnapShot = this.col.where('practica', '==', practiceRef).get();
     (await querySnapShot).forEach((doc) => {
       this.firestr.doc(doc.ref).delete()
     })

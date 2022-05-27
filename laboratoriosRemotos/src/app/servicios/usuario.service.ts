@@ -1,21 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { Diccionario } from '../modelos/diccionario';
 import { ResultadoServicio } from '../modelos/resultadoServicio';
 import { Usuario } from '../modelos/usuario';
-import { CursoService } from './curso.service';
-import { GruposService } from './grupos.service';
-import { PracticaService } from './practica.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-  
-  col = this.firestr.firestore.collection('Usuarios');
 
-  constructor(private firestr: AngularFirestore, private cursoSvc: CursoService,
-    private practicaSvc: PracticaService, private gruposSvc: GruposService) { }
+  private col = this.firestr.firestore.collection('Usuarios');
+
+  constructor(private firestr: AngularFirestore) { }
 
   async defineRol(correo: string) {
     const querySnapShot = this.col.where('correo', '==', correo).get();
@@ -44,7 +39,7 @@ export class UsuarioService {
     }
   }
 
-  async getUser(idUser: string){
+  async getUser(idUser: string) {
     const documentSnapShot = this.col.doc(idUser).get();
     return (await documentSnapShot).data()
   }
@@ -66,24 +61,28 @@ export class UsuarioService {
   }
 
   async deleteUser(correo: string, rol: string) {
+    var materias: DocumentReference[] = [];
     try {
       const querySnapShot = this.col.where('correo', '==', correo).get();
-      var materias: Diccionario<DocumentReference> = new Diccionario();
-      (await querySnapShot).forEach(async (doc) => {
+      (await querySnapShot).forEach((doc) => {
         if (rol === 'Docente') {
           materias = doc.data()['materias']
-          for (const nombreCurso in materias) {
-            this.gruposSvc.deleteGrupos(materias[nombreCurso])
-            this.practicaSvc.deleteFromCursoReference(materias[nombreCurso])
-            this.cursoSvc.deleteFromReference(materias[nombreCurso])
-          }
         }
         this.firestr.doc(doc.ref).delete()
+        return
       })
-      return true
-    } catch {
-      return false
+    } finally {
+      return materias
     }
+  }
+
+  async deleteSubjectsOfUsers(subjectRef: DocumentReference){
+    const querySnapShot = this.col.where('materias', 'array-contains', subjectRef).get();
+    (await querySnapShot).forEach(doc => {
+      var materias: DocumentReference[] = doc.data()['materias']
+      materias = materias.filter((i) => i.path !== subjectRef.path)
+      doc.ref.update('materias', materias)
+    })
   }
 
   async addUser(user: Usuario) {
