@@ -7,7 +7,7 @@ import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire
 export class CursoService {
 
   col = this.firestr.firestore.collection('Materias');
-  materias: any;
+  materias: any[] = [];
 
   constructor(private firestr: AngularFirestore) { }
 
@@ -22,7 +22,7 @@ export class CursoService {
     for (const key in mapMaterias) {
       refMaterias.push(mapMaterias[key])
     }
-
+    console.log(refMaterias)
     refMaterias.forEach(element=>{
       console.log("Elemento" , element.id)
       this.col.doc(element.id).get().then(res=>{
