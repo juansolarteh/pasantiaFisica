@@ -1,0 +1,14 @@
+.group-wrapper {
+    border: dashed 2px grey;
+}
+
+mat-card {
+    margin-bottom: 1rem;
+}
+
+mat-list-item{
+    border: solid #ccc 0.1rem;
+    margin-bottom: 0.5rem;
+    cursor: move;
+}
+

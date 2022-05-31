@@ -33,4 +33,8 @@ export class CursoService {
     return this.materias
   }
 
+  getSubject(idSubject: string){
+    return this.col.doc(idSubject)
+  }
+
 }

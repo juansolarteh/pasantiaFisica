@@ -18,6 +18,7 @@ export class SubjectComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.subject = params['subjectId']
+      localStorage.setItem('subject', this.subject)
     })
     var lastWord = this.router.url.split('/').pop();
     if (lastWord == 'g' && this.firstSelection == 0) {

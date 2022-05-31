@@ -1,1 +1,29 @@
-<p>groups works!</p>
+<div id="group" cdkDropListGroup>
+    <mat-card class="group-wrapper" *ngFor="let group of groups; let i = index">
+        <mat-card-title *ngIf="i == 0">Sin grupo</mat-card-title>
+        <mat-card-title *ngIf="i != 0">Grupo {{i}}</mat-card-title>
+        <mat-list cdkDropList [cdkDropListData]="group" (cdkDropListDropped)="drop($event)">
+            <mat-list-item cdkDrag *ngFor="let member of group">
+                <mat-icon mat-list-icon>person</mat-icon>
+                <p mat-line>{{member['name']}}</p>
+                <button mat-icon-button *ngIf="i !== 0" (click)="moveWithoutGroup(i, member)"
+                    matTooltip="Retirar del grupo {{i}}">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" matTooltip="Expulsar estudiante del curso"
+                    (click)="deleteMember(deleteMessage, member, i)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-list-item>
+        </mat-list>
+    </mat-card>
+</div>
+<div class="wrap_button">
+    <button mat-button color="primary" (click)="createGroup()">
+        <mat-icon>add</mat-icon>Crear grupo
+    </button>
+</div>
+
+<ng-template #deleteMessage>
+    <app-delete-course-member-dialog [memberGroup]="memberToDelete"></app-delete-course-member-dialog>
+</ng-template>
