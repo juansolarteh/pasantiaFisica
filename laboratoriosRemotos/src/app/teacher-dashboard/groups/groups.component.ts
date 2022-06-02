@@ -35,6 +35,7 @@ export class GroupsComponent implements OnInit {
       this.groups.push(list)
     })
     //esto es un comentario para el branch
+    //Jorge SOlano comentario desde branch JorgeSE
     //Falta pintar el lider
     //groups.forEach(group => {
     //  if (!group['lider'])
