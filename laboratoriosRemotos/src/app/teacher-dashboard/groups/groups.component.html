@@ -6,12 +6,15 @@
             <mat-list-item cdkDrag *ngFor="let member of group">
                 <mat-icon mat-list-icon>person</mat-icon>
                 <p mat-line>{{member['name']}}</p>
+                <ng-container mat-line *ngFor="let leader of leaders">
+                    <p mat-line *ngIf="member['id'] === leader">Lider de equipo</p>
+                </ng-container>
                 <button mat-icon-button *ngIf="i !== 0" (click)="moveWithoutGroup(i, member)"
                     matTooltip="Retirar del grupo {{i}}">
                     <mat-icon>cancel</mat-icon>
                 </button>
                 <button mat-icon-button color="primary" matTooltip="Expulsar estudiante del curso"
-                    (click)="deleteMember(deleteMessage, member, i)">
+                    (click)="deleteStudent(deleteMessage, member, i)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-list-item>

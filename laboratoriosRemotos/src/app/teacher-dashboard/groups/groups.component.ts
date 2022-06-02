@@ -34,6 +34,7 @@ export class GroupsComponent implements OnInit {
       }
       this.groups.push(list)
     })
+    //esto es un comentario para el branch
     //Falta pintar el lider
     //groups.forEach(group => {
     //  if (!group['lider'])
@@ -50,27 +51,37 @@ export class GroupsComponent implements OnInit {
         event.previousIndex,
         event.currentIndex,
       );
+      if (event.previousContainer.data !== this.groups[0] && event.previousContainer.data.length === 0) {     
+        this.groups = this.groups.filter((g) => g !== event.previousContainer.data)
+      }
     }
   }
 
   moveWithoutGroup(indexGroup: number, memberGroup: MemberGroup) {
     this.groups[indexGroup] = this.groups[indexGroup].filter((m) => m !== memberGroup)
     this.groups[0].push(memberGroup)
-    console.log(this.groups)
+    this.verifyGroupBox(indexGroup)
   }
 
-  deleteMember(contentDialog: any, member: MemberGroup, indexGroup: number) {
+  deleteStudent(contentDialog: any, member: MemberGroup, indexGroup: number) {
     this.memberToDelete = member
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.groups[indexGroup] = this.groups[indexGroup].filter((m) => m !== member)
+        this.verifyGroupBox(indexGroup)
         this.changeDetector.markForCheck();
       }
     });
   }
 
-  createGroup(){
+  verifyGroupBox(index: number) {
+    if (index !== 0 && this.groups[index].length === 0) {
+      this.groups = this.groups.filter((g) => g !== this.groups[index])
+    }
+  }
+
+  createGroup() {
     const newList: MemberGroup[] = []
     this.groups.push(newList)
   }
