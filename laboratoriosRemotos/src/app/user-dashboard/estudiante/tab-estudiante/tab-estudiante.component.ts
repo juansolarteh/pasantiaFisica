@@ -13,7 +13,7 @@ export class TabEstudianteComponent implements OnInit {
 
   constructor(private userSvc: UsuarioService, private cursoService : CursoService) { }
   materias: any[] = [];
-  
+  //sdasdasds
   async ngOnInit(){
     const id = localStorage.getItem('idUsuario')
     console.log("Id", id)
