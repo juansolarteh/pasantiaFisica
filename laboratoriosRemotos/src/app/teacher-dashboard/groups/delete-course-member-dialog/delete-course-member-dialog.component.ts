@@ -12,6 +12,7 @@ export class DeleteCourseMemberDialogComponent {
   @Input() memberGroup: MemberGroup = {
     name: '',
     id: '',
+    leader: false
   }
 
   constructor(private groupSvc: GruposService) { }

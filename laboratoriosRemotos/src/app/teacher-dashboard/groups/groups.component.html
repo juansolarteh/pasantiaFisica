@@ -1,18 +1,21 @@
 <div id="group" cdkDropListGroup>
     <mat-card class="group-wrapper" *ngFor="let group of groups; let i = index">
+        <p>{{group['id']}}</p>
         <mat-card-title *ngIf="i == 0">Sin grupo</mat-card-title>
         <mat-card-title *ngIf="i != 0">Grupo {{i}}</mat-card-title>
-        <mat-list cdkDropList [cdkDropListData]="group" (cdkDropListDropped)="drop($event)">
-            <mat-list-item cdkDrag *ngFor="let member of group">
+        <mat-list cdkDropList [cdkDropListData]="group['team']" (cdkDropListDropped)="drop($event)">
+            <mat-list-item cdkDrag *ngFor="let member of group['team']">
                 <mat-icon mat-list-icon>person</mat-icon>
                 <p mat-line>{{member['name']}}</p>
-                <ng-container mat-line *ngFor="let leader of leaders">
-                    <p mat-line *ngIf="member['id'] === leader">Lider de equipo</p>
+                <p mat-line *ngIf="member['leader'] === true">Lider de equipo</p>
+                <ng-container *ngIf="i !== 0">
+                    <button mat-icon-button *ngIf="member['leader'] === false" matTooltip="Cambiar a lider">
+                        <img class="leader" src="../assets/imagenes/leader.png">
+                    </button>
+                    <button mat-icon-button (click)="moveWithoutGroup(i, member)" matTooltip="Retirar del grupo {{i}}">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
                 </ng-container>
-                <button mat-icon-button *ngIf="i !== 0" (click)="moveWithoutGroup(i, member)"
-                    matTooltip="Retirar del grupo {{i}}">
-                    <mat-icon>cancel</mat-icon>
-                </button>
                 <button mat-icon-button color="primary" matTooltip="Expulsar estudiante del curso"
                     (click)="deleteStudent(deleteMessage, member, i)">
                     <mat-icon>delete</mat-icon>

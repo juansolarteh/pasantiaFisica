@@ -19,7 +19,6 @@ export class GroupsResolverServiceResolver implements Resolve<any[]> {
       subjectId = 'nn'
     }
     const subject = this.subjectSvc.getSubject(subjectId)
-    const a = this.grupoSvc.getFromSubjectRef(subject)
     return this.grupoSvc.getFromSubjectRef(subject)
   }
 }
