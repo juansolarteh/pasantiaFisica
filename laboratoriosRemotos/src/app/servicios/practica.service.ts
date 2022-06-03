@@ -30,4 +30,10 @@ export class PracticaService {
     })
     return practicesRef
   }
+
+  getPracticesOfSubject(subject_id : string){
+    
+    
+    
+  }
 }

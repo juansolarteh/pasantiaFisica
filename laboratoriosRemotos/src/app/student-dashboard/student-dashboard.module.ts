@@ -7,9 +7,11 @@ import { MaterialModule } from '../compartido/material.module';
 import { ComponentesModule } from '../compartido/componentes/componentes.module';
 import { SubjectComponent } from './subject/subject.component';
 
-import { GroupsComponent } from './subject/groups/groups.component';
+import { GroupsComponent } from './groups/groups.component';
 import { PracticesComponent } from './practices/practices.component';
 import { PracticeComponent } from './practice/practice.component';
+import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subject-card.component';
+import { CalendarComponent } from './calendar/calendar.component';
 
 
 @NgModule({
@@ -19,6 +21,8 @@ import { PracticeComponent } from './practice/practice.component';
     PracticesComponent,
     PracticeComponent,
     GroupsComponent,
+    CodeSubjectCardComponent,
+    CalendarComponent,
   ],
   imports: [
     CommonModule,

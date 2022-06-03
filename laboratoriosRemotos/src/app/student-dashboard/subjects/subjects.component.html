@@ -1,89 +1,19 @@
 <app-navbar></app-navbar>
 <div class="container">
     <div class="grid">
-        <div class="columna">
-            <ng-container *ngFor="let materia of materias">
-                <app-card-subject [subjectTitle]="materia.nombre">
-                    <div extra-info>Jorge Adrián Muñoz Velasco</div>
+        <div class="columna" *ngFor="let materia of materias">
+                <app-card-subject [subjectTitle]="materia.getSubjectInfo().nombre">
+                    <div extra-info>{{materia.getSubjectInfo().docente}}</div>
                     <div content>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, debitis saepe enim nihil deleniti
-                        quis molestias fugiat obcaecati rem neque harum repudiandae aliquid labore dolor sapiente modi
-                        reprehenderit quaerat dolores.
-
+                        {{materia.getSubjectInfo().descripcion}}
                     </div>
                     <div actions>
-                        <button mat-button>Ver prácticas</button>
-                        <button mat-button>Desmatricular</button>
+                        <button mat-button (click)="goToPractices(materia.getSubjectId())">Ver prácticas</button>
+                        <button mat-button (click)="goToDeleteSubject()">Desmatricular</button>
                     </div>
                 </app-card-subject>
-            </ng-container>
-
         </div>
         <div class="columna">
-            <ng-content select="[special-card]"></ng-content>
+            <app-code-subject-card></app-code-subject-card>
         </div>
     </div>
-    <!-- <app-shared-subjects >
-    
-    <mat-card class="card-materia" special-card>
-        <mat-card-header>
-            <div mat-card-avatar class="codigo-avatar"></div>
-            <mat-card-title>Código de clase</mat-card-title>
-            <mat-card-subtitle>Pídele a tu profesor el código de clase e introdúcelo aquí.</mat-card-subtitle>
-        </mat-card-header>
-        <div class="codigo-materia">
-            <form class="codigo-form">
-                <mat-form-field appearance="fill">
-                  <mat-label>Código de clase</mat-label>
-                  <input matInput placeholder="Ej. AJ12SL">
-                </mat-form-field>
-            </form>
-            <button mat-button>Unirme</button>
-        </div>
-    </mat-card>
-</app-shared-subjects> -->
-
-
-    <!-- <div class="container">
-    <div class="grid">
-        <div class="columna">
-            <mat-card class="card-materia">
-                <mat-card-header>
-                    <div mat-card-avatar class="materia-avatar"></div>
-                    <mat-card-title>Mécanica - Grupo A</mat-card-title>
-                    <mat-card-subtitle>Jorge Adrián Muñoz Velasco</mat-card-subtitle>
-                </mat-card-header>
-                <ng-content>
-                    
-                </ng-content>
-                <mat-card-content>
-                    <div class="mat-body-1">
-                        
-                    </div>
-                </mat-card-content>
-                <mat-card-actions>
-                    <button mat-button>Ver prácticas</button>
-                    <button mat-button>Desmatricular</button>
-                </mat-card-actions>
-            </mat-card>
-        </div>
-        <div class="columna">
-            <mat-card class="card-materia">
-                <mat-card-header>
-                    <div mat-card-avatar class="codigo-avatar"></div>
-                    <mat-card-title>Código de clase</mat-card-title>
-                    <mat-card-subtitle>Pídele a tu profesor el código de clase e introdúcelo aquí.</mat-card-subtitle>
-                </mat-card-header>
-                <div class="codigo-materia">
-                    <form class="codigo-form">
-                        <mat-form-field appearance="fill">
-                          <mat-label>Código de clase</mat-label>
-                          <input matInput placeholder="Ej. AJ12SL">
-                        </mat-form-field>
-                    </form>
-                    <button mat-button>Unirme</button>
-                </div>
-                    
-            </mat-card>
-        </div>
-    </div> -->

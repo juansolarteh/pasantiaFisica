@@ -40,14 +40,4 @@
 }
 
 
-.codigo-avatar {
-    background-image: url('https://cdn-icons.flaticon.com/png/512/2115/premium/2115955.png?token=exp=1654208238~hmac=1e73de49d3bfe3cee66c700b75b96593');
-    background-size: cover;
-}
 
-.codigo-materia {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
