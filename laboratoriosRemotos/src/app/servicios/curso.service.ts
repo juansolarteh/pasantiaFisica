@@ -15,6 +15,7 @@ export class CursoService {
     this.firestr.doc(refCurso).delete()
   }
 
+
   async getSubjectsFromStudent(refStudent : DocumentData) {
     const mapMaterias = refStudent["materias"]
     const refMaterias: any[] = [];
@@ -22,14 +23,11 @@ export class CursoService {
     for (const key in mapMaterias) {
       refMaterias.push(mapMaterias[key])
     }
-    console.log(refMaterias)
     refMaterias.forEach(element=>{
-      console.log("Elemento" , element.id)
       this.col.doc(element.id).get().then(res=>{
         this.materias.push(res.data())
       })
     })
-    console.log("Materias a retornar" , this.materias)
     return this.materias
   }
 

@@ -7,11 +7,18 @@ import { MaterialModule } from '../compartido/material.module';
 import { ComponentesModule } from '../compartido/componentes/componentes.module';
 import { SubjectComponent } from './subject/subject.component';
 
+import { GroupsComponent } from './subject/groups/groups.component';
+import { PracticesComponent } from './practices/practices.component';
+import { PracticeComponent } from './practice/practice.component';
+
 
 @NgModule({
   declarations: [
     SubjectsComponent,
-    SubjectComponent
+    SubjectComponent,
+    PracticesComponent,
+    PracticeComponent,
+    GroupsComponent,
   ],
   imports: [
     CommonModule,
