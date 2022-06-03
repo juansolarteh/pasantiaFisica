@@ -2,6 +2,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { Group } from 'src/app/modelos/group';
 import { MemberGroup } from 'src/app/modelos/memberGroup';
 
 @Component({
@@ -12,8 +13,7 @@ import { MemberGroup } from 'src/app/modelos/memberGroup';
 })
 export class GroupsComponent implements OnInit {
 
-  groups: any[][] = []
-  leaders: string[] = []
+  groups: Group[] = []
   memberToDelete!: MemberGroup
 
   constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private changeDetector: ChangeDetectorRef) { }
@@ -21,47 +21,66 @@ export class GroupsComponent implements OnInit {
   ngOnInit(): void {
     var groups: any[] = this.route.snapshot.data['groups']
     groups.forEach(group => {
-      if (group['lider']) {
-        this.leaders.push(group['lider'])
-      }
       var list: MemberGroup[] = []
-      for (let idParticipant in group['grupo']) {
-        const part: MemberGroup = {
-          id: idParticipant,
-          name: group['grupo'][idParticipant]
+      for (let idParticipant in group['team']['grupo']) {
+        var memberG: MemberGroup
+        if (group['team']['lider'] === idParticipant) {
+          memberG = {
+            id: idParticipant,
+            name: group['team']['grupo'][idParticipant],
+            leader: true
+          }
+        } else {
+          memberG = {
+            id: idParticipant,
+            name: group['team']['grupo'][idParticipant],
+            leader: false
+          }
         }
-        list.push(part)
+        list.push(memberG)
       }
-      this.groups.push(list)
+      list = this.sort(list)
+      const currentGroup: Group = {
+        id: group['id'],
+        team: list
+      }
+      this.groups.push(currentGroup)
     })
-    //esto es un comentario para el branch
-    //Jorge SOlano comentario desde branch JorgeSE
-    //Falta pintar el lider
-    //groups.forEach(group => {
-    //  if (!group['lider'])
-    //})
+  }
+
+  sort(list: any[]) {
+    list.sort(function (a, b) {
+      if (a.name > b.name) {
+        return 1;
+      }
+      if (a.name < b.name) {
+        return -1;
+      }
+      return 0;
+    })
+    return list
   }
 
   drop(event: CdkDragDrop<MemberGroup[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
+    if (event.previousContainer !== event.container) {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
-      if (event.previousContainer.data !== this.groups[0] && event.previousContainer.data.length === 0) {     
-        this.groups = this.groups.filter((g) => g !== event.previousContainer.data)
+      if (event.previousContainer.data !== this.groups[0]['team'] && event.previousContainer.data.length === 0) {
+        this.groups = this.groups.filter((g) => g['team'] !== event.previousContainer.data)
       }
+      event.container.data = this.sort(event.container.data)
     }
   }
 
   moveWithoutGroup(indexGroup: number, memberGroup: MemberGroup) {
-    this.groups[indexGroup] = this.groups[indexGroup].filter((m) => m !== memberGroup)
-    this.groups[0].push(memberGroup)
+    this.groups[indexGroup]['team'] = this.groups[indexGroup]['team'].filter((m: MemberGroup) => m !== memberGroup)
+    this.groups[0]['team'].push(memberGroup)
     this.verifyGroupBox(indexGroup)
+    this.groups[0]['team'] = this.sort(this.groups[0]['team'])
   }
 
   deleteStudent(contentDialog: any, member: MemberGroup, indexGroup: number) {
@@ -69,7 +88,7 @@ export class GroupsComponent implements OnInit {
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.groups[indexGroup] = this.groups[indexGroup].filter((m) => m !== member)
+        this.groups[indexGroup] = this.groups[indexGroup]['team'].filter((m: MemberGroup) => m !== member)
         this.verifyGroupBox(indexGroup)
         this.changeDetector.markForCheck();
       }
@@ -77,13 +96,16 @@ export class GroupsComponent implements OnInit {
   }
 
   verifyGroupBox(index: number) {
-    if (index !== 0 && this.groups[index].length === 0) {
-      this.groups = this.groups.filter((g) => g !== this.groups[index])
+    if (index !== 0 && this.groups[index]['team'].length === 0) {
+      this.groups = this.groups.filter((g) => g['team'] !== this.groups[index]['team'])
     }
   }
 
   createGroup() {
-    const newList: MemberGroup[] = []
-    this.groups.push(newList)
+    const newGroup: Group = {
+      id: '',
+      team: [] 
+    }
+    this.groups.push(newGroup)
   }
 }
