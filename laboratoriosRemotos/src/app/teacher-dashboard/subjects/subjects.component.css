@@ -1,0 +1,35 @@
+mat-card{
+    border: grey solid 0.1rem;
+}
+
+.container{
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 1rem;
+}
+
+mat-divider{
+    background-color: grey;
+}
+
+mat-card-content{
+    min-height: 7rem;
+}
+
+mat-card-header{
+    height: 3rem;
+}
+
+.header{
+    cursor: pointer;
+}
+
+mat-card-title:hover{
+    text-decoration: underline;
+}

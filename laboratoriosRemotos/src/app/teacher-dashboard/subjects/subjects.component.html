@@ -3,5 +3,23 @@
         <mat-icon>add</mat-icon>
     </button>
 </app-navbar>
-<button (click)="goToSubject('W5sRL0virwyAppAvnGYo')" >prueba1</button>
-<button (click)="goToSubject('W5sRL0virwyAppAvnGYo')" >prueba2</button>
+<div class="container">
+    <div class="grid">
+        <mat-card *ngFor="let subject of materias">
+            <div class="header" (click)="goToSubject(subject)">
+                <mat-card-header>
+                    <mat-card-title>{{subject}}</mat-card-title>
+                </mat-card-header>
+            </div>
+            <mat-divider></mat-divider>
+            <mat-card-content>
+            </mat-card-content>
+            <mat-divider></mat-divider>
+            <mat-card-actions align="end">
+                <button mat-icon-button aria-label="Example icon button with a vertical three dot icon">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>
