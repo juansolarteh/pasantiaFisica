@@ -1,0 +1,57 @@
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 70% 28%;
+    grid-template-rows: auto;
+    gap: 1rem;
+}
+
+.columna{
+    padding: 1rem;
+}
+
+.mat-display-1{
+    margin: 0;
+    
+}
+
+.mat-subheading-1{
+    color: gray;
+}
+
+
+/* .grid div:hover{
+    border: 1px solid red;
+}
+ */
+
+.agendamiento{
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.mat-body-1{
+    text-align: justify;
+}
+.botones{
+    display: flex;
+    justify-content: space-around;
+}
+
+.info-practica{
+    padding: 0.5rem;
+
+}
+
+.icon-display {
+    transform: scale(2);
+ }
+
