@@ -12,3 +12,8 @@ mat-list-item{
     cursor: move;
 }
 
+.leader{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+

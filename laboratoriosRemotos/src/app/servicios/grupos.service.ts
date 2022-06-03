@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { Group } from '../modelos/group';
 import { MemberGroup } from '../modelos/memberGroup';
 
 @Injectable({
@@ -22,7 +23,11 @@ export class GruposService {
     var list: any[] = []
     const querySnapShot = subjectRef.collection(this.subcollection).get();
     (await querySnapShot).forEach((doc) => {
-      list.push(doc.data())
+      const group: Group = {
+        id: doc.id,
+        team: doc.data()
+      }
+      list.push(group)
     })
     return list
   }
