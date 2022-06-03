@@ -1,23 +1,17 @@
 <app-navbar></app-navbar>
 <div class="container">
     <div class="grid">
-        <div class="columna">
-            <ng-container *ngFor="let materia of materias">
+        <div class="columna" *ngFor="let materia of materias">
                 <app-card-subject [subjectTitle]="materia.getSubjectInfo().nombre">
-                    <div extra-info>{{materia.getSubjectInfo().numGrupos}}</div>
+                    <div extra-info>{{materia.getSubjectInfo().docente}}</div>
                     <div content>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut, debitis saepe enim nihil deleniti
-                        quis molestias fugiat obcaecati rem neque harum repudiandae aliquid labore dolor sapiente modi
-                        reprehenderit quaerat dolores.
-
+                        {{materia.getSubjectInfo().descripcion}}
                     </div>
                     <div actions>
-                        <button mat-button (click)="goToPractices()">Ver prácticas</button>
+                        <button mat-button (click)="goToPractices(materia.getSubjectId())">Ver prácticas</button>
                         <button mat-button (click)="goToDeleteSubject()">Desmatricular</button>
                     </div>
                 </app-card-subject>
-            </ng-container>
-
         </div>
         <div class="columna">
             <app-code-subject-card></app-code-subject-card>

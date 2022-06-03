@@ -1,5 +1,5 @@
 <app-navbar>
-  <mat-tab-group animationDuration="0ms" midOptions>
+  <mat-tab-group animationDuration="0ms" midOptions selectedIndex="0" (selectedTabChange)="changeTab($event)">
     <mat-tab label="Prácticas"></mat-tab>
     <mat-tab label="Calendario"></mat-tab>
     <mat-tab label="Grupos"></mat-tab>

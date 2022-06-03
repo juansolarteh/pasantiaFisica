@@ -1,5 +1,5 @@
 import { Subject } from './../../modelos/Subject';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UsuarioService } from './../../servicios/usuario.service';
 import { CursoService } from 'src/app/servicios/curso.service';
 import { Component, OnInit } from '@angular/core';
@@ -13,7 +13,8 @@ export class SubjectsComponent implements OnInit {
 
   materias: Subject[] = [];
   
-  constructor(private userService: UsuarioService, private subjectService: CursoService ) { }
+  constructor(private userService: UsuarioService, private subjectService: CursoService,
+    private readonly router: Router, private activatedRoute: ActivatedRoute) { }
 
   async ngOnInit(): Promise<void> {
     
@@ -22,7 +23,6 @@ export class SubjectsComponent implements OnInit {
       const doc = await this.userService.getUser(id)
       if (doc != undefined) {
         this.subjectService.getSubjectsFromStudent(doc).then(res => {
-          //alert("obtuvo algo")
           this.materias = res
           console.log(this.materias)
         }).catch(e => {
@@ -32,14 +32,9 @@ export class SubjectsComponent implements OnInit {
     }
   }
 
-  goToPractices(){
-    alert("Yendo a practica")
-    this.materias.forEach(element => {
-      console.log(element.getSubjectInfo()?.nombre)
-      
-    });
-    //this.currentRoute
-    //this.router.navigate(['../subject', subject], {relativeTo: this.activatedRoute})
+  goToPractices(subject_id: string){
+
+    this.router.navigate(['../subject',subject_id], {relativeTo: this.activatedRoute})
   }
   goToDeleteSubject(){
     alert("Yendo a elimitar asignatura")

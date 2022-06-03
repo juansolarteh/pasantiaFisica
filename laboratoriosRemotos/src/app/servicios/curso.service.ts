@@ -33,7 +33,8 @@ export class CursoService {
             clave: data['clave'],
             descripcion: data['descripcion'],
             nombre: data['nombre'],
-            numGrupos: data['numGrupos']
+            numGrupos: data['numGrupos'],
+            docente: data['docente']
           }
           let subject = new Subject(element.id, subject_info)
           this.subjects.push(subject)
