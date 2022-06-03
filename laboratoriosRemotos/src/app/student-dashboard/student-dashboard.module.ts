@@ -10,6 +10,7 @@ import { SubjectComponent } from './subject/subject.component';
 import { GroupsComponent } from './subject/groups/groups.component';
 import { PracticesComponent } from './practices/practices.component';
 import { PracticeComponent } from './practice/practice.component';
+import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subject-card.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { PracticeComponent } from './practice/practice.component';
     PracticesComponent,
     PracticeComponent,
     GroupsComponent,
+    CodeSubjectCardComponent,
   ],
   imports: [
     CommonModule,

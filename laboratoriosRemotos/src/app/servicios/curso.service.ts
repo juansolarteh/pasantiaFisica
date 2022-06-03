@@ -1,3 +1,4 @@
+import { Subject } from './../modelos/Subject';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
 
@@ -7,31 +8,42 @@ import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire
 export class CursoService {
 
   col = this.firestr.firestore.collection('Materias');
-  materias: any[] = [];
-
+  subjects: Subject[] = [];
   constructor(private firestr: AngularFirestore) { }
 
-  deleteFromReference(refCurso: DocumentReference){
+  deleteFromReference(refCurso: DocumentReference) {
     this.firestr.doc(refCurso).delete()
   }
 
 
-  async getSubjectsFromStudent(refStudent : DocumentData) {
+  async getSubjectsFromStudent(refStudent: DocumentData) {
+    //Obtencion de referencias de materias
     const mapMaterias = refStudent["materias"]
     const refMaterias: any[] = [];
-    
+    //Almacenamos las referencias en un ArrayDeReferencias
     for (const key in mapMaterias) {
       refMaterias.push(mapMaterias[key])
     }
-    refMaterias.forEach(element=>{
-      this.col.doc(element.id).get().then(res=>{
-        this.materias.push(res.data())
+    //Recorremos Las referencias y creamos nuevas materias en una lista
+    refMaterias.forEach(element => {
+      this.col.doc(element.id).get().then(res => {
+        let data = res.data()
+        if (data != undefined) {
+          let subject_info = {
+            clave: data['clave'],
+            descripcion: data['descripcion'],
+            nombre: data['nombre'],
+            numGrupos: data['numGrupos']
+          }
+          let subject = new Subject(element.id, subject_info)
+          this.subjects.push(subject)
+        }
       })
     })
-    return this.materias
+    return this.subjects
   }
 
-  getSubject(idSubject: string){
+  getSubject(idSubject: string) {
     return this.col.doc(idSubject)
   }
 
