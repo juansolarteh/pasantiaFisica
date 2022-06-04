@@ -88,7 +88,7 @@ export class GroupsComponent implements OnInit {
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.groups[indexGroup] = this.groups[indexGroup]['team'].filter((m: MemberGroup) => m !== member)
+        this.groups[indexGroup]['team'] = this.groups[indexGroup]['team'].filter((m: MemberGroup) => m !== member)
         this.verifyGroupBox(indexGroup)
         this.changeDetector.markForCheck();
       }

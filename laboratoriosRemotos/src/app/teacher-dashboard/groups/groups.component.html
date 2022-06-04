@@ -1,6 +1,5 @@
 <div id="group" cdkDropListGroup>
     <mat-card class="group-wrapper" *ngFor="let group of groups; let i = index">
-        <p>{{group['id']}}</p>
         <mat-card-title *ngIf="i == 0">Sin grupo</mat-card-title>
         <mat-card-title *ngIf="i != 0">Grupo {{i}}</mat-card-title>
         <mat-list cdkDropList [cdkDropListData]="group['team']" (cdkDropListDropped)="drop($event)">
