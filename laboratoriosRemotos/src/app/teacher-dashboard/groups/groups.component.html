@@ -3,15 +3,17 @@
         <mat-card-title *ngIf="i == 0">Sin grupo</mat-card-title>
         <mat-card-title *ngIf="i != 0">Grupo {{i}}</mat-card-title>
         <mat-list cdkDropList [cdkDropListData]="group['team']" (cdkDropListDropped)="drop($event)">
-            <mat-list-item cdkDrag *ngFor="let member of group['team']">
+            <mat-list-item cdkDrag *ngFor="let member of group['team']; let ii = index">
                 <mat-icon mat-list-icon>person</mat-icon>
                 <p mat-line>{{member['name']}}</p>
                 <p mat-line *ngIf="member['leader'] === true">Lider de equipo</p>
                 <ng-container *ngIf="i !== 0">
-                    <button mat-icon-button *ngIf="member['leader'] === false" matTooltip="Cambiar a lider">
+                    <button mat-icon-button *ngIf="member['leader'] === false" matTooltip="Cambiar a lider"
+                        (click)="chageLeader(i, ii)">
                         <img class="leader" src="../assets/imagenes/leader.png">
                     </button>
-                    <button mat-icon-button (click)="moveWithoutGroup(i, member)" matTooltip="Retirar del grupo {{i}}">
+                    <button mat-icon-button matTooltip="Retirar del grupo {{i}}" 
+                        (click)="moveWithoutGroup(i, member)">
                         <mat-icon>cancel</mat-icon>
                     </button>
                 </ng-container>
