@@ -16,7 +16,7 @@ export class SubjectsComponent implements OnInit {
   constructor(private readonly router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    console.log('desde la lista de subjects')
+    console.log('desde la lista de subjects. Falta traer los subjects')
   }
 
   goToSubject(subject: string) {
