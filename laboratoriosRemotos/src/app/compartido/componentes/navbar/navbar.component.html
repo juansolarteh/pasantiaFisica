@@ -1,8 +1,9 @@
 <mat-toolbar>
   <button mat-icon-button>
     <mat-icon>menu</mat-icon>
-  </button>
-  <span>Laboratorios remotos</span>
+  </button> 
+
+  <span><ng-content select="[leftOptions]"></ng-content></span>
   <span class="spacer"></span>
   <ng-content select="[midOptions]"></ng-content>
   <span class="spacer"></span>
