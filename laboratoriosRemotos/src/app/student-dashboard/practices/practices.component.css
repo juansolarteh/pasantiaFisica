@@ -14,8 +14,8 @@
 }
 
 .cabecera{
-    background-color: #13254a;
-    border-radius: 5px;
+    background-color: #283593;
+    border-radius: 10px;
     padding: 30px;
     display: flex;
     align-items: flex-end;
@@ -25,12 +25,18 @@
 
 .practica{
     border:1px solid lightgrey;
-    border-radius: 5px;
-    box-shadow: 3px 3px 10px lightgray;
+    border-radius: 10px;
+    /* box-shadow: 3px 3px 10px lightgray; */
     cursor: pointer;
+}
+.practica:hover{
+    box-shadow: 3px 3px 10px lightgray;
 }
 
 .icon-display {
-    transform: scale(2);
-    
+    transform: scale(1.4);
+    background-color: #283593;
+    background-size: cover;
+    color: white;
+    margin: 10px;
  }

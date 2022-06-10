@@ -14,7 +14,11 @@ import { GruposService } from '../servicios/grupos.service';
 export class GroupsResolverServiceResolver implements Resolve<any[]> {
   constructor(private subjectSvc: CursoService, private grupoSvc: GruposService) { }
   resolve(): any[] | Observable<any[]> | Promise<any[]> {
-    console.log('desde resolver => ', this.subjectSvc.subjectSelectedRef)
-    return this.grupoSvc.getFromSubjectRef(this.subjectSvc.subjectSelectedRef)
+    var subjectId = localStorage.getItem('subject')
+    if (!subjectId){
+      subjectId = 'nn'
+    }
+    const subject = this.subjectSvc.getSubject(subjectId)
+    return this.grupoSvc.getFromSubjectRef(subject)
   }
 }

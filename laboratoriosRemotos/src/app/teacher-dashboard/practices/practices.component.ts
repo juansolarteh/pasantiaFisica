@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CursoService } from 'src/app/servicios/curso.service';
 
 @Component({
   selector: 'app-practices',
@@ -10,10 +9,10 @@ import { CursoService } from 'src/app/servicios/curso.service';
 })
 export class PracticesComponent implements OnInit {
 
-  constructor(private activatedRoute: ActivatedRoute, private subjectSvc: CursoService) { }
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    console.log('traido de practicas => ', this.subjectSvc.subjectSelectedRef)
+
   }
 
 }

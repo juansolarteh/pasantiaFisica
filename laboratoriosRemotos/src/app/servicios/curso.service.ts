@@ -1,7 +1,6 @@
 import { Subject } from './../modelos/Subject';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable({
   providedIn: 'root'
@@ -46,9 +45,11 @@ export class CursoService {
     })
     return this.subjects
   }
+  
 
   getSubject(idSubject: string) {
     this.subjectSelectedRef = this.col.doc(idSubject)
     return this.subjectSelectedRef
   }
+
 }
