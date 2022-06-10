@@ -14,11 +14,9 @@
 }
 
 .cabecera{
-    background-color: #3964C3;
+    background-color: #13254a;
     border-radius: 5px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-top: 30px;
+    padding: 30px;
     display: flex;
     align-items: flex-end;
     text-align: start;

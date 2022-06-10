@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { plainToInstance } from 'class-transformer';
+import { Subject } from 'src/app/modelos/Subject';
 import { PracticaService } from 'src/app/servicios/practica.service';
 
 @Component({
@@ -10,11 +12,14 @@ import { PracticaService } from 'src/app/servicios/practica.service';
 export class SubjectComponent implements OnInit {
 
   constructor(private practiceService : PracticaService, private readonly router: Router, private activatedRoute: ActivatedRoute) { }
-
+  selectedSubject!: Subject
+  
   ngOnInit(): void {
-    /* this.activatedRoute.params.subscribe(res=>{
-      console.log(res)
-    }) */
+    let subject = localStorage.getItem("selectedSubject")
+    if (subject != null) {
+      let aux = JSON.parse(subject) as Object
+      this.selectedSubject = plainToInstance(Subject, aux)
+    }
   }
   changeTab(event:any){
     console.log(event.index)

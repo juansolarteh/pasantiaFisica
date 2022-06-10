@@ -1,4 +1,4 @@
-import { DocumentData, DocumentReference } from "@angular/fire/compat/firestore";
+
 import { SubjectInfo } from "./SubjectInfo";
 
 export class Subject{
