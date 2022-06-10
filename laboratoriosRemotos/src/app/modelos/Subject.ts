@@ -1,12 +1,14 @@
-import { DocumentData } from "@angular/fire/compat/firestore";
+import { DocumentData, DocumentReference } from "@angular/fire/compat/firestore";
 import { SubjectInfo } from "./SubjectInfo";
 
 export class Subject{
 
     subject_id:string;
+    //subject_ref: DocumentReference;
     subject_info:SubjectInfo;
 
     constructor(prmSubject_id:string, prmSubject_info:SubjectInfo) {
+       //this.subject_ref = prmSubject_ref; 
        this.subject_id=prmSubject_id;
        this.subject_info=prmSubject_info;
     }
@@ -14,6 +16,7 @@ export class Subject{
     getSubjectId(){
         return this.subject_id
     }
+    
     getSubjectInfo(){
         return this.subject_info
     }

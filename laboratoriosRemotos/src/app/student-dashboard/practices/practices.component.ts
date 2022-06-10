@@ -1,3 +1,4 @@
+import { CursoService } from 'src/app/servicios/curso.service';
 import { PracticaService } from './../../servicios/practica.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,20 +10,20 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class PracticesComponent implements OnInit {
 
-  constructor(private practiceService : PracticaService, private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private practiceService : PracticaService, private cursoService : CursoService, private readonly router: Router, private activatedRoute: ActivatedRoute) { }
   subject_id !: string
+  practices : any[] = []
 
   ngOnInit(): void {
+
     this.activatedRoute.parent?.params.subscribe(params=>{
       this.subject_id = params['subjectId']
-      this.practiceService.getPracticesOfSubject(this.subject_id)
     })
-    
-    
-    /* this.subject_id = this.activatedRoute.snapshot.paramMap.get('subjectId')!
-    console.log("subjectid" , this.subject_id)
-    this.practiceService.getPracticesOfSubject(this.subject_id)
-    console.log(this.subject_id) */
+
+    let refSubjetct = this.cursoService.getSubject(this.subject_id)
+    this.practiceService.getPractices(refSubjetct).then(res => {
+      this.practices = res
+    })
   }
 
 }

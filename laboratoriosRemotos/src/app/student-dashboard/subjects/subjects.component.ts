@@ -24,7 +24,6 @@ export class SubjectsComponent implements OnInit {
       if (doc != undefined) {
         this.subjectService.getSubjectsFromStudent(doc).then(res => {
           this.materias = res
-          console.log(this.materias)
         }).catch(e => {
           console.log("Error", e)
         })
@@ -33,7 +32,6 @@ export class SubjectsComponent implements OnInit {
   }
 
   goToPractices(subject_id: string){
-
     this.router.navigate(['../subject',subject_id], {relativeTo: this.activatedRoute})
   }
   goToDeleteSubject(){
