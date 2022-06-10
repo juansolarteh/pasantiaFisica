@@ -1,9 +1,11 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/modelos/group';
 import { MemberGroup } from 'src/app/modelos/memberGroup';
+import { CursoService } from 'src/app/servicios/curso.service';
+import { GruposService } from 'src/app/servicios/grupos.service';
 
 @Component({
   selector: 'app-groups',
@@ -16,10 +18,12 @@ export class GroupsComponent implements OnInit {
   groups: Group[] = []
   memberToDelete!: MemberGroup
 
-  constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private changeDetector: ChangeDetectorRef) { }
+  constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private changeDetector: ChangeDetectorRef,
+    private groupSvc: GruposService, private subjectSvc: CursoService) { }
 
   ngOnInit(): void {
     var groups: any[] = this.route.snapshot.data['groups']
+    console.log(groups)
     groups.forEach(group => {
       var list: MemberGroup[] = []
       for (let idParticipant in group['team']['grupo']) {
@@ -69,15 +73,27 @@ export class GroupsComponent implements OnInit {
         event.previousIndex,
         event.currentIndex,
       );
+
       const indexGroup = this.groups.findIndex((g) => g['team'] === event.container.data)
+      const indexPreviousGroup = this.groups.findIndex((g) => g['team'] === event.previousContainer.data)
+
+      var idSubject = localStorage.getItem('subject')
+      if (idSubject) {
+        this.groupSvc.moveMemberGroup(
+          this.groups[indexGroup].team[event.currentIndex],
+          this.groups[indexPreviousGroup].id,
+          this.groups[indexGroup].id,
+          idSubject
+        );
+      }  
+
       if (event.previousContainer.data !== this.groups[0]['team']) {
         const lengthPreviousGroup = event.previousContainer.data.length;
         if (lengthPreviousGroup === 0) {
           this.groups = this.groups.filter((g) => g['team'] !== event.previousContainer.data);
         }
-        const indexPreviousGroup = this.groups.findIndex((g) => g['team'] === event.previousContainer.data)
         this.verifyLeader(indexGroup, event.currentIndex, indexPreviousGroup, lengthPreviousGroup);
-      }else{
+      } else {
         this.verifyLeader(indexGroup, -1, 0, 0);
       }
       event.container.data = this.sort(event.container.data)
@@ -98,7 +114,7 @@ export class GroupsComponent implements OnInit {
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const leader = member.leader? 1: 0;
+        const leader = member.leader ? 1 : 0;
         this.groups[indexGroup]['team'] = this.groups[indexGroup]['team'].filter((m: MemberGroup) => m !== member)
         this.verifyLeader(-1, leader, indexGroup, this.groups[indexGroup]['team'].length)
         this.verifyGroupBox(indexGroup)
@@ -124,7 +140,7 @@ export class GroupsComponent implements OnInit {
         this.groups[indexPreviousGroup]['team'][0]['leader'] = true
       }
     }
-    if (indexGroup > 0 && this.groups[indexGroup]['team'].length === 1){
+    if (indexGroup > 0 && this.groups[indexGroup]['team'].length === 1) {
       this.groups[indexGroup]['team'][0]['leader'] = true
     }
   }

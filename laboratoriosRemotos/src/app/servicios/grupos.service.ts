@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { Diccionario } from '../modelos/diccionario';
 import { Group } from '../modelos/group';
 import { MemberGroup } from '../modelos/memberGroup';
 
@@ -9,6 +10,7 @@ import { MemberGroup } from '../modelos/memberGroup';
 export class GruposService {
 
   private subcollection = 'Grupos'
+  private col = this.firestr.firestore.collection('Materias');
 
   constructor(private firestr: AngularFirestore) { }
 
@@ -32,7 +34,23 @@ export class GruposService {
     return list
   }
 
-  deleteGroupMember(member: MemberGroup, idSubject: string){
+  async moveMemberGroup(member: MemberGroup, idPreviousGroup: string, idNewGroup: string, idSubject: string) {
+    var docRef: DocumentReference = this.col.doc(idSubject).collection(this.subcollection).doc(idPreviousGroup);
+    var docDat = (await docRef.get()).data();
+    if (docDat) {
+      console.log(docDat)
+      var group = docDat['grupo']
+      
+      const result = Object.values(group).filter(value => {
+        console.log(value);
+        return value !== member.id;
+      });
+      console.log(result)
+    }
+  }
+
+
+  deleteGroupMember(member: MemberGroup, idSubject: string) {
 
   }
 }
