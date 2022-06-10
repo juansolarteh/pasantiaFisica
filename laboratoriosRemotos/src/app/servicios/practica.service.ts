@@ -31,9 +31,16 @@ export class PracticaService {
     return practicesRef
   }
 
-  getPracticesOfSubject(subject_id : string){
-    
-    
-    
+
+  async getPractices(refSubject: DocumentReference){
+    let practices : any[] = []
+    this.getPracticesRef(refSubject).then(res=>{
+      res.forEach(practice =>{
+        this.col.doc(practice.id).get().then(res=>{
+          practices.push(res.data())
+        })
+      })
+    })
+    return practices
   }
 }
