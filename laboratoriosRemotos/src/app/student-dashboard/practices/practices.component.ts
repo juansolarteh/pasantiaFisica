@@ -27,7 +27,10 @@ export class PracticesComponent implements OnInit {
     let refSubject = this.cursoService.getSubject(this.selectedSubject.getSubjectId())
     this.practiceService.getPractices(refSubject).then(res => {
       this.practices = res
-      //hola
+      console.log(this.practices)
     })
+  }
+  goToPracticeInfo(practice : Practice){
+    alert("hola")
   }
 }
