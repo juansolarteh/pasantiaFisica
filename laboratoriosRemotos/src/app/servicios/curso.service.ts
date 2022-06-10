@@ -1,6 +1,7 @@
 import { Subject } from './../modelos/Subject';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,8 @@ export class CursoService {
 
   col = this.firestr.firestore.collection('Materias');
   subjects: Subject[] = [];
+  subjectSelectedRef !: DocumentReference
+
   constructor(private firestr: AngularFirestore) { }
 
   deleteFromReference(refCurso: DocumentReference) {
@@ -43,9 +46,9 @@ export class CursoService {
     })
     return this.subjects
   }
-  
-  getSubject(idSubject: string) {
-    return this.col.doc(idSubject)
-  }
 
+  getSubject(idSubject: string) {
+    this.subjectSelectedRef = this.col.doc(idSubject)
+    return this.subjectSelectedRef
+  }
 }

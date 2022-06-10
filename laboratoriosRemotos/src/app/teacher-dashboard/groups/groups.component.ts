@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/modelos/group';
 import { MemberGroup } from 'src/app/modelos/memberGroup';
+import { CursoService } from 'src/app/servicios/curso.service';
 import { GruposService } from 'src/app/servicios/grupos.service';
 
 @Component({
@@ -18,10 +19,11 @@ export class GroupsComponent implements OnInit {
   memberToDelete!: MemberGroup
 
   constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private changeDetector: ChangeDetectorRef,
-    private groupSvc: GruposService) { }
+    private groupSvc: GruposService, private subjectSvc: CursoService) { }
 
   ngOnInit(): void {
     var groups: any[] = this.route.snapshot.data['groups']
+    console.log(groups)
     groups.forEach(group => {
       var list: MemberGroup[] = []
       for (let idParticipant in group['team']['grupo']) {
