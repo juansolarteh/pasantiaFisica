@@ -1,3 +1,6 @@
+import { Subject } from './../modelos/Subject';
+import { plainToInstance } from 'class-transformer';
+import { Practice } from 'src/app/modelos/Practice';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 
@@ -33,11 +36,16 @@ export class PracticaService {
 
 
   async getPractices(refSubject: DocumentReference){
-    let practices : any[] = []
+    let practices : Practice[] = []
     this.getPracticesRef(refSubject).then(res=>{
       res.forEach(practice =>{
         this.col.doc(practice.id).get().then(res=>{
-          practices.push(res.data())
+          //Se convierte la respuesta a string y luego a JSON para poder castear la data a tipo Practice
+          //Esto se realiza mediante el metodo plainToInstance de la libreria externa "class-transformer"
+          let dataString = JSON.stringify(res.data())
+          let data = JSON.parse(dataString) as Object
+          let newPractice = plainToInstance(Practice, data)
+          practices.push(newPractice)
         })
       })
     })

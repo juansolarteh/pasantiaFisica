@@ -9,6 +9,8 @@ export class CursoService {
 
   col = this.firestr.firestore.collection('Materias');
   subjects: Subject[] = [];
+  subjectSelectedRef !: DocumentReference
+
   constructor(private firestr: AngularFirestore) { }
 
   deleteFromReference(refCurso: DocumentReference) {
@@ -44,8 +46,10 @@ export class CursoService {
     return this.subjects
   }
   
+
   getSubject(idSubject: string) {
-    return this.col.doc(idSubject)
+    this.subjectSelectedRef = this.col.doc(idSubject)
+    return this.subjectSelectedRef
   }
 
 }
