@@ -7,12 +7,12 @@
         </div>
 
     </div>
-    <div class="practica" *ngFor="let practice of practices">
+    <div class="practica" *ngFor="let practice of practices" (click)="goToInfoPractice(practice)">
         <mat-list>
-            <mat-list-item>
-                <mat-icon class="icon-display" color="primary" mat-list-icon>science</mat-icon>
-                <div mat-line>{{this.selectedSubject.getSubjectInfo().docente}} ha publicado una nueva práctica: Práctica de {{practice.nombre}}</div>
-                <div mat-line>Fecha de creación: {{practice.fecha_creacion.seconds * 1000 | date: 'longDate'}}</div>
+            <mat-list-item class="info-practica" >
+                    <mat-icon class="icon-display" mat-list-icon>science</mat-icon>
+                    <div mat-line>{{this.selectedSubject.getSubjectInfo().docente}} ha publicado una nueva práctica: Práctica de {{practice.getNombre()}}</div>
+                    <div mat-line>Fecha de creación: {{practice.getFecha_creacion().seconds * 1000 | date: 'longDate'}}</div>
             </mat-list-item>
         </mat-list>
     </div>
