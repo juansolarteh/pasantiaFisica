@@ -23,9 +23,9 @@ export class PracticesComponent implements OnInit {
       let aux = JSON.parse(subject) as Object
       this.selectedSubject = plainToInstance(Subject, aux)
     }
-    /* let refSubject = this.cursoService.getSubject(this.selectedSubject.getSubjectId())
+    let refSubject = this.cursoService.getSubject(this.selectedSubject.getSubjectId())
     this.practiceService.getPractices(refSubject).then(res => {
       this.practices = res
-    }) */
+    })
   }
 }
