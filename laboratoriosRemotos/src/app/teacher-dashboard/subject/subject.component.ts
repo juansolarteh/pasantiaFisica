@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
@@ -12,9 +12,9 @@ export class SubjectComponent implements OnInit, OnDestroy {
 
   public subscriber!: Subscription;
 
-  subject !: string
+  subjectId !: string
   activeLink = 'p'
-  firstSelection = 0
+  selectedTab = 0
 
   constructor(private readonly router: Router, private activatedRoute: ActivatedRoute) { }
 
@@ -25,42 +25,51 @@ export class SubjectComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      this.subject = params['subjectId']
-      localStorage.setItem('subject', this.subject)
+      this.subjectId = params['subjectId'];
+      localStorage.setItem('subject', this.subjectId);
     })
-    var lastWord = this.router.url.split('/').pop();
-    if (lastWord == 'g' && this.firstSelection == 0) {
-      this.firstSelection = 1
+
+    this.verifyRoute()
+  }
+
+  changeTab(event: any) {
+    console.log(event.index)
+    switch (event.index) {
+      case 0: this.router.navigate(['./p'], { relativeTo: this.activatedRoute });
+        break;
+      case 1: this.router.navigate(['./g'], { relativeTo: this.activatedRoute })
+        break;
+      default: this.router.navigate(['/'], { relativeTo: this.activatedRoute })
+    }
+  }
+
+  private verifyRoute() {
+    var urlSegment = this.getLastPath()
+
+    if (urlSegment === 'g' && this.selectedTab == 0) {
+      this.selectedTab = 1
       this.activeLink = 'g'
     }
 
     this.subscriber = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event) => {
-      var lastWord = this.router.url.split('/').pop();
-      if (lastWord == 'g' && this.firstSelection == 0) {
-        this.firstSelection = 1
+      var urlSegment = this.getLastPath()
+      if (urlSegment == 'g' && this.selectedTab == 0) {
+        this.selectedTab = 1
         this.activeLink = 'g'
-      }else{
-        this.firstSelection = 0
+      } else {
+        this.selectedTab = 0
         this.activeLink = 'p'
       }
     })
   }
 
-  changeView() {
-    if (this.activeLink === 'p') {
-      this.activeLink = 'g'
-    } else {
-      this.activeLink = 'p'
-    }
-    var newRoute = ''
-    var list = this.router.url.split('/');
-    list.pop()
-    list.forEach(word => {
-      newRoute += word + '/'
+  private getLastPath() {
+    let lastPath!: string
+    this.activatedRoute.firstChild?.url.forEach(urlSeg => {
+      lastPath = urlSeg[0].path;
     })
-    newRoute += this.activeLink
-    this.router.navigateByUrl(newRoute)
+    return lastPath
   }
 }

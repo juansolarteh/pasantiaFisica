@@ -9,7 +9,7 @@ import { SubjectUltimo } from '../models/SubjectUltimo';
   providedIn: 'root'
 })
 export class SubjectService {
-
+  //refSubject.collection(this.subCol).doc('SG')
   private col = this.firestr.firestore.collection('Materias');
   private subCol = 'Grupos'
   subjects: Subject[] = [];
@@ -21,16 +21,22 @@ export class SubjectService {
     this.firestr.doc(refSubject).delete()
   }
 
-  async getTeacherSubjects(teacherRef: DocumentReference){
-    var listSubjects: ObjectDB<SubjectUltimo>[] = [];
+  async getNameSubjects(teacherRef: DocumentReference){
+    var listSubjects: ObjectDB<string>[] = [];
     const querySnapShot = this.col.where('docente', '==', teacherRef).get();
     (await querySnapShot).forEach((res) => {
-      res.id
-      res.get('nombre', )
-      let subject: SubjectUltimo = convertTo(SubjectUltimo, res.data());
-      listSubjects.push(new ObjectDB(subject, res.id));
+      listSubjects.push(new ObjectDB(res.get('nombre'), res.id));
     });
     return listSubjects;
+  }
+
+  async prueba(studentRef: DocumentReference){
+    var listSubjects: ObjectDB<string>[] = [];
+
+    (await this.col.get()).forEach(a => {
+      let s = a.ref.collection(this.subCol).where('grupo', 'in', studentRef).get()
+      
+    })
   }
 
 

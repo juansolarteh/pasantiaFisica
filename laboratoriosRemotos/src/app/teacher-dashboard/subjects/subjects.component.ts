@@ -3,11 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
 
-interface subjectShow{
-  id:string,
-  name:string
-}
-
 @Component({
   selector: 'app-subjects',
   templateUrl: './subjects.component.html',
@@ -16,19 +11,12 @@ interface subjectShow{
 })
 export class SubjectsComponent implements OnInit {
 
-  subjects: subjectShow[] = [];
+  subjects: ObjectDB<string>[] = [];
 
   constructor(private readonly router: Router, private readonly route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    const subjects: ObjectDB<SubjectUltimo>[] = this.route.snapshot.data['subjects']
-    subjects.forEach(subject => {
-      let sub: subjectShow = {
-        id: subject.getId(),
-        name: subject.getObjectDB().getNombre(),
-      }
-      this.subjects.push(sub);
-    })
+    this.subjects = this.route.snapshot.data['subjects']
   }
 
   goToSubject(subjectId: string) {

@@ -10,7 +10,7 @@ import { SubjectsComponent } from './subjects/subjects.component';
 
 const routes: Routes = [
   {
-    path: 'subject/:subjectId', component: SubjectComponent, canActivate: [CorrectPathGuard], children: [
+    path: 'subject/:subjectId', component: SubjectComponent, children: [
       { path: 'p', component: PracticesComponent, },
       {
         path: 'g',
@@ -24,10 +24,9 @@ const routes: Routes = [
     path: 'subjects',
     component: SubjectsComponent,
     pathMatch: 'full',
-    canActivate: [CorrectPathGuard],
     resolve: { subjects: SubjectsTeacherResolverServiceResolver }
   },
-  { path: '', redirectTo: 'subjects', pathMatch: 'full', canActivate: [CorrectPathGuard] },
+  { path: '', redirectTo: 'subjects', pathMatch: 'full'},
 ];
 
 @NgModule({

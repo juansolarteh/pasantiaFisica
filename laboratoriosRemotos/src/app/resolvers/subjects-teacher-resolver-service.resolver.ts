@@ -10,12 +10,12 @@ import { UserService } from '../services/user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SubjectsTeacherResolverServiceResolver implements Resolve<ObjectDB<SubjectUltimo>[]> {
+export class SubjectsTeacherResolverServiceResolver implements Resolve<ObjectDB<string>[]> {
 
   constructor(private subjectSvc: SubjectService, private userSvc: UserService) { }
   
-  resolve(): ObjectDB<SubjectUltimo>[] | Observable<ObjectDB<SubjectUltimo>[]> | Promise<ObjectDB<SubjectUltimo>[]> {
-    const user = this.userSvc.getUserLoggedRef()
-    return this.subjectSvc.getTeacherSubjects(user);
+  resolve(): ObjectDB<string>[] | Observable<ObjectDB<string>[]> | Promise<ObjectDB<string>[]> {
+    const user = this.userSvc.getUserLoggedRef();
+    return this.subjectSvc.getNameSubjects(user);
   }
 }
