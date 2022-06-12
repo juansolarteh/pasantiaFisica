@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { StudentDashboardRoutingModule } from './student-dashboard-routing.module';
 import { SubjectsComponent } from './subjects/subjects.component';
-import { MaterialModule } from '../compartido/material.module';
-import { ComponentesModule } from '../compartido/componentes/componentes.module';
+import { MaterialModule } from '../shared/material.module';
+import { ComponentsModule } from '../shared/components/components.module';
 import { SubjectComponent } from './subject/subject.component';
 
 import { GroupsComponent } from './groups/groups.component';
@@ -28,7 +28,7 @@ import { CalendarComponent } from './calendar/calendar.component';
     CommonModule,
     StudentDashboardRoutingModule,
     MaterialModule,
-    ComponentesModule
+    ComponentsModule
   ]
 })
 export class StudentDashboardModule { }

@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CursoService } from 'src/app/servicios/curso.service';
-import { UsuarioService } from 'src/app/servicios/usuario.service';
+import { ObjectDB } from 'src/app/models/ObjectDB';
+import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
+
+interface subjectShow{
+  id:string,
+  name:string
+}
 
 @Component({
   selector: 'app-subjects',
@@ -11,15 +16,22 @@ import { UsuarioService } from 'src/app/servicios/usuario.service';
 })
 export class SubjectsComponent implements OnInit {
 
-  materias: any[] = ['W5sRL0virwyAppAvnGYo'];
+  subjects: subjectShow[] = [];
 
-  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private readonly router: Router, private readonly route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    console.log('desde la lista de subjects. Falta traer los subjects')
+    const subjects: ObjectDB<SubjectUltimo>[] = this.route.snapshot.data['subjects']
+    subjects.forEach(subject => {
+      let sub: subjectShow = {
+        id: subject.getId(),
+        name: subject.getObjectDB().getNombre(),
+      }
+      this.subjects.push(sub);
+    })
   }
 
-  goToSubject(subject: string) {
-    this.router.navigate(['../subject', subject], { relativeTo: this.activatedRoute })
+  goToSubject(subjectId: string) {
+    this.router.navigate(['../subject', subjectId], { relativeTo: this.route })
   }
 }

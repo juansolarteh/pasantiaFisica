@@ -1,20 +1,36 @@
-import { Subject } from './../modelos/Subject';
+import { Subject } from '../models/Subject';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
+import { ObjectDB } from '../models/ObjectDB';
+import { convertTo } from '../models/ObjectConverter';
+import { SubjectUltimo } from '../models/SubjectUltimo';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CursoService {
+export class SubjectService {
 
-  col = this.firestr.firestore.collection('Materias');
+  private col = this.firestr.firestore.collection('Materias');
+  private subCol = 'Grupos'
   subjects: Subject[] = [];
   subjectSelectedRef !: DocumentReference
 
   constructor(private firestr: AngularFirestore) { }
 
-  deleteFromReference(refCurso: DocumentReference) {
-    this.firestr.doc(refCurso).delete()
+  deleteFromReference(refSubject: DocumentReference) {
+    this.firestr.doc(refSubject).delete()
+  }
+
+  async getTeacherSubjects(teacherRef: DocumentReference){
+    var listSubjects: ObjectDB<SubjectUltimo>[] = [];
+    const querySnapShot = this.col.where('docente', '==', teacherRef).get();
+    (await querySnapShot).forEach((res) => {
+      res.id
+      res.get('nombre', )
+      let subject: SubjectUltimo = convertTo(SubjectUltimo, res.data());
+      listSubjects.push(new ObjectDB(subject, res.id));
+    });
+    return listSubjects;
   }
 
 
@@ -50,6 +66,15 @@ export class CursoService {
   getSubject(idSubject: string) {
     this.subjectSelectedRef = this.col.doc(idSubject)
     return this.subjectSelectedRef
+  }
+
+  async getRefSubjectsFromRefUser(refUser: DocumentReference){
+    var refSubjects: DocumentReference[] = [];
+    const querySnapShot = this.col.where('docente', '==', refUser).get();
+    (await querySnapShot).forEach((doc) => {
+      refSubjects.push(doc.ref);
+    })
+    return refSubjects;
   }
 
 }

@@ -1,35 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from './servicios/auth.service';
-import { UsuarioService } from './servicios/usuario.service';
+import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
   template: '<router-outlet></router-outlet>'
 })
 export class AppComponent implements OnInit {
-  constructor(private readonly router: Router, private authService: AuthService, private userSvc: UsuarioService,
-    private activatedRoute: ActivatedRoute) { }
+  constructor(private readonly router: Router, private authService: AuthService, private userSvc: UserService,) { }
 
   async ngOnInit() {
-    const emailUser: string | null = localStorage.getItem('email')
+    const emailUser: string | null = localStorage.getItem('email');
     if (emailUser == null) {
-      this.authService.logout()
-      this.router.navigate(['/'])
-      return
+      this.authService.logout();
+      this.router.navigate(['/']);
+      return;
     }
 
-    await this.userSvc.defineRol(emailUser)
-    const rol = localStorage.getItem('rol')
+    await this.userSvc.defineRol(emailUser);
+    const rol = localStorage.getItem('rol');
     if (rol) {
-      const ruta = this.router.routerState.snapshot.url
-      if (ruta == '/app') {
+      const route = this.router.routerState.snapshot.url;
+      if (route == '/app') {
         if (rol == 'Docente') {
-          this.router.navigate(['teacherDashboard'])
+          this.router.navigate(['teacherDashboard']);
         } else if (rol == 'Estudiante') {
-          this.router.navigate(['studentDashboard'])
+          this.router.navigate(['studentDashboard']);
         } else {
-          this.router.navigate(['managerDashboard'])
+          this.router.navigate(['managerDashboard']);
         }
       }
     }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MemberGroup } from 'src/app/modelos/memberGroup';
-import { GruposService } from 'src/app/servicios/grupos.service';
+import { MemberGroup } from 'src/app/models/memberGroup';
+import { GroupsService } from 'src/app/services/groups.service';
 
 @Component({
   selector: 'app-delete-course-member-dialog',
@@ -15,5 +15,5 @@ export class DeleteCourseMemberDialogComponent {
     leader: false
   }
 
-  constructor(private groupSvc: GruposService) { }
+  constructor(private groupSvc: GroupsService) { }
 }

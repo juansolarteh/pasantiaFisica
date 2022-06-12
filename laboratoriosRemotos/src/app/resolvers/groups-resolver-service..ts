@@ -5,14 +5,14 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { CursoService } from '../servicios/curso.service';
-import { GruposService } from '../servicios/grupos.service';
+import { SubjectService } from '../services/subject.service';
+import { GroupsService } from '../services/groups.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GroupsResolverServiceResolver implements Resolve<any[]> {
-  constructor(private subjectSvc: CursoService, private grupoSvc: GruposService) { }
+  constructor(private subjectSvc: SubjectService, private grupoSvc: GroupsService) { }
   resolve(): any[] | Observable<any[]> | Promise<any[]> {
     var subjectId = localStorage.getItem('subject')
     if (!subjectId){

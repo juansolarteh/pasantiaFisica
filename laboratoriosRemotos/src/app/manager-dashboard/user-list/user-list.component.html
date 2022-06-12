@@ -1,11 +1,11 @@
 <mat-list>
     <h3 mat-subheader id="title">{{titleList}}</h3>
     <mat-divider id="title-divider"></mat-divider>
-    <mat-list-item *ngFor="let person of personList; last as last" id="{{person}}">
+    <mat-list-item *ngFor="let user of userList; last as last">
         <mat-icon mat-list-icon>person</mat-icon>
-        <h4 mat-line>{{person['nombre']}}</h4>
-        <p mat-line>{{person['correo']}} </p>
-        <button mat-icon-button color="primary" (click)="delete(deleteMessage, person)">
+        <h4 mat-line>{{user.getObjectDB().getNombre()}}</h4>
+        <p mat-line>{{user.getObjectDB().getCorreo()}} </p>
+        <button mat-icon-button color="primary" (click)="delete(deleteMessage, user)">
             <mat-icon>delete</mat-icon>
         </button>
         <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
@@ -13,5 +13,5 @@
 </mat-list>
 
 <ng-template #deleteMessage>
-    <app-delete-dialog [person]="deletedPerson"></app-delete-dialog>
+    <app-delete-dialog [user]="deletedUser.getObjectDB()"></app-delete-dialog>
 </ng-template>

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { Group } from '../modelos/group';
-import { MemberGroup } from '../modelos/memberGroup';
+import { Group } from '../models/group';
+import { MemberGroup } from '../models/memberGroup';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GruposService {
+export class GroupsService {
 
   private subcollection = 'Grupos'
 

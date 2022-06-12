@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { ManagerDashboardRoutingModule } from './manager-dashboard-routing.module';
 import { ManagerDashboardComponent } from './manager-dashboard.component';
-import { MaterialModule } from '../compartido/material.module';
-import { PersonListComponent } from './person-list/person-list.component';
+import { MaterialModule } from '../shared/material.module';
+import { UserListComponent } from './user-list/user-list.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
-import { ComponentesModule } from '../compartido/componentes/componentes.module';
+import { ComponentsModule } from '../shared/components/components.module';
 import { AddDialogComponent } from './add-dialog/add-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     ManagerDashboardComponent,
-    PersonListComponent,
+    UserListComponent,
     DeleteDialogComponent,
     AddDialogComponent,
   ],
@@ -21,7 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ManagerDashboardRoutingModule,
     MaterialModule,
-    ComponentesModule,
+    ComponentsModule,
     ReactiveFormsModule
   ]
 })
