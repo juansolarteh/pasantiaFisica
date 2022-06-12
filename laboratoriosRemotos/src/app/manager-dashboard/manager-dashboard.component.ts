@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Usuario } from '../modelos/usuario';
-import { UsuarioService } from '../servicios/usuario.service';
+import { ObjectDB } from '../models/ObjectDB';
+import { User } from '../models/User';
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -11,41 +11,38 @@ import { UsuarioService } from '../servicios/usuario.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManagerDashboardComponent implements OnInit {
-  docentes: Usuario[] = []
-  laboratoristas: Usuario[] = []
-  addUserRol = ''
-  dialogRef: MatDialogRef<unknown, any> | undefined
+  teachers: ObjectDB<User>[] = [];
+  laboratorians: ObjectDB<User>[] = [];
+  addUserRol = '';
+  dialogRef: MatDialogRef<unknown, any> | undefined;
 
   constructor(public dialog: MatDialog, private readonly route: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    const workers: Usuario[] = this.route.snapshot.data['workers']
-    this.docentes = workers.filter((i) => i.rol !== 'Laboratorista')
-    this.laboratoristas = workers.filter((i) => i.rol !== 'Docente')
+    const users: ObjectDB<User>[] = this.route.snapshot.data['users'];
+    this.teachers = users.filter((user) => user.getObjectDB().getRol() !== 'Laboratorista');
+    this.laboratorians = users.filter((user) => user.getObjectDB().getRol() !== 'Docente');
   }
 
-  deleteUser(user: Usuario) {
-    if (user['rol'] === 'Docente') {
-      this.docentes = this.docentes.filter((i) => i !== user);
+  deleteUser(user: ObjectDB<User>) {
+    if (user.getObjectDB().getRol() === 'Docente') {
+      this.teachers = this.teachers.filter((teacher) => teacher !== user);
     } else {
-      this.laboratoristas = this.laboratoristas.filter((i) => i !== user);
+      this.laboratorians = this.laboratorians.filter((laboratorian) => laboratorian !== user);
     }
   }
 
   onAddUser(contentDialog: any, rol: string) {
-    this.addUserRol = rol
+    this.addUserRol = rol;
     this.dialogRef = this.dialog.open(contentDialog);
   }
 
-  closeAddDialog(usuario: Usuario) {
-    const falsoUsuario: Usuario = new Usuario()
-    this.dialogRef?.close()
+  closeAddDialog(user: ObjectDB<User>) {
+    this.dialogRef?.close();
     if (this.addUserRol === 'Docente'){
-      this.docentes.push(usuario)
-      this.docentes = this.docentes.filter((i) => i !== falsoUsuario);
+      this.teachers.push(user);
     }else{
-      this.laboratoristas.push(usuario)
-      this.laboratoristas = this.laboratoristas.filter((i) => i !== falsoUsuario);
+      this.laboratorians.push(user);
     }
     this.changeDetector.markForCheck();
   }

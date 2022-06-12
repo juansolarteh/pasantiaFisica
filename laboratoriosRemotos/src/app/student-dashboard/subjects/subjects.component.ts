@@ -1,7 +1,7 @@
-import { Subject } from './../../modelos/Subject';
+import { Subject } from '../../models/Subject';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UsuarioService } from './../../servicios/usuario.service';
-import { CursoService } from 'src/app/servicios/curso.service';
+import { UserService } from '../../services/user.service';
+import { SubjectService } from 'src/app/services/subject.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -13,7 +13,7 @@ export class SubjectsComponent implements OnInit {
 
   materias: Subject[] = [];
   
-  constructor(private userService: UsuarioService, private subjectService: CursoService,
+  constructor(private userService: UserService, private subjectService: SubjectService,
     private readonly router: Router, private activatedRoute: ActivatedRoute) { }
 
   async ngOnInit(): Promise<void> {
@@ -33,7 +33,7 @@ export class SubjectsComponent implements OnInit {
 
   goToPractices(subject: Subject){
     localStorage.setItem("selectedSubject" , JSON.stringify(subject))
-    this.router.navigate(['../subject',subject.getSubjectId()], {relativeTo: this.activatedRoute})
+    //this.router.navigate(['../subject',subject.getSubjectId()], {relativeTo: this.activatedRoute})
   }
   goToDeleteSubject(){
     alert("Yendo a elimitar asignatura")

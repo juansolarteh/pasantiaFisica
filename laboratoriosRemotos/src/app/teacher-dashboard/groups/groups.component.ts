@@ -2,8 +2,8 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Group } from 'src/app/modelos/group';
-import { MemberGroup } from 'src/app/modelos/memberGroup';
+import { Group } from 'src/app/models/group';
+import { MemberGroup } from 'src/app/models/memberGroup';
 
 @Component({
   selector: 'app-groups',

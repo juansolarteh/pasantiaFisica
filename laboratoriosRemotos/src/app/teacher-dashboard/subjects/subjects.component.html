@@ -5,10 +5,10 @@
 </app-navbar>
 <div class="container">
     <div class="grid">
-        <mat-card *ngFor="let subject of materias">
-            <div class="header" (click)="goToSubject(subject)">
+        <mat-card *ngFor="let subject of subjects">
+            <div class="header" (click)="goToSubject(subject.getId())">
                 <mat-card-header>
-                    <mat-card-title>{{subject}}</mat-card-title>
+                    <mat-card-title>{{subject.getObjectDB()}}</mat-card-title>
                 </mat-card-header>
             </div>
             <mat-divider></mat-divider>

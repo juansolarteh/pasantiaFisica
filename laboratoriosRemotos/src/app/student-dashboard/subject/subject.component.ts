@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { plainToInstance } from 'class-transformer';
-import { Subject } from 'src/app/modelos/Subject';
-import { PracticaService } from 'src/app/servicios/practica.service';
+import { Subject } from 'src/app/models/Subject';
+import { PracticeService } from 'src/app/services/practice.service';
 
 @Component({
   selector: 'app-subject',
@@ -11,7 +11,7 @@ import { PracticaService } from 'src/app/servicios/practica.service';
 })
 export class SubjectComponent implements OnInit {
 
-  constructor(private practiceService : PracticaService, private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private practiceService : PracticeService, private readonly router: Router, private activatedRoute: ActivatedRoute) { }
   selectedSubject!: Subject
   
   ngOnInit(): void {

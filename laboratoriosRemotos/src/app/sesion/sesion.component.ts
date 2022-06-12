@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../servicios/auth.service';
+import { AuthService } from '../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ResponseService } from '../models/ResponseService';
 
 @Component({
   selector: 'app-sesion',
@@ -14,11 +15,11 @@ export class SesionComponent{
   constructor(private authService: AuthService, private readonly router: Router, private _snackBar: MatSnackBar) { }
 
   async login() {
-    const response = await this.authService.loginGoogle()
-    if (response.approved) {
+    const response: ResponseService<void> = await this.authService.loginGoogle()
+    if (response.isApproved()) {
       this.router.navigate(['../app'])
     }else{
-      this.openSnackBar(response.message)
+      this.openSnackBar(response.getMessage())
     }
   }
 

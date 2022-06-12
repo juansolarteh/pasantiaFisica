@@ -1,6 +1,6 @@
-<h2 mat-dialog-title>Eliminar {{person['rol']}}</h2>
+<h2 mat-dialog-title>Eliminar {{user.getRol()}}</h2>
 <mat-dialog-content>
-    <p>¿Esta seguro que quiere eliminar al {{person['rol']}} {{person['nombre']}} con correo {{person['correo']}}?</p>
+    <p>¿Esta seguro que quiere eliminar al {{user.getRol()}} {{user.getNombre()}} con correo {{user.getCorreo()}}?</p>
 </mat-dialog-content>
 <mat-dialog-actions >
     <button mat-button mat-dialog-close>Cancelar</button>

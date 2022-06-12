@@ -2,8 +2,8 @@
 <div></div>
 <div id="middle_wrap_list">
     <div id="wrap_list">
-        <app-person-list [titleList]="'Docentes'" [personList]="docentes" (deletePerson)="deleteUser($event)">
-        </app-person-list>
+        <app-user-list [titleList]="'Docentes'" [userList]="teachers" (deleteUser)="deleteUser($event)">
+        </app-user-list>
         <br>
         <div class="wrap_button">
             <button mat-button color="primary" (click)="onAddUser(addMessage, 'Docente')">
@@ -11,8 +11,8 @@
             </button>
         </div>
         <br>
-        <app-person-list [titleList]="'Laboratoristas'" [personList]="laboratoristas" (deletePerson)="deleteUser($event)">
-        </app-person-list>
+        <app-user-list [titleList]="'Laboratoristas'" [userList]="laboratorians" (deleteUser)="deleteUser($event)">
+        </app-user-list>
         <br>
         <div class="wrap_button">
             <button mat-button color="primary" (click)="onAddUser(addMessage, 'Laboratorista')">
