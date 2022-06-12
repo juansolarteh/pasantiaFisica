@@ -17,6 +17,9 @@ export class SubjectsComponent implements OnInit {
     private readonly router: Router, private activatedRoute: ActivatedRoute) { }
 
   async ngOnInit(): Promise<void> {
+
+    const userRef = this.userService.getUserLoggedRef()
+    this.subjectService.prueba(userRef);
     
     const id = localStorage.getItem('idUsuario')
     if (id != null) {

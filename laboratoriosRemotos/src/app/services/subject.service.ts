@@ -12,13 +12,28 @@ export class SubjectService {
   //refSubject.collection(this.subCol).doc('SG')
   private col = this.firestr.firestore.collection('Materias');
   private subCol = 'Grupos'
+  
   subjects: Subject[] = [];
-  subjectSelectedRef !: DocumentReference
+  private refSubjectSelected !: DocumentReference;
 
   constructor(private firestr: AngularFirestore) { }
 
   deleteFromReference(refSubject: DocumentReference) {
-    this.firestr.doc(refSubject).delete()
+    this.firestr.doc(refSubject).delete();
+  }
+
+  getRefSubjectSelected(){
+    return this.refSubjectSelected;
+  }
+
+  getSubjectById(idSubject: string) {
+    this.refSubjectSelected = this.col.doc(idSubject);
+    let subjectDB!: ObjectDB<SubjectUltimo>;
+    this.refSubjectSelected.get().then(res => {
+      let subject: SubjectUltimo = convertTo(SubjectUltimo, res.data()!);
+      subjectDB = new ObjectDB(subject, res.id);
+    });
+    return subjectDB;
   }
 
   async getNameSubjects(teacherRef: DocumentReference){
@@ -31,14 +46,26 @@ export class SubjectService {
   }
 
   async prueba(studentRef: DocumentReference){
-    var listSubjects: ObjectDB<string>[] = [];
+    var listSubjects: DocumentReference[] = [];
+    (await this.firestr.firestore.collection('Grupos').where('grupo', 'array-contains', studentRef).get()).forEach(r =>{
+      let refSubject: DocumentReference = r.get('Materia');
+    })
+  }
 
-    (await this.col.get()).forEach(a => {
-      let s = a.ref.collection(this.subCol).where('grupo', 'in', studentRef).get()
+  getSubjectsByRefs(refSubject: DocumentReference[]){
+    refSubject.forEach(t => {
       
     })
   }
 
+  getSubjectByRef(refSubject: DocumentReference){
+    let a!:ObjectDB<SubjectUltimo>;
+    refSubject.get().then(s => {
+      let sub = convertTo(SubjectUltimo, s.data()!)
+      a = new ObjectDB(sub, s.id)
+    })
+    return a;
+  }
 
   async getSubjectsFromStudent(refStudent: DocumentData) {
     //Obtencion de referencias de materias
@@ -66,12 +93,6 @@ export class SubjectService {
       })
     })
     return this.subjects
-  }
-  
-
-  getSubject(idSubject: string) {
-    this.subjectSelectedRef = this.col.doc(idSubject)
-    return this.subjectSelectedRef
   }
 
   async getRefSubjectsFromRefUser(refUser: DocumentReference){

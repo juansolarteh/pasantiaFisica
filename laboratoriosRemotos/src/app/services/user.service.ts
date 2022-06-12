@@ -49,8 +49,21 @@ export class UserService {
     return (await documentSnapShot).data();
   }
 
-  getRefUser(idUser: string) {
-    return this.col.doc(idUser);
+  getNamesUsers(refUsers: DocumentReference[]) {
+    var usersDB!: ObjectDB<string>[];
+    refUsers.forEach(refUser =>{
+      usersDB.push(this.getNameUser(refUser));
+    })
+    return usersDB;
+  }
+
+  getNameUser(refUser: DocumentReference) {
+    var userDB!: ObjectDB<string>;
+    refUser.get().then(res=>{
+      let nameStudent: string = res.get('nombre');
+      userDB = new ObjectDB(nameStudent, res.id);
+    });
+    return userDB;
   }
 
   async getUsers() {

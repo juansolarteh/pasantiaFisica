@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
+import { SubjectService } from 'src/app/services/subject.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-subjects',
@@ -16,10 +18,11 @@ export class SubjectsComponent implements OnInit {
   constructor(private readonly router: Router, private readonly route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.subjects = this.route.snapshot.data['subjects']
+    this.subjects = this.route.snapshot.data['subjects'];
+
   }
 
   goToSubject(subjectId: string) {
-    this.router.navigate(['../subject', subjectId], { relativeTo: this.route })
+    this.router.navigate(['../subject', subjectId], { relativeTo: this.route });
   }
 }

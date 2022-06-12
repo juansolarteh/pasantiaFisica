@@ -2,8 +2,10 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Group } from 'src/app/models/group';
+import { Group } from 'src/app/models/Group';
 import { MemberGroup } from 'src/app/models/memberGroup';
+import { ObjectDB } from 'src/app/models/ObjectDB';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-groups',
@@ -16,10 +18,15 @@ export class GroupsComponent implements OnInit {
   groups: Group[] = []
   memberToDelete!: MemberGroup
 
-  constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private changeDetector: ChangeDetectorRef) { }
+  constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private changeDetector: ChangeDetectorRef,
+    private userSvc: UserService) { }
 
   ngOnInit(): void {
-    var groups: any[] = this.route.snapshot.data['groups']
+    var groupsDB: ObjectDB<Group>[] = this.route.snapshot.data['groups']
+    groupsDB.forEach(groupDB => {
+      this.userSvc.getNamesUsers(groupDB.getObjectDB().getGrupo());
+    })
+
     groups.forEach(group => {
       var list: MemberGroup[] = []
       for (let idParticipant in group['team']['grupo']) {
