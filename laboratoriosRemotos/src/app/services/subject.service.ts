@@ -1,20 +1,42 @@
-import { Subject } from './../modelos/Subject';
+import { Subject } from '../models/Subject';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
+import { ObjectDB } from '../models/ObjectDB';
+import { convertTo } from '../models/ObjectConverter';
+import { SubjectUltimo } from '../models/SubjectUltimo';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CursoService {
-
-  col = this.firestr.firestore.collection('Materias');
+export class SubjectService {
+  //refSubject.collection(this.subCol).doc('SG')
+  private col = this.firestr.firestore.collection('Materias');
+  private subCol = 'Grupos'
   subjects: Subject[] = [];
   subjectSelectedRef !: DocumentReference
 
   constructor(private firestr: AngularFirestore) { }
 
-  deleteFromReference(refCurso: DocumentReference) {
-    this.firestr.doc(refCurso).delete()
+  deleteFromReference(refSubject: DocumentReference) {
+    this.firestr.doc(refSubject).delete()
+  }
+
+  async getNameSubjects(teacherRef: DocumentReference){
+    var listSubjects: ObjectDB<string>[] = [];
+    const querySnapShot = this.col.where('docente', '==', teacherRef).get();
+    (await querySnapShot).forEach((res) => {
+      listSubjects.push(new ObjectDB(res.get('nombre'), res.id));
+    });
+    return listSubjects;
+  }
+
+  async prueba(studentRef: DocumentReference){
+    var listSubjects: ObjectDB<string>[] = [];
+
+    (await this.col.get()).forEach(a => {
+      let s = a.ref.collection(this.subCol).where('grupo', 'in', studentRef).get()
+      
+    })
   }
 
 
@@ -50,6 +72,15 @@ export class CursoService {
   getSubject(idSubject: string) {
     this.subjectSelectedRef = this.col.doc(idSubject)
     return this.subjectSelectedRef
+  }
+
+  async getRefSubjectsFromRefUser(refUser: DocumentReference){
+    var refSubjects: DocumentReference[] = [];
+    const querySnapShot = this.col.where('docente', '==', refUser).get();
+    (await querySnapShot).forEach((doc) => {
+      refSubjects.push(doc.ref);
+    })
+    return refSubjects;
   }
 
 }

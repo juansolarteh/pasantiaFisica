@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CursoService } from 'src/app/servicios/curso.service';
-import { UsuarioService } from 'src/app/servicios/usuario.service';
+import { ObjectDB } from 'src/app/models/ObjectDB';
+import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
 
 @Component({
   selector: 'app-subjects',
@@ -11,15 +11,15 @@ import { UsuarioService } from 'src/app/servicios/usuario.service';
 })
 export class SubjectsComponent implements OnInit {
 
-  materias: any[] = ['W5sRL0virwyAppAvnGYo'];
+  subjects: ObjectDB<string>[] = [];
 
-  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private readonly router: Router, private readonly route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    console.log('desde la lista de subjects. Falta traer los subjects')
+    this.subjects = this.route.snapshot.data['subjects']
   }
 
-  goToSubject(subject: string) {
-    this.router.navigate(['../subject', subject], { relativeTo: this.activatedRoute })
+  goToSubject(subjectId: string) {
+    this.router.navigate(['../subject', subjectId], { relativeTo: this.route })
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { SesionRoutingModule } from './sesion-routing.module';
 import { SesionComponent } from './sesion.component';
-import { MaterialModule } from '../compartido/material.module';
+import { MaterialModule } from '../shared/material.module';
 
 
 @NgModule({

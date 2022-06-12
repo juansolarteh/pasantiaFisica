@@ -4,7 +4,7 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firest
 @Injectable({
   providedIn: 'root'
 })
-export class AgendaService {
+export class ScheduleService {
 
   col = this.firestr.firestore.collection('Agenda');
 

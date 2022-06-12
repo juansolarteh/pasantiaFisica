@@ -1,13 +1,12 @@
-import { Subject } from './../modelos/Subject';
 import { plainToInstance } from 'class-transformer';
-import { Practice } from 'src/app/modelos/Practice';
+import { Practice } from 'src/app/models/Practice';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PracticaService {
+export class PracticeService {
 
   col = this.firestr.firestore.collection('Practicas');
   subcollection = 'Constantes'
@@ -25,7 +24,11 @@ export class PracticaService {
     })
   }
 
-  async getPracticesRef(refSubject: DocumentReference){
+  async delete(practiceRef: DocumentReference){
+    this.firestr.doc(practiceRef).delete();
+  }
+
+  async getPracticesRefFromSubjectRef(refSubject: DocumentReference){
     var practicesRef: DocumentReference[] = [] 
     const querySnapShot = this.col.where('materia', '==', refSubject).get();
     (await querySnapShot).forEach((doc) => {
@@ -35,7 +38,7 @@ export class PracticaService {
   }
 
 
-  async getPractices(refSubject: DocumentReference){
+ /*  async getPractices(refSubject: DocumentReference){
     let practices : Practice[] = []
     this.getPracticesRef(refSubject).then(res=>{
       res.forEach(practice =>{
@@ -50,5 +53,5 @@ export class PracticaService {
       })
     })
     return practices
-  }
+  } */
 }
