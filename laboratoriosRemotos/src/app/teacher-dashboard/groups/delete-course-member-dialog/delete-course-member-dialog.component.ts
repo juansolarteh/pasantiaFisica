@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MemberGroup } from 'src/app/models/memberGroup';
+import { MemberGroup } from 'src/app/models/MemberGroup';
 import { GroupsService } from 'src/app/services/groups.service';
 
 @Component({

@@ -50,7 +50,7 @@ export class UserService {
   }
 
   getNamesUsers(refUsers: DocumentReference[]) {
-    var usersDB!: ObjectDB<string>[];
+    var usersDB!: string[];
     refUsers.forEach(refUser =>{
       usersDB.push(this.getNameUser(refUser));
     })
@@ -58,12 +58,11 @@ export class UserService {
   }
 
   getNameUser(refUser: DocumentReference) {
-    var userDB!: ObjectDB<string>;
+    var nameUser!: string;
     refUser.get().then(res=>{
-      let nameStudent: string = res.get('nombre');
-      userDB = new ObjectDB(nameStudent, res.id);
+      nameUser = res.get('nombre');
     });
-    return userDB;
+    return nameUser;
   }
 
   async getUsers() {

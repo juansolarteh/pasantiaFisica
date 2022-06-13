@@ -1,5 +1,4 @@
 import { DocumentReference } from "@angular/fire/compat/firestore"
-import { MemberGroup } from "./memberGroup"
 
 export class Group {
 

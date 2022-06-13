@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { Group } from '../models/Group';
-import { MemberGroup } from '../models/memberGroup';
+import { MemberGroup } from '../models/MemberGroup';
 import { convertTo } from '../models/ObjectConverter';
 import { ObjectDB } from '../models/ObjectDB';
 

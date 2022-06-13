@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Group } from 'src/app/models/Group';
-import { MemberGroup } from 'src/app/models/memberGroup';
+import { MemberGroup } from 'src/app/models/MemberGroup';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { UserService } from 'src/app/services/user.service';
 
