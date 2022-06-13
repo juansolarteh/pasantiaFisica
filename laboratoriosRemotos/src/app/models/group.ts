@@ -1,4 +1,5 @@
 import { DocumentReference } from "@angular/fire/compat/firestore"
+import { MemberGroup } from "./MemberGroup";
 
 export class Group {
 
@@ -49,5 +50,49 @@ export class Group {
 
     public setMateria(materia: DocumentReference): void {
         this.materia = materia;
+    }
+}
+
+export class GroupWithNames {
+
+    private esGrupo: boolean;
+    private grupo: MemberGroup[];
+    private lider: DocumentReference | undefined;
+
+    constructor(
+        esGrupo: boolean,
+        grupo: MemberGroup[],
+        lider?: DocumentReference,
+    ) {
+        this.esGrupo = esGrupo;
+        this.grupo = grupo;
+        this.lider = lider;
+    }
+
+    public isEsGrupo(): boolean {
+        return this.esGrupo;
+    }
+
+    public setEsGrupo(esGrupo: boolean): void {
+        this.esGrupo = esGrupo;
+    }
+
+    public getGrupo(): MemberGroup[] {
+        return this.grupo;
+    }
+
+    public setGrupo(grupo: MemberGroup[]): void {
+        this.grupo = grupo;
+    }
+
+    public getLider(): DocumentReference | undefined{
+        if (this.lider){
+            return this.lider
+        }
+        return undefined
+    }
+
+    public setLider(lider: DocumentReference): void {
+        this.lider = lider;
     }
 }

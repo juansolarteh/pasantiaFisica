@@ -26,14 +26,14 @@ export class SubjectService {
     return this.refSubjectSelected;
   }
 
-  getSubjectById(idSubject: string) {
+  async getSubjectById(idSubject: string) {
     this.refSubjectSelected = this.col.doc(idSubject);
-    let subjectDB!: ObjectDB<SubjectUltimo>;
-    this.refSubjectSelected.get().then(res => {
+    let promise = this.refSubjectSelected.get().then(res => {
       let subject: SubjectUltimo = convertTo(SubjectUltimo, res.data()!);
-      subjectDB = new ObjectDB(subject, res.id);
+      return new ObjectDB<SubjectUltimo>(subject, res.id);
     });
-    return subjectDB;
+    console.log('refSUbject => ', this.refSubjectSelected.id) 
+    return await promise
   }
 
   async getNameSubjects(teacherRef: DocumentReference){

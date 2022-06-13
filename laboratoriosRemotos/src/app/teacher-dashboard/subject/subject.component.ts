@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { ObjectDB } from 'src/app/models/ObjectDB';
@@ -15,21 +15,20 @@ export class SubjectComponent implements OnInit, OnDestroy {
 
   private subscriber!: Subscription;
   subject !: SubjectUltimo;
-  subjectId!: string
   selectedTab = 0;
 
-  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute, private subjectSvc: SubjectService) { }
+  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute,
+    private subjectSvc: SubjectService, private changeDetector: ChangeDetectorRef) { }
 
   ngOnDestroy(): void {
     this.subscriber?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
+    this.activatedRoute.params.subscribe(async params => {
       let subjectId = params['subjectId'];
-      let subjectDB: ObjectDB<SubjectUltimo> = this.subjectSvc.getSubjectById(subjectId);
-      this.subject = subjectDB.getObjectDB();
-      this.subjectId = subjectDB.getId();
+      this.subject = (await this.subjectSvc.getSubjectById(subjectId)).getObjectDB();
+      this.changeDetector.markForCheck();
     })
     this.verifyRoute()
   }

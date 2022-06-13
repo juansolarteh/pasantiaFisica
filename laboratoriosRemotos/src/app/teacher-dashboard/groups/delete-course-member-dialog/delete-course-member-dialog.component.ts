@@ -9,11 +9,7 @@ import { GroupsService } from 'src/app/services/groups.service';
 })
 export class DeleteCourseMemberDialogComponent {
 
-  @Input() memberGroup: MemberGroup = {
-    name: '',
-    id: '',
-    leader: false
-  }
+  @Input() memberGroup!: MemberGroup;
 
   constructor(private groupSvc: GroupsService) { }
 }
