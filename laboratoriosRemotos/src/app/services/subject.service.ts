@@ -4,7 +4,6 @@ import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
 import { SubjectUltimo } from '../models/SubjectUltimo';
-import { Group } from '../models/Group';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +12,16 @@ export class SubjectService {
   private col = this.firestr.firestore.collection('Materias');
   
   subjects: Subject[] = [];
+  private withoutGroup: DocumentReference[] = [];
   
-
   constructor(private firestr: AngularFirestore) { }
+
+  getWithoutGroup(){
+    return this.withoutGroup
+  }
+  moveStudent(id: string){
+    console.log('from move student to SG => ', id)
+  }
 
   deleteFromReference(refSubject: DocumentReference) {
     this.firestr.doc(refSubject).delete();
@@ -23,8 +29,8 @@ export class SubjectService {
 
   async getStudentsWithouGroup(subjectId: string){
     const doc = await this.col.doc(subjectId).get();
-    let withoutGroups: DocumentReference[] = doc.get('sinGrupo');
-    return withoutGroups;
+    this.withoutGroup = doc.get('sinGrupo');
+    return this.withoutGroup;
   }
 
   async getRefGroupsFromSubjectId(subjectId: string){

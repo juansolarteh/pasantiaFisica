@@ -22,6 +22,19 @@ export class GroupsService {
   getGroups(){
     return this.groupsDB;
   }
+  deleteGroup(id: string){
+    console.log('from delete Group => ', id)
+  }
+  outGroup(groupId: string, studentId: string){
+    console.log('from Out Group => ', groupId, ' student => ',studentId)
+  }
+  transferStudent(prevGroupId: string, newGroupId: string, studentId: string){
+    console.log('from Transfer Student => ', studentId, ' from => ', prevGroupId, ' To => ', newGroupId)
+    //Usar OutGroup
+  }
+  convertLeader(idStudent: string, idGroup: string){
+
+  }
 
   async getFromRefs(groupsRef: DocumentReference[]){
     let prom = groupsRef.map(async groupRef => {
