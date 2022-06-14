@@ -54,15 +54,6 @@ export class UserService {
     return (await documentSnapShot).data();
   }
 
-  getNamesUsers(refUsers: DocumentReference[]) {
-    var usersDB!: MemberGroup[];
-    refUsers.forEach(refUser =>{
-      usersDB.push(this.getNameUser(refUser));
-    })
-    usersDB = this.sort(usersDB);
-    return usersDB;
-  }
-
   private sort(list: MemberGroup[]) {
     list.sort(function (a, b) {
       if (a.getName() > b.getName()) {
@@ -76,12 +67,18 @@ export class UserService {
     return list
   }
 
-  getNameUser(refUser: DocumentReference) {
-    var nameUser!: MemberGroup;
-    refUser.get().then(res=>{
-      nameUser = new MemberGroup(refUser,  res.get('nombre'));
-    });
-    return nameUser;
+  async getGroupMembers(refUser: DocumentReference[]) {
+    let membersProm = refUser.map(async ref => {
+      return await this.getGroupMember(ref)
+    })
+    let members = await Promise.all(membersProm)
+    return this.sort(members)
+  }
+
+  async getGroupMember(refUser: DocumentReference) {
+    let doc = await refUser.get();
+    let name: string = doc.get('nombre');
+    return new MemberGroup(refUser.id, name);
   }
 
   async getUsers() {

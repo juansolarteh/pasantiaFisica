@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GroupsResolverServiceResolver } from '../resolvers/groups-resolver-service.';
 import { SubjectsTeacherResolverServiceResolver } from '../resolvers/subjects-teacher-resolver-service.resolver';
+import { WithoutGroupResolverServiceResolver } from '../resolvers/without-group-resolver-service.resolver';
 import { GroupsComponent } from './groups/groups.component';
 import { PracticesComponent } from './practices/practices.component';
 import { SubjectComponent } from './subject/subject.component';
@@ -16,7 +17,10 @@ const routes: Routes = [
       {
         path: 'g',
         component: GroupsComponent,
-        resolve: { groups: GroupsResolverServiceResolver },
+        resolve: {
+          groups: GroupsResolverServiceResolver,
+          withoutGroup: WithoutGroupResolverServiceResolver
+        },
       },
       { path: '', redirectTo: 'p', pathMatch: 'full' },
     ]

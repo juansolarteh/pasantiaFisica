@@ -2,20 +2,20 @@ import { DocumentReference } from "@angular/fire/compat/firestore"
 
 export class MemberGroup {
 
-    private refUser: DocumentReference;
+    private id: string;
     private name: string;
 
-    constructor(refUser: DocumentReference, name: string) {
-        this.refUser = refUser
+    constructor(id: string, name: string) {
+        this.id = id
         this.name = name
     }
 
-    public getRefUser(): DocumentReference {
-        return this.refUser;
+    public getId(): string {
+        return this.id;
     }
 
-    public setRefUser(refUser: DocumentReference): void {
-        this.refUser = refUser;
+    public setId(refUser: string): void {
+        this.id = refUser;
     }
 
     public getName(): string {

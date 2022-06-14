@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
-import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
-import { SubjectService } from 'src/app/services/subject.service';
-import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-subjects',

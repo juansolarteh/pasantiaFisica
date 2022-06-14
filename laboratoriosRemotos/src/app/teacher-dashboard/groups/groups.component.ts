@@ -10,8 +10,7 @@ import { ObjectDB } from 'src/app/models/ObjectDB';
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
-  styleUrls: ['./groups.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./groups.component.css']
 })
 export class GroupsComponent implements OnInit {
 
@@ -22,6 +21,10 @@ export class GroupsComponent implements OnInit {
 
   ngOnInit(): void {
     this.groups = this.route.snapshot.data['groups'];
+    let sg: ObjectDB<GroupWithNames> = this.route.snapshot.data['withoutGroup'];
+    let aux = this.groups[0];
+    this.groups[0] = sg;
+    this.groups.push(aux)
   }
 
   sort(list: MemberGroup[]) {
@@ -77,7 +80,7 @@ export class GroupsComponent implements OnInit {
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const leader = member.getRefUser() === this.groups[indexGroup].getObjectDB().getLider() ? 1 : 0;
+        const leader = member.getId() === this.groups[indexGroup].getObjectDB().getLider() ? 1 : 0;
         this.groups[indexGroup].getObjectDB().setGrupo(
           this.groups[indexGroup].getObjectDB().getGrupo().filter((m: MemberGroup) => m !== member)
         );
@@ -98,29 +101,29 @@ export class GroupsComponent implements OnInit {
 
     if (indexGroup === -1) {
       if (indexMember === 1 && lengthPreviousGroup > 0) {
-        let newLeader: DocumentReference = this.groups[indexPreviousGroup].getObjectDB().getGrupo()[0].getRefUser()
+        let newLeader: string = this.groups[indexPreviousGroup].getObjectDB().getGrupo()[0].getId()
         this.groups[indexPreviousGroup].getObjectDB().setLider(newLeader);
       }
     } else if (indexMember > -1 &&
-      this.groups[indexGroup].getObjectDB().getGrupo()[indexMember].getRefUser()
+      this.groups[indexGroup].getObjectDB().getGrupo()[indexMember].getId()
       === this.groups[indexGroup].getObjectDB().getLider()) {
       if (lengthPreviousGroup > 0) {
-        let newLeader: DocumentReference = this.groups[indexPreviousGroup].getObjectDB().getGrupo()[0].getRefUser()
+        let newLeader: string = this.groups[indexPreviousGroup].getObjectDB().getGrupo()[0].getId()
         this.groups[indexPreviousGroup].getObjectDB().setLider(newLeader);
       }
     }
     if (indexGroup > 0 && this.groups[indexGroup].getObjectDB().getGrupo().length === 1) {
-      let newLeader: DocumentReference = this.groups[indexGroup].getObjectDB().getGrupo()[0].getRefUser()
+      let newLeader: string = this.groups[indexGroup].getObjectDB().getGrupo()[0].getId()
       this.groups[indexGroup].getObjectDB().setLider(newLeader);
     }
   }
 
   createGroup() {
-    let newGroup = new GroupWithNames(true, []);
+    let newGroup = new GroupWithNames([], '');
     this.groups.push(new ObjectDB(newGroup, ''))
   }
 
-  chageLeader(indexGroup: number, newLeader: DocumentReference) {
+  chageLeader(indexGroup: number, newLeader: string) {
     this.groups[indexGroup].getObjectDB().setLider(newLeader);
   }
 }

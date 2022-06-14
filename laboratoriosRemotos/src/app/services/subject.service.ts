@@ -4,17 +4,16 @@ import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
 import { SubjectUltimo } from '../models/SubjectUltimo';
+import { Group } from '../models/Group';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubjectService {
-  //refSubject.collection(this.subCol).doc('SG')
   private col = this.firestr.firestore.collection('Materias');
-  private subCol = 'Grupos'
   
   subjects: Subject[] = [];
-  private refSubjectSelected !: DocumentReference;
+  
 
   constructor(private firestr: AngularFirestore) { }
 
@@ -22,18 +21,21 @@ export class SubjectService {
     this.firestr.doc(refSubject).delete();
   }
 
-  getRefSubjectSelected(){
-    return this.refSubjectSelected;
+  async getStudentsWithouGroup(subjectId: string){
+    const doc = await this.col.doc(subjectId).get();
+    let withoutGroups: DocumentReference[] = doc.get('sinGrupo');
+    return withoutGroups;
+  }
+
+  async getRefGroupsFromSubjectId(subjectId: string){
+    const doc = await this.col.doc(subjectId).get();
+    let refGroups: DocumentReference[] = doc.get('grupos');
+    return refGroups;
   }
 
   async getSubjectById(idSubject: string) {
-    this.refSubjectSelected = this.col.doc(idSubject);
-    let promise = this.refSubjectSelected.get().then(res => {
-      let subject: SubjectUltimo = convertTo(SubjectUltimo, res.data()!);
-      return new ObjectDB<SubjectUltimo>(subject, res.id);
-    });
-    console.log('refSUbject => ', this.refSubjectSelected.id) 
-    return await promise
+    let data = (await this.col.doc(idSubject).get()).data();
+    return convertTo(SubjectUltimo, data!);
   }
 
   async getNameSubjects(teacherRef: DocumentReference){
@@ -50,21 +52,6 @@ export class SubjectService {
     (await this.firestr.firestore.collection('Grupos').where('grupo', 'array-contains', studentRef).get()).forEach(r =>{
       let refSubject: DocumentReference = r.get('Materia');
     })
-  }
-
-  getSubjectsByRefs(refSubject: DocumentReference[]){
-    refSubject.forEach(t => {
-      
-    })
-  }
-
-  getSubjectByRef(refSubject: DocumentReference){
-    let a!:ObjectDB<SubjectUltimo>;
-    refSubject.get().then(s => {
-      let sub = convertTo(SubjectUltimo, s.data()!)
-      a = new ObjectDB(sub, s.id)
-    })
-    return a;
   }
 
   async getSubjectsFromStudent(refStudent: DocumentData) {

@@ -11,6 +11,7 @@ import { ObjectDB } from '../models/ObjectDB';
 export class GroupsService {
 
   private col = this.firestr.firestore.collection('Grupos');
+  private groupsDB!: ObjectDB<Group>[];
 
   constructor(private firestr: AngularFirestore) { }
 
@@ -18,14 +19,25 @@ export class GroupsService {
     
   }
 
-  async getFromSubjectRef(subjectRef: DocumentReference) {
-    var groups: ObjectDB<Group>[] = []
-    const querySnapShot = this.col.where('materia', '==', subjectRef).get();
-    (await querySnapShot).forEach(res => {
-      let group: Group = convertTo(Group, res.data());
-      groups.push(new ObjectDB(group, res.id));
+  getGroups(){
+    return this.groupsDB;
+  }
+
+  async getFromRefs(groupsRef: DocumentReference[]){
+    let prom = groupsRef.map(async groupRef => {
+      let group = await this.getFromRef(groupRef)
+      return group
     })
-    return groups
+    this.groupsDB = await Promise.all(prom)
+    return this.groupsDB;
+  }
+
+  async getFromRef(groupRef: DocumentReference){
+    const doc = await groupRef.get();
+    let usersRef: DocumentReference[] = doc.get('grupo');
+    let leader: DocumentReference = doc.get('lider');
+    let group = new Group(usersRef, leader);
+    return new ObjectDB(group, groupRef.id)
   }
 
   deleteGroupMember(member: MemberGroup, idSubject: string){

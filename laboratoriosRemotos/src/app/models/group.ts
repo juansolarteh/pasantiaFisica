@@ -3,29 +3,15 @@ import { MemberGroup } from "./MemberGroup";
 
 export class Group {
 
-    private esGrupo: boolean;
     private grupo: DocumentReference[];
     private lider: DocumentReference;
-    private materia: DocumentReference;
 
     constructor(
-        esGrupo: boolean,
         grupo: DocumentReference[],
         lider: DocumentReference,
-        materia: DocumentReference,
     ) {
-        this.esGrupo = esGrupo;
         this.grupo = grupo;
         this.lider = lider;
-        this.materia = materia;
-    }
-
-    public isEsGrupo(): boolean {
-        return this.esGrupo;
-    }
-
-    public setEsGrupo(esGrupo: boolean): void {
-        this.esGrupo = esGrupo;
     }
 
     public getGrupo(): DocumentReference[] {
@@ -43,38 +29,21 @@ export class Group {
     public setLider(lider: DocumentReference): void {
         this.lider = lider;
     }
-
-    public getMateria(): DocumentReference {
-        return this.materia;
-    }
-
-    public setMateria(materia: DocumentReference): void {
-        this.materia = materia;
-    }
 }
 
 export class GroupWithNames {
 
-    private esGrupo: boolean;
-    private grupo: MemberGroup[];
-    private lider: DocumentReference | undefined;
+    private grupo!: MemberGroup[];
+    private lider?: string;
 
     constructor(
-        esGrupo: boolean,
         grupo: MemberGroup[],
-        lider?: DocumentReference,
+        lider?: string,
     ) {
-        this.esGrupo = esGrupo;
         this.grupo = grupo;
-        this.lider = lider;
-    }
-
-    public isEsGrupo(): boolean {
-        return this.esGrupo;
-    }
-
-    public setEsGrupo(esGrupo: boolean): void {
-        this.esGrupo = esGrupo;
+        if (lider){
+            this.lider = lider;
+        }
     }
 
     public getGrupo(): MemberGroup[] {
@@ -85,14 +54,11 @@ export class GroupWithNames {
         this.grupo = grupo;
     }
 
-    public getLider(): DocumentReference | undefined{
-        if (this.lider){
-            return this.lider
-        }
-        return undefined
+    public getLider(): string | undefined{
+        return this.lider
     }
 
-    public setLider(lider: DocumentReference): void {
+    public setLider(lider: string): void {
         this.lider = lider;
     }
 }
