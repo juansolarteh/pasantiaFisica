@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { Group } from '../models/Group';
 import { MemberGroup } from '../models/MemberGroup';
-import { convertTo } from '../models/ObjectConverter';
 import { ObjectDB } from '../models/ObjectDB';
 
 @Injectable({
@@ -16,27 +15,75 @@ export class GroupsService {
   constructor(private firestr: AngularFirestore) { }
 
   async deleteGrupos(refSubject: DocumentReference) {
-    
+
   }
 
-  getGroups(){
+  //Mehtods from teacher
+  getGroups() {
     return this.groupsDB;
   }
-  deleteGroup(id: string){
-    console.log('from delete Group => ', id)
+  deleteGroup(refGroup: DocumentReference) {
+    this.groupsDB = this.groupsDB.filter(g => g.getId() !== refGroup.id);
+    refGroup.delete()
   }
-  outGroup(groupId: string, studentId: string){
-    console.log('from Out Group => ', groupId, ' student => ',studentId)
+  outGroup(groupId: string, studentId: string) {
+    let indexGroup: number = this.groupsDB.findIndex(g => g.getId() === groupId);
+    let refEst: DocumentReference = this.groupsDB[indexGroup].getObjectDB().getGrupo().find(m => m.id === studentId)!;
+    let newGroup: DocumentReference[] = this.groupsDB[indexGroup].getObjectDB().getGrupo().filter(m => m !== refEst)
+    this.groupsDB[indexGroup].getObjectDB().setGrupo(newGroup);
+    this.col.doc(groupId).update('grupo', newGroup);
+    return refEst;
   }
-  transferStudent(prevGroupId: string, newGroupId: string, studentId: string){
-    console.log('from Transfer Student => ', studentId, ' from => ', prevGroupId, ' To => ', newGroupId)
-    //Usar OutGroup
+  async inGroup(groupId: string, studentRef: DocumentReference) {
+    if (groupId !== 'NG') {
+      let indexGroup: number = this.groupsDB.findIndex(g => g.getId() === groupId);
+      this.groupsDB[indexGroup].getObjectDB().getGrupo().push(studentRef);
+      this.col.doc(groupId).update('grupo', this.groupsDB[indexGroup].getObjectDB().getGrupo())
+      return undefined;
+    }else{
+      let newGroup = new Group([studentRef], studentRef);
+      let refNewGroup: DocumentReference = await this.createGroup(newGroup);
+      this.groupsDB.push(new ObjectDB(newGroup, refNewGroup.id))
+      return refNewGroup
+    }
   }
-  convertLeader(idStudent: string, idGroup: string){
+  async transferGroup(newGroupId: string, prevGroupId: string, studentId: string) {
+    let indexPrevGroup: number = this.groupsDB.findIndex(g => g.getId() === prevGroupId);
+    let refEst: DocumentReference = this.groupsDB[indexPrevGroup].getObjectDB().getGrupo().find(m => m.id === studentId)!;
+    let prevGroup: DocumentReference[] = this.groupsDB[indexPrevGroup].getObjectDB().getGrupo().filter(m => m !== refEst);
+    this.groupsDB[indexPrevGroup].getObjectDB().setGrupo(prevGroup);
+    this.col.doc(prevGroupId).update('grupo', prevGroup);
+    if (newGroupId !== 'NG') {
+      let indexNewGroup: number = this.groupsDB.findIndex(g => g.getId() === newGroupId);
+      this.groupsDB[indexNewGroup].getObjectDB().getGrupo().push(refEst);
+      this.col.doc(newGroupId).update('grupo', this.groupsDB[indexNewGroup].getObjectDB().getGrupo());
+      return undefined;
+    } else {
+      let newGroup = new Group([refEst], refEst)
+      let refNewGroup: DocumentReference = await this.createGroup(newGroup);
+      this.groupsDB.push(new ObjectDB(newGroup, refNewGroup.id))
+      return refNewGroup;
+    }
+  }
+  convertLeader(idStudent: string, groupId: string) {
+    let indexGroup: number = this.groupsDB.findIndex(g => g.getId() === groupId);
+    let refEst: DocumentReference = this.groupsDB[indexGroup].getObjectDB().getGrupo().find(m => m.id === idStudent)!;
+    this.groupsDB[indexGroup].getObjectDB().setLider(refEst);
+    this.col.doc(groupId).update('lider', refEst);
+  }
+  //End Mehtods from teacher
 
+  async createGroup(newGroup: Group) {
+    let refNewGroup: DocumentReference = await this.col.add({
+      grupo: newGroup.getGrupo(),
+      lider: newGroup.getLider()
+    }).then(doc => {
+      return doc;
+    });
+    return refNewGroup;
   }
 
-  async getFromRefs(groupsRef: DocumentReference[]){
+  async getFromRefs(groupsRef: DocumentReference[]) {
     let prom = groupsRef.map(async groupRef => {
       let group = await this.getFromRef(groupRef)
       return group
@@ -45,7 +92,7 @@ export class GroupsService {
     return this.groupsDB;
   }
 
-  async getFromRef(groupRef: DocumentReference){
+  async getFromRef(groupRef: DocumentReference) {
     const doc = await groupRef.get();
     let usersRef: DocumentReference[] = doc.get('grupo');
     let leader: DocumentReference = doc.get('lider');
@@ -53,7 +100,7 @@ export class GroupsService {
     return new ObjectDB(group, groupRef.id)
   }
 
-  deleteGroupMember(member: MemberGroup, idSubject: string){
+  deleteGroupMember(member: MemberGroup, idSubject: string) {
 
   }
 }
