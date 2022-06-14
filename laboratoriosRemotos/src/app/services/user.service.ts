@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { MemberGroup } from '../models/MemberGroup';
 import { convertTo } from '../models/ObjectConverter';
 import { ObjectDB } from '../models/ObjectDB';
 import { ResponseService } from '../models/ResponseService';
@@ -44,13 +45,40 @@ export class UserService {
     }
   }
 
+  getRefUser(idUser: string){
+    return this.col.doc(idUser)
+  }
+
   async getUser(idUser: string) {
     const documentSnapShot = this.col.doc(idUser).get();
     return (await documentSnapShot).data();
   }
 
-  getRefUser(idUser: string) {
-    return this.col.doc(idUser);
+  private sort(list: MemberGroup[]) {
+    list.sort(function (a, b) {
+      if (a.getName() > b.getName()) {
+        return 1;
+      }
+      if (a.getName() < b.getName()) {
+        return -1;
+      }
+      return 0;
+    })
+    return list
+  }
+
+  async getGroupMembers(refUser: DocumentReference[]) {
+    let membersProm = refUser.map(async ref => {
+      return await this.getGroupMember(ref)
+    })
+    let members = await Promise.all(membersProm)
+    return this.sort(members)
+  }
+
+  async getGroupMember(refUser: DocumentReference) {
+    let doc = await refUser.get();
+    let name: string = doc.get('nombre');
+    return new MemberGroup(refUser.id, name);
   }
 
   async getUsers() {

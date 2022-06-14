@@ -1,22 +1,20 @@
 <div id="group" cdkDropListGroup>
     <mat-card class="group-wrapper" *ngFor="let group of groups; let i = index">
-        <mat-card-title *ngIf="i == 0">Sin grupo</mat-card-title>
-        <mat-card-title *ngIf="i != 0">Grupo {{i}}</mat-card-title>
-        <mat-list cdkDropList [cdkDropListData]="group['team']" (cdkDropListDropped)="drop($event)">
-            <mat-list-item cdkDrag *ngFor="let member of group['team']; let ii = index">
+        <mat-card-title *ngIf="!group.getObjectDB().getLider()">Sin grupo</mat-card-title>
+        <mat-card-title *ngIf="group.getObjectDB().getLider()">Grupo {{i}}</mat-card-title>
+        <mat-list cdkDropList [cdkDropListData]="group.getObjectDB().getGrupo()" (cdkDropListDropped)="drop($event)">
+            <mat-list-item cdkDrag *ngFor="let member of group.getObjectDB().getGrupo(); let ii = index">
                 <mat-icon mat-list-icon>person</mat-icon>
-                <p mat-line>{{member['name']}}</p>
-                <p mat-line *ngIf="member['leader'] === true">Lider de equipo</p>
-                <ng-container *ngIf="i !== 0">
-                    <button mat-icon-button *ngIf="member['leader'] === false" matTooltip="Cambiar a lider"
-                        (click)="chageLeader(i, ii)">
-                        <img class="leader" src="../assets/imagenes/leader.png">
-                    </button>
-                    <button mat-icon-button matTooltip="Retirar del grupo {{i}}" 
-                        (click)="moveWithoutGroup(i, member)">
-                        <mat-icon>cancel</mat-icon>
-                    </button>
-                </ng-container>
+                <p mat-line>{{member.getName()}}</p>
+                <p mat-line *ngIf="member.getId() === group.getObjectDB().getLider()">Lider de equipo</p>
+                <button mat-icon-button *ngIf="member.getId() !== group.getObjectDB().getLider()"
+                    matTooltip="Cambiar a lider" (click)="chageLeader(i, member.getId())">
+                    <img class="leader" src="../assets/imagenes/leader.png">
+                </button>
+                <button mat-icon-button matTooltip="Retirar del grupo {{i}}" (click)="moveWithoutGroup(i, member)">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+
                 <button mat-icon-button color="primary" matTooltip="Expulsar estudiante del curso"
                     (click)="deleteStudent(deleteMessage, member, i)">
                     <mat-icon>delete</mat-icon>

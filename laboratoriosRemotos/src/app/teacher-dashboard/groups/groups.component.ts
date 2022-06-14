@@ -1,64 +1,43 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DocumentReference } from '@angular/fire/compat/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Group } from 'src/app/models/group';
-import { MemberGroup } from 'src/app/models/memberGroup';
+import { Group, GroupWithNames } from 'src/app/models/Group';
+import { MemberGroup } from 'src/app/models/MemberGroup';
+import { ObjectDB } from 'src/app/models/ObjectDB';
 
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
-  styleUrls: ['./groups.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./groups.component.css']
 })
 export class GroupsComponent implements OnInit {
 
-  groups: Group[] = []
+  groups: ObjectDB<GroupWithNames>[] = []
   memberToDelete!: MemberGroup
 
   constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    var groups: any[] = this.route.snapshot.data['groups']
-    groups.forEach(group => {
-      var list: MemberGroup[] = []
-      for (let idParticipant in group['team']['grupo']) {
-        var memberG: MemberGroup
-        if (group['team']['lider'] === idParticipant) {
-          memberG = {
-            id: idParticipant,
-            name: group['team']['grupo'][idParticipant],
-            leader: true
-          }
-        } else {
-          memberG = {
-            id: idParticipant,
-            name: group['team']['grupo'][idParticipant],
-            leader: false
-          }
-        }
-        list.push(memberG)
-      }
-      list = this.sort(list)
-      const currentGroup: Group = {
-        id: group['id'],
-        team: list
-      }
-      this.groups.push(currentGroup)
-    })
+    this.groups = this.route.snapshot.data['groups'];
+    let sg: ObjectDB<GroupWithNames> = this.route.snapshot.data['withoutGroup'];
+    let aux = this.groups[0];
+    this.groups[0] = sg;
+    this.groups.push(aux)
   }
 
-  sort(list: any[]) {
+  sort(list: MemberGroup[]) {
     list.sort(function (a, b) {
-      if (a.name > b.name) {
+      if (a.getName() > b.getName()) {
         return 1;
       }
-      if (a.name < b.name) {
+      if (a.getName() < b.getName()) {
         return -1;
       }
       return 0;
     })
-    return list
+    return list;
   }
 
   drop(event: CdkDragDrop<MemberGroup[]>) {
@@ -69,15 +48,15 @@ export class GroupsComponent implements OnInit {
         event.previousIndex,
         event.currentIndex,
       );
-      const indexGroup = this.groups.findIndex((g) => g['team'] === event.container.data)
-      if (event.previousContainer.data !== this.groups[0]['team']) {
+      const indexGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.container.data)
+      if (event.previousContainer.data !== this.groups[0].getObjectDB().getGrupo()) {
         const lengthPreviousGroup = event.previousContainer.data.length;
         if (lengthPreviousGroup === 0) {
-          this.groups = this.groups.filter((g) => g['team'] !== event.previousContainer.data);
+          this.groups = this.groups.filter((g) => g.getObjectDB().getGrupo() !== event.previousContainer.data);
         }
-        const indexPreviousGroup = this.groups.findIndex((g) => g['team'] === event.previousContainer.data)
+        const indexPreviousGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.previousContainer.data)
         this.verifyLeader(indexGroup, event.currentIndex, indexPreviousGroup, lengthPreviousGroup);
-      }else{
+      } else {
         this.verifyLeader(indexGroup, -1, 0, 0);
       }
       event.container.data = this.sort(event.container.data)
@@ -85,12 +64,15 @@ export class GroupsComponent implements OnInit {
   }
 
   moveWithoutGroup(indexGroup: number, memberGroup: MemberGroup) {
-    this.groups[indexGroup]['team'] = this.groups[indexGroup]['team'].filter((m: MemberGroup) => m !== memberGroup)
-    this.groups[0]['team'].push(memberGroup)
-    const indexMember = this.groups[0]['team'].length - 1;
-    this.verifyLeader(0, indexMember, indexGroup, this.groups[indexGroup]['team'].length)
+    this.groups[indexGroup].getObjectDB().setGrupo(
+      this.groups[indexGroup].getObjectDB().getGrupo().filter((m: MemberGroup) => m !== memberGroup)
+    );
+    this.groups[0].getObjectDB().getGrupo().push(memberGroup)
+    
+    const indexMember = this.groups[0].getObjectDB().getGrupo().length - 1;
+    this.verifyLeader(0, indexMember, indexGroup, this.groups[indexGroup].getObjectDB().getGrupo().length)
     this.verifyGroupBox(indexGroup)
-    this.groups[0]['team'] = this.sort(this.groups[0]['team'])
+    this.groups[0].getObjectDB().setGrupo(this.sort(this.groups[0].getObjectDB().getGrupo()))
   }
 
   deleteStudent(contentDialog: any, member: MemberGroup, indexGroup: number) {
@@ -98,9 +80,11 @@ export class GroupsComponent implements OnInit {
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        const leader = member.leader? 1: 0;
-        this.groups[indexGroup]['team'] = this.groups[indexGroup]['team'].filter((m: MemberGroup) => m !== member)
-        this.verifyLeader(-1, leader, indexGroup, this.groups[indexGroup]['team'].length)
+        const leader = member.getId() === this.groups[indexGroup].getObjectDB().getLider() ? 1 : 0;
+        this.groups[indexGroup].getObjectDB().setGrupo(
+          this.groups[indexGroup].getObjectDB().getGrupo().filter((m: MemberGroup) => m !== member)
+        );
+        this.verifyLeader(-1, leader, indexGroup, this.groups[indexGroup].getObjectDB().getGrupo().length)
         this.verifyGroupBox(indexGroup)
         this.changeDetector.markForCheck();
       }
@@ -108,44 +92,38 @@ export class GroupsComponent implements OnInit {
   }
 
   verifyGroupBox(index: number) {
-    if (index !== 0 && this.groups[index]['team'].length === 0) {
-      this.groups = this.groups.filter((g) => g['team'] !== this.groups[index]['team'])
+    if (index !== 0 && this.groups[index].getObjectDB().getGrupo().length === 0) {
+      this.groups = this.groups.filter((g) => g.getObjectDB().getGrupo() !== this.groups[index].getObjectDB().getGrupo())
     }
   }
 
   verifyLeader(indexGroup: number, indexMember: number, indexPreviousGroup: number, lengthPreviousGroup: number) {
+
     if (indexGroup === -1) {
       if (indexMember === 1 && lengthPreviousGroup > 0) {
-        this.groups[indexPreviousGroup]['team'][0]['leader'] = true
+        let newLeader: string = this.groups[indexPreviousGroup].getObjectDB().getGrupo()[0].getId()
+        this.groups[indexPreviousGroup].getObjectDB().setLider(newLeader);
       }
-    } else if (indexMember > -1 && this.groups[indexGroup]['team'][indexMember]['leader']) {
-      this.groups[indexGroup]['team'][indexMember]['leader'] = false
+    } else if (indexMember > -1 &&
+      this.groups[indexGroup].getObjectDB().getGrupo()[indexMember].getId()
+      === this.groups[indexGroup].getObjectDB().getLider()) {
       if (lengthPreviousGroup > 0) {
-        this.groups[indexPreviousGroup]['team'][0]['leader'] = true
+        let newLeader: string = this.groups[indexPreviousGroup].getObjectDB().getGrupo()[0].getId()
+        this.groups[indexPreviousGroup].getObjectDB().setLider(newLeader);
       }
     }
-    if (indexGroup > 0 && this.groups[indexGroup]['team'].length === 1){
-      this.groups[indexGroup]['team'][0]['leader'] = true
+    if (indexGroup > 0 && this.groups[indexGroup].getObjectDB().getGrupo().length === 1) {
+      let newLeader: string = this.groups[indexGroup].getObjectDB().getGrupo()[0].getId()
+      this.groups[indexGroup].getObjectDB().setLider(newLeader);
     }
   }
 
   createGroup() {
-    const newGroup: Group = {
-      id: '',
-      team: []
-    }
-    this.groups.push(newGroup)
+    let newGroup = new GroupWithNames([], '');
+    this.groups.push(new ObjectDB(newGroup, ''))
   }
 
-  chageLeader(indexGroup: number, indexMember: number) {
-    if (!this.groups[indexGroup]['team'][indexMember]['leader']) {
-      for (let positionMember in this.groups[indexGroup]['team']) {
-        if (this.groups[indexGroup]['team'][positionMember]['leader']) {
-          this.groups[indexGroup]['team'][positionMember]['leader'] = false;
-          break;
-        }
-      }
-      this.groups[indexGroup]['team'][indexMember]['leader'] = true;
-    }
+  chageLeader(indexGroup: number, newLeader: string) {
+    this.groups[indexGroup].getObjectDB().setLider(newLeader);
   }
 }

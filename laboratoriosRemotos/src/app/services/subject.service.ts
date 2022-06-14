@@ -4,21 +4,38 @@ import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
 import { SubjectUltimo } from '../models/SubjectUltimo';
+import { Group } from '../models/Group';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubjectService {
-  //refSubject.collection(this.subCol).doc('SG')
   private col = this.firestr.firestore.collection('Materias');
-  private subCol = 'Grupos'
+  
   subjects: Subject[] = [];
-  subjectSelectedRef !: DocumentReference
+  
 
   constructor(private firestr: AngularFirestore) { }
 
   deleteFromReference(refSubject: DocumentReference) {
-    this.firestr.doc(refSubject).delete()
+    this.firestr.doc(refSubject).delete();
+  }
+
+  async getStudentsWithouGroup(subjectId: string){
+    const doc = await this.col.doc(subjectId).get();
+    let withoutGroups: DocumentReference[] = doc.get('sinGrupo');
+    return withoutGroups;
+  }
+
+  async getRefGroupsFromSubjectId(subjectId: string){
+    const doc = await this.col.doc(subjectId).get();
+    let refGroups: DocumentReference[] = doc.get('grupos');
+    return refGroups;
+  }
+
+  async getSubjectById(idSubject: string) {
+    let data = (await this.col.doc(idSubject).get()).data();
+    return convertTo(SubjectUltimo, data!);
   }
 
   async getNameSubjects(teacherRef: DocumentReference){
@@ -31,14 +48,11 @@ export class SubjectService {
   }
 
   async prueba(studentRef: DocumentReference){
-    var listSubjects: ObjectDB<string>[] = [];
-
-    (await this.col.get()).forEach(a => {
-      let s = a.ref.collection(this.subCol).where('grupo', 'in', studentRef).get()
-      
+    var listSubjects: DocumentReference[] = [];
+    (await this.firestr.firestore.collection('Grupos').where('grupo', 'array-contains', studentRef).get()).forEach(r =>{
+      let refSubject: DocumentReference = r.get('Materia');
     })
   }
-
 
   async getSubjectsFromStudent(refStudent: DocumentData) {
     //Obtencion de referencias de materias
@@ -66,12 +80,6 @@ export class SubjectService {
       })
     })
     return this.subjects
-  }
-  
-
-  getSubject(idSubject: string) {
-    this.subjectSelectedRef = this.col.doc(idSubject)
-    return this.subjectSelectedRef
   }
 
   async getRefSubjectsFromRefUser(refUser: DocumentReference){

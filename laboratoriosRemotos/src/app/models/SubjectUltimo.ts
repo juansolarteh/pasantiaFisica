@@ -12,7 +12,7 @@ export class SubjectUltimo{
         descripcion: string,
         docente: DocumentReference,
         nombre: string,
-        numGrupos: number
+        numGrupos: number,
     ) {
         this.clave = clave
         this.descripcion = descripcion
@@ -20,8 +20,7 @@ export class SubjectUltimo{
         this.nombre = nombre
         this.numGrupos = numGrupos
     }
-
-
+    
     public getClave(): string {
         return this.clave;
     }

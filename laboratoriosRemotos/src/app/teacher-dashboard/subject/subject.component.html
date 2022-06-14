@@ -6,12 +6,15 @@
 </app-navbar>
 <div id="centered-wrapper">
     <div id="wrapper">
-        <div id="subject">
+        <div>
             <mat-card>
-                <p>{{subjectId}}</p>
+                <p>{{subject?.getNombre()}}</p>
+                <p>{{subject?.getClave()}}</p>
+                <p>{{subject?.getDescripcion()}}</p>
+                <p>{{subject?.getNumGrupos()}}</p>
             </mat-card>     
         </div>
-        <div id="outlet">
+        <div>
             <router-outlet></router-outlet>
         </div>
     </div>

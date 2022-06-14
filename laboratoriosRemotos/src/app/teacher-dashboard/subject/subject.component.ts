@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
+import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
+import { SubjectService } from 'src/app/services/subject.service';
 
 @Component({
   selector: 'app-subject',
@@ -10,30 +12,29 @@ import { filter, Subscription } from 'rxjs';
 })
 export class SubjectComponent implements OnInit, OnDestroy {
 
-  public subscriber!: Subscription;
+  private managerRoute!: Subscription;
+  subject !: SubjectUltimo;
+  selectedTab = 0;
 
-  subjectId !: string
-  activeLink = 'p'
-  selectedTab = 0
-
-  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute,
+    private subjectSvc: SubjectService, private changeDetector: ChangeDetectorRef) { }
 
   ngOnDestroy(): void {
-    this.subscriber?.unsubscribe();
-    localStorage.removeItem('subject')
+    this.managerRoute?.unsubscribe();
+    localStorage.removeItem('subjectId')
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
-      this.subjectId = params['subjectId'];
-      localStorage.setItem('subject', this.subjectId);
+    this.activatedRoute.params.subscribe(async params => {
+      let subjectId = params['subjectId'];
+      localStorage.setItem('subjectId', subjectId)
+      this.subject = await this.subjectSvc.getSubjectById(subjectId);
+      this.changeDetector.markForCheck();
     })
-
     this.verifyRoute()
   }
 
   changeTab(event: any) {
-    console.log(event.index)
     switch (event.index) {
       case 0: this.router.navigate(['./p'], { relativeTo: this.activatedRoute });
         break;
@@ -45,22 +46,18 @@ export class SubjectComponent implements OnInit, OnDestroy {
 
   private verifyRoute() {
     var urlSegment = this.getLastPath()
-
     if (urlSegment === 'g' && this.selectedTab == 0) {
       this.selectedTab = 1
-      this.activeLink = 'g'
     }
 
-    this.subscriber = this.router.events.pipe(
+    this.managerRoute = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event) => {
+    ).subscribe(() => {
       var urlSegment = this.getLastPath()
       if (urlSegment == 'g' && this.selectedTab == 0) {
         this.selectedTab = 1
-        this.activeLink = 'g'
       } else {
         this.selectedTab = 0
-        this.activeLink = 'p'
       }
     })
   }
