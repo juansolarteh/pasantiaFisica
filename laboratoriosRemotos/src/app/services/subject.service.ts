@@ -31,8 +31,8 @@ export class SubjectService {
     this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
     return refEst;
   }
-  createGroup(refNewGroup: DocumentReference){
-    this.refSubjectSelected.get().then(doc => {
+  async createGroup(refNewGroup: DocumentReference){
+    await this.refSubjectSelected.get().then(doc => {
       let groups: DocumentReference[] = doc.get('grupos');
       groups.push(refNewGroup);
       doc.ref.update('grupos', groups)
