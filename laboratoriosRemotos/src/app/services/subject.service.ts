@@ -59,16 +59,9 @@ export class SubjectService {
     return refSubjects;
 
   }
-  async getSubjectsFromStudent(studentRef: DocumentReference) {
-    var listSubjects: ObjectDB<Subject>[] = [];
-    var listWithoutGroup : ObjectDB<Subject>[] = [];
-    var listWithGroup : ObjectDB<Subject>[] = [];
-    listWithoutGroup = await this.getSubjectsWithoutGroup(studentRef)
-    listWithGroup = await this.getSubjectsByGroup(studentRef)
-    listSubjects = listWithGroup.concat(listWithoutGroup)
-    return listSubjects;
-  }
-  private async getSubjectsWithoutGroup(studentRef: DocumentReference){
+  //----------------------------------------------
+  //Métodos Jorge - Módulo estudiantes
+  async getSubjectsWithoutGroup(studentRef: DocumentReference){
     var listWithoutGroup : ObjectDB<Subject>[] = [];
     const querySnapShot = this.col.where('sinGrupo', 'array-contains', studentRef).get();
     (await querySnapShot).forEach(doc=>{
@@ -78,9 +71,8 @@ export class SubjectService {
     return listWithoutGroup
   }
 
-  private async getSubjectsByGroup(studentRef: DocumentReference) {
+  async getSubjectsByGroup(data: string[]) {
     var listWithGroup : ObjectDB<Subject>[] = [];
-    let data = this.groupService.getGroupsFromRefStudent(studentRef)
     if (data != null) {
       let querySnapShot = this.col.get();
       (await querySnapShot).forEach(doc=>{
