@@ -1,30 +1,63 @@
-
-import { SubjectInfo } from "./SubjectInfo";
+import { DocumentReference } from "@angular/fire/compat/firestore";
 
 export class Subject{
+    private clave: string;
+    private descripcion: string;
+    private docente: DocumentReference;
+    private nombre: string;
+    private numGrupos: number;
 
-    subject_id:string;
-    //subject_ref: DocumentReference;
-    subject_info:SubjectInfo;
-
-    constructor(prmSubject_id:string, prmSubject_info:SubjectInfo) {
-       //this.subject_ref = prmSubject_ref; 
-       this.subject_id=prmSubject_id;
-       this.subject_info=prmSubject_info;
-    }
-
-    getSubjectId(){
-        return this.subject_id
+    constructor(
+        clave: string,
+        descripcion: string,
+        docente: DocumentReference,
+        nombre: string,
+        numGrupos: number,
+    ) {
+        this.clave = clave
+        this.descripcion = descripcion
+        this.docente = docente
+        this.nombre = nombre
+        this.numGrupos = numGrupos
     }
     
-    getSubjectInfo(){
-        return this.subject_info
+    public getClave(): string {
+        return this.clave;
     }
 
-    setSubjectId(prmSubject_Id:string){
-        this.subject_id = prmSubject_Id
+    public setClave(clave: string): void {
+        this.clave = clave;
     }
-    setSubjectInfo(prmSubject_info:SubjectInfo){
-        this.subject_info = prmSubject_info
+
+    public getDescripcion(): string {
+        return this.descripcion;
+    }
+
+    public setDescripcion(descripcion: string): void {
+        this.descripcion = descripcion;
+    }
+
+    public getDocente(): DocumentReference {
+        return this.docente;
+    }
+
+    public setDocente(docente: DocumentReference): void {
+        this.docente = docente;
+    }
+
+    public getNombre(): string {
+        return this.nombre;
+    }
+
+    public setNombre(nombre: string): void {
+        this.nombre = nombre;
+    }
+
+    public getNumGrupos(): number {
+        return this.numGrupos;
+    }
+
+    public setNumGrupos(numGrupos: number): void {
+        this.numGrupos = numGrupos;
     }
 }

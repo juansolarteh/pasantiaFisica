@@ -1,3 +1,4 @@
+import { SubjectsStudentResolverService } from './../resolvers/student/subjects-student.resolver';
 import { GroupsComponent } from './groups/groups.component';
 import { PracticeComponent } from './practice/practice.component';
 import { NgModule } from '@angular/core';
@@ -16,7 +17,10 @@ const routes: Routes = [
     { path: 'groups', component: GroupsComponent},
     { path: '', redirectTo: 'practices', pathMatch: 'full'},
   ]},
-  { path: 'subjects', component: SubjectsComponent, pathMatch: 'full'},
+  { path: 'subjects',
+    component: SubjectsComponent,
+    pathMatch: 'full', resolve:{
+    subjects: SubjectsStudentResolverService}},
   { path: '', redirectTo: 'subjects', pathMatch: 'full'},
 ];
 

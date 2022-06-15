@@ -1,9 +1,9 @@
+import { ObjectDB } from './../models/ObjectDB';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { Group } from '../models/Group';
 import { MemberGroup } from '../models/MemberGroup';
 import { convertTo } from '../models/ObjectConverter';
-import { ObjectDB } from '../models/ObjectDB';
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +42,18 @@ export class GroupsService {
 
   deleteGroupMember(member: MemberGroup, idSubject: string){
 
+  }
+
+  getGroupsFromRefStudent(studentRef: DocumentReference){
+    let idGroups : String[] = []
+    let query = this.col.where('grupo','array-contains',studentRef).get()
+    query.then(res=>{
+      if(res.size >0){
+        res.forEach(doc=>{
+          idGroups.push(doc.id)
+        })
+      }
+    })
+    return idGroups
   }
 }
