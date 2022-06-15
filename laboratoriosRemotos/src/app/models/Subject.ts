@@ -3,14 +3,14 @@ import { DocumentReference } from "@angular/fire/compat/firestore";
 export class Subject{
     private clave: string;
     private descripcion: string;
-    private docente: DocumentReference;
+    private docente: string;
     private nombre: string;
     private numGrupos: number;
 
     constructor(
         clave: string,
         descripcion: string,
-        docente: DocumentReference,
+        docente: string,
         nombre: string,
         numGrupos: number,
     ) {
@@ -37,11 +37,11 @@ export class Subject{
         this.descripcion = descripcion;
     }
 
-    public getDocente(): DocumentReference {
+    public getDocente(): string {
         return this.docente;
     }
 
-    public setDocente(docente: DocumentReference): void {
+    public setDocente(docente: string): void {
         this.docente = docente;
     }
 

@@ -1,3 +1,4 @@
+import { DocumentReference } from '@angular/fire/compat/firestore';
 import { GroupsService } from 'src/app/services/groups.service';
 import { Subject } from './../../models/Subject';
 import { ObjectDB } from './../../models/ObjectDB';
@@ -6,6 +7,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SubjectService } from 'src/app/services/subject.service';
 import { UserService } from 'src/app/services/user.service';
+import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
+import { convertTo } from 'src/app/models/ObjectConverter';
 
 
 @Injectable({
@@ -16,11 +19,19 @@ export class SubjectsStudentResolverService implements Resolve<ObjectDB<Subject>
 
     resolve(): ObjectDB<Subject>[] | Observable<ObjectDB<Subject>[]> | Promise<ObjectDB<Subject>[]> {
         const studentRef = this.userSvc.getUserLoggedRef();
+
         return this.groupSvc.getGroupsByRefStudent(studentRef).then(async res => {
             let listWithGroup = await this.subjectSvc.getSubjectsByGroup(res)
             let listWithoutGroup = await this.subjectSvc.getSubjectsWithoutGroup(studentRef)
             let listSubjects = listWithGroup.concat(listWithoutGroup)
+            console.log(listSubjects)
             return listSubjects
         })
     }
+
+    /* private getAllInfo(listSubjects : ObjectDB<Subject>[]){
+        listSubjects.map(subject=>{
+            let teacher = subject.getObjectDB().getDocente()
+        })
+    } */
 }

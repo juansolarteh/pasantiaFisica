@@ -16,7 +16,7 @@ export class SubjectService {
 
   private col = this.firestr.firestore.collection('Materias');
 
-  subjects: Subject[] = [];
+  subjects: SubjectUltimo[] = [];
 
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;

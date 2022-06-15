@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { Group } from '../models/Group';
 import { MemberGroup } from '../models/MemberGroup';
-import { convertTo } from '../models/ObjectConverter';
+
 
 @Injectable({
   providedIn: 'root'
