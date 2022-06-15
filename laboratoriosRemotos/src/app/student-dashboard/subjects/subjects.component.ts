@@ -1,8 +1,7 @@
 import { Subject } from '../../models/Subject';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
-import { SubjectService } from 'src/app/services/subject.service';
 import { Component, OnInit } from '@angular/core';
+import { ObjectDB } from 'src/app/models/ObjectDB';
 
 @Component({
   selector: 'app-subjects',
@@ -11,31 +10,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubjectsComponent implements OnInit {
 
-  materias: Subject[] = [];
+  subjects: ObjectDB<Subject>[] = [];
   
-  constructor(private userService: UserService, private subjectService: SubjectService,
-    private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor( private activatedRoute: ActivatedRoute) { }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
 
-    const userRef = this.userService.getUserLoggedRef()
-    this.subjectService.prueba(userRef);
-    
-    const id = localStorage.getItem('idUsuario')
-    if (id != null) {
-      const doc = await this.userService.getUser(id)
-      if (doc != undefined) {
-        this.subjectService.getSubjectsFromStudent(doc).then(res => {
-          this.materias = res
-        }).catch(e => {
-          console.log("Error", e)
-        })
-      }
-    }
+    this.subjects = this.activatedRoute.snapshot.data['subjects'];
+    console.log(this.subjects)
   }
 
-  goToPractices(subject: Subject){
-    localStorage.setItem("selectedSubject" , JSON.stringify(subject))
+  goToPractices(subject:ObjectDB<Subject>){
+    alert("hola")
+    //localStorage.setItem("selectedSubject" , JSON.stringify(subject))
     //this.router.navigate(['../subject',subject.getSubjectId()], {relativeTo: this.activatedRoute})
   }
   goToDeleteSubject(){
