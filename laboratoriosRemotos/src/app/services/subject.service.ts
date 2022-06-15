@@ -1,9 +1,10 @@
 import { GroupsService } from 'src/app/services/groups.service';
+import { Subject } from '../models/Subject';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
-import { Subject } from '../models/Subject';
+import { SubjectUltimo } from '../models/SubjectUltimo';
 import { Group } from '../models/Group';
 
 
@@ -18,7 +19,7 @@ export class SubjectService {
   subjects: Subject[] = [];
 
 
-  constructor(private firestr: AngularFirestore) { }
+  constructor(private firestr: AngularFirestore, private groupService: GroupsService) { }
 
   deleteFromReference(refSubject: DocumentReference) {
     this.firestr.doc(refSubject).delete();
@@ -38,7 +39,7 @@ export class SubjectService {
 
   async getSubjectById(idSubject: string) {
     let data = (await this.col.doc(idSubject).get()).data();
-    return convertTo(Subject, data!);
+    return convertTo(SubjectUltimo, data!);
   }
 
   async getNameSubjects(teacherRef: DocumentReference) {
@@ -56,11 +57,18 @@ export class SubjectService {
       refSubjects.push(doc.ref);
     })
     return refSubjects;
-  }
 
-  //----------------------------------------------
-  //Métodos Jorge - Módulo estudiantes
-  async getSubjectsWithoutGroup(studentRef: DocumentReference){
+  }
+  async getSubjectsFromStudent(studentRef: DocumentReference) {
+    var listSubjects: ObjectDB<Subject>[] = [];
+    var listWithoutGroup : ObjectDB<Subject>[] = [];
+    var listWithGroup : ObjectDB<Subject>[] = [];
+    listWithoutGroup = await this.getSubjectsWithoutGroup(studentRef)
+    listWithGroup = await this.getSubjectsByGroup(studentRef)
+    listSubjects = listWithGroup.concat(listWithoutGroup)
+    return listSubjects;
+  }
+  private async getSubjectsWithoutGroup(studentRef: DocumentReference){
     var listWithoutGroup : ObjectDB<Subject>[] = [];
     const querySnapShot = this.col.where('sinGrupo', 'array-contains', studentRef).get();
     (await querySnapShot).forEach(doc=>{
@@ -70,8 +78,9 @@ export class SubjectService {
     return listWithoutGroup
   }
 
-  async getSubjectsByGroup(data: string[]) {
+  private async getSubjectsByGroup(studentRef: DocumentReference) {
     var listWithGroup : ObjectDB<Subject>[] = [];
+    let data = this.groupService.getGroupsFromRefStudent(studentRef)
     if (data != null) {
       let querySnapShot = this.col.get();
       (await querySnapShot).forEach(doc=>{
