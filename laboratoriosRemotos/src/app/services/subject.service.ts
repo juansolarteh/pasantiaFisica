@@ -19,7 +19,7 @@ export class SubjectService {
   subjects: Subject[] = [];
 
 
-  constructor(private firestr: AngularFirestore, private groupService: GroupsService) { }
+  constructor(private firestr: AngularFirestore) { }
 
   deleteFromReference(refSubject: DocumentReference) {
     this.firestr.doc(refSubject).delete();
