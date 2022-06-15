@@ -18,6 +18,8 @@ export class SubjectService {
 
   subjects: Subject[] = [];
 
+  private withoutGroup: DocumentReference[] = [];
+  private refSubjectSelected!: DocumentReference;
 
   constructor(private firestr: AngularFirestore) { }
 
