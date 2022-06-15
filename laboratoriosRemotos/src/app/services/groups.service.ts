@@ -44,15 +44,11 @@ export class GroupsService {
 
   }
 
-  getGroupsFromRefStudent(studentRef: DocumentReference){
-    let idGroups : String[] = []
-    let query = this.col.where('grupo','array-contains',studentRef).get()
-    query.then(res=>{
-      if(res.size >0){
-        res.forEach(doc=>{
-          idGroups.push(doc.id)
-        })
-      }
+  async getGroupsByRefStudent(studentRef: DocumentReference){
+    let idGroups : string[] = []
+    let querySnapShot = this.col.where('grupo','array-contains',studentRef).get();
+    (await querySnapShot).forEach(doc=>{
+      idGroups.push(doc.id)
     })
     return idGroups
   }

@@ -1,3 +1,5 @@
+import { DocumentReference } from '@angular/fire/compat/firestore';
+import { GroupsService } from 'src/app/services/groups.service';
 import { Subject } from './../../models/Subject';
 import { ObjectDB } from './../../models/ObjectDB';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
@@ -9,12 +11,29 @@ import { UserService } from 'src/app/services/user.service';
 
 @Injectable({
     providedIn: 'root'
-  })
-export class SubjectsStudentResolverService implements  Resolve<ObjectDB<Subject>[]>{
-    constructor(private subjectSvc: SubjectService, private userSvc: UserService) { }
-    
+})
+export class SubjectsStudentResolverService implements Resolve<ObjectDB<Subject>[]>{
+
+ 
+    constructor(private subjectSvc: SubjectService, private userSvc: UserService, private groupSvc: GroupsService) { }
+
     resolve(): ObjectDB<Subject>[] | Observable<ObjectDB<Subject>[]> | Promise<ObjectDB<Subject>[]> {
-        const user = this.userSvc.getUserLoggedRef();
-        return this.subjectSvc.getSubjectsFromStudent(user);
+
+        const studentRef = this.userSvc.getUserLoggedRef();
+        return this.groupSvc.getGroupsByRefStudent(studentRef).then(async res=>{
+            let listWithGroup = await this.subjectSvc.getSubjectsByGroup(res)
+            let listWithoutGroup = await this.subjectSvc.getSubjectsWithoutGroup(studentRef)
+            let listSubjects = listWithGroup.concat(listWithoutGroup)
+            return listSubjects
+        })
     }
+
+    /* private getTeacherNames(listSubjects: ObjectDB<Subject>[]){
+
+        listSubjects.map(subject => {
+            let userDocumentReference: DocumentReference = subject.getObjectDB().getDocente()
+            this.userSvc.getGroupMember(userDocumentReference)
+            
+        })
+    } */
 }

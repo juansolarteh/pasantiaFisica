@@ -37,7 +37,7 @@ export class Subject{
         this.descripcion = descripcion;
     }
 
-    public getDocente(): DocumentReference {
+    public getDocente(): DocumentReference{
         return this.docente;
     }
 
