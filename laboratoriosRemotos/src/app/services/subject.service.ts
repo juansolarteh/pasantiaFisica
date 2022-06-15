@@ -5,7 +5,6 @@ import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
 import { SubjectUltimo } from '../models/SubjectUltimo';
-import { Group } from '../models/Group';
 
 
 
@@ -16,12 +15,42 @@ export class SubjectService {
 
   private col = this.firestr.firestore.collection('Materias');
 
-  subjects: SubjectUltimo[] = [];
-
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;
 
   constructor(private firestr: AngularFirestore) { }
+
+  //Methods of Group
+  getWithoutGroup(){
+    return this.withoutGroup
+  }
+  inStudent(refEst: DocumentReference){
+    this.withoutGroup.push(refEst);
+    this.refSubjectSelected.update('sinGrupo', this.withoutGroup);
+  }
+  outStudent(studentId: string){
+    let refEst: DocumentReference = this.withoutGroup.find(m => m.id === studentId)!;
+    this.withoutGroup = this.withoutGroup.filter(e => e !== refEst);
+    this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
+    return refEst;
+  }
+  createGroup(refNewGroup: DocumentReference){
+    this.refSubjectSelected.get().then(doc => {
+      let groups: DocumentReference[] = doc.get('grupos');
+      groups.push(refNewGroup);
+      doc.ref.update('grupos', groups)
+    })
+  }
+  async deleteGroup(groupId: string){
+    return this.refSubjectSelected.get().then(doc => {
+      let groups: DocumentReference[] = doc.get('grupos');
+      let groupToDelete: DocumentReference = groups.find(g => g.id === groupId)!
+      groups = groups.filter(g => g !== groupToDelete);
+      doc.ref.update('grupos', groups)
+      return groupToDelete;
+    })
+  }
+  //End Methods of Group
 
   deleteFromReference(refSubject: DocumentReference) {
     this.firestr.doc(refSubject).delete();
@@ -29,8 +58,8 @@ export class SubjectService {
 
   async getStudentsWithouGroup(subjectId: string) {
     const doc = await this.col.doc(subjectId).get();
-    let withoutGroups: DocumentReference[] = doc.get('sinGrupo');
-    return withoutGroups;
+    this.withoutGroup = doc.get('sinGrupo');
+    return this.withoutGroup;
   }
 
   async getRefGroupsFromSubjectId(subjectId: string) {
@@ -40,7 +69,8 @@ export class SubjectService {
   }
 
   async getSubjectById(idSubject: string) {
-    let data = (await this.col.doc(idSubject).get()).data();
+    this.refSubjectSelected = this.col.doc(idSubject);
+    let data = (await this.refSubjectSelected.get()).data();
     return convertTo(SubjectUltimo, data!);
   }
 
