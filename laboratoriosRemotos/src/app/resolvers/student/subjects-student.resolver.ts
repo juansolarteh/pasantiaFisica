@@ -24,14 +24,21 @@ export class SubjectsStudentResolverService implements Resolve<ObjectDB<Subject>
             let listWithGroup = await this.subjectSvc.getSubjectsByGroup(res)
             let listWithoutGroup = await this.subjectSvc.getSubjectsWithoutGroup(studentRef)
             let listSubjects = listWithGroup.concat(listWithoutGroup)
-            console.log(listSubjects)
-            return listSubjects
+            let subjectsWithAllInfo = this.getAllInfo(listSubjects)
+            return subjectsWithAllInfo
         })
     }
 
-    /* private getAllInfo(listSubjects : ObjectDB<Subject>[]){
-        listSubjects.map(subject=>{
-            let teacher = subject.getObjectDB().getDocente()
+    private getAllInfo(listSubjects : ObjectDB<SubjectUltimo>[]){
+        let subjectsWithAllInfo : ObjectDB<Subject>[] = []
+        listSubjects.forEach(async subject=>{
+            let name = await this.userSvc.getUserName( subject.getObjectDB().getDocente())
+            let newSubject = new Subject(subject.getObjectDB().getClave(),
+            subject.getObjectDB().getDescripcion(),
+            name,subject.getObjectDB().getNombre(),
+            subject.getObjectDB().getNumGrupos())
+            subjectsWithAllInfo.push(new ObjectDB<Subject>(newSubject,subject.getId()))
         })
-    } */
+        return subjectsWithAllInfo
+    }
 }

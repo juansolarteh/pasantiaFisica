@@ -1,19 +1,21 @@
-<!-- <div class="grid">
-    <div class="cabecera">
-        <div class="info-cabecera">
-            <div class="mat-display-1">{{this.selectedSubject.getSubjectInfo().nombre}}</div>
-            <div class="mat-headline">{{this.selectedSubject.getSubjectInfo().docente}}</div>
-            <div class="mat-body-strong">{{this.selectedSubject.getSubjectInfo().descripcion}}</div>
+<div class="container">
+    <div class="grid">
+        <div class="cabecera">
+            <div class="info-cabecera">
+                <div class="mat-display-1">{{this.subjectSelected.getObjectDB().getNombre() | titlecase}}</div>
+                <div class="mat-headline">{{this.subjectSelected.getObjectDB().getDocente() | titlecase}}</div>
+                <div class="mat-body-strong">{{this.subjectSelected.getObjectDB().getDescripcion()}}</div>
+            </div>
+    
         </div>
-
+        <div class="practica" *ngFor="let practice of practices" (click)="goToPracticeInfo(practice)">
+            <mat-list>
+                <mat-list-item class="info-practica" >
+                        <mat-icon class="icon-display" mat-list-icon>science</mat-icon>
+                        <div mat-line>{{this.subjectSelected.getObjectDB().getDocente() | titlecase}} ha publicado una nueva práctica: Práctica de {{practice.getObjectDB().getNombre() | titlecase}}</div>
+                        <div mat-line>Fecha de creación: {{practice.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}</div>
+                </mat-list-item>
+            </mat-list>
+        </div>
     </div>
-    <div class="practica" *ngFor="let practice of practices" (click)="goToPracticeInfo(practice)">
-        <mat-list>
-            <mat-list-item class="info-practica" >
-                    <mat-icon class="icon-display" mat-list-icon>science</mat-icon>
-                    <div mat-line>{{this.selectedSubject.getSubjectInfo().docente}} ha publicado una nueva práctica: Práctica de {{practice.getNombre()}}</div>
-                    <div mat-line>Fecha de creación: {{practice.getFecha_creacion().seconds * 1000 | date: 'longDate'}}</div>
-            </mat-list-item>
-        </mat-list>
-    </div>
-</div> -->
+</div>

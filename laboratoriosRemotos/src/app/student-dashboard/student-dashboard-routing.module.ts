@@ -1,3 +1,4 @@
+import { PracticesStudentResolverService } from './../resolvers/student/practices-student.resolver';
 import { SubjectsStudentResolverService } from './../resolvers/student/subjects-student.resolver';
 import { GroupsComponent } from './groups/groups.component';
 import { PracticeComponent } from './practice/practice.component';
@@ -9,19 +10,24 @@ import { PracticesComponent } from './practices/practices.component';
 import { CalendarComponent } from './calendar/calendar.component';
 
 const routes: Routes = [
-  
-  { path: 'subject/:subjectId', component: SubjectComponent,children : [
-    {path: 'practice/:practiceId', component: PracticeComponent},
-    { path: 'practices', component: PracticesComponent},
-    { path: 'calendar', component: CalendarComponent},
-    { path: 'groups', component: GroupsComponent},
-    { path: '', redirectTo: 'practices', pathMatch: 'full'},
-  ]},
-  { path: 'subjects',
+
+  {
+    path: 'subject/:subjectId', component: SubjectComponent, children: [
+      { path: 'practice/:practiceId', component: PracticeComponent },
+      { path: 'practices', component: PracticesComponent,resolve: { practices: PracticesStudentResolverService } },
+      { path: 'calendar', component: CalendarComponent },
+      { path: 'groups', component: GroupsComponent },
+      { path: '', redirectTo: 'practices', pathMatch: 'full' },
+    ]
+  },
+  {
+    path: 'subjects',
     component: SubjectsComponent,
-    pathMatch: 'full', resolve:{
-    subjects: SubjectsStudentResolverService}},
-  { path: '', redirectTo: 'subjects', pathMatch: 'full'},
+    pathMatch: 'full', resolve: {
+      subjects: SubjectsStudentResolverService
+    }
+  },
+  { path: '', redirectTo: 'subjects', pathMatch: 'full' },
 ];
 
 @NgModule({

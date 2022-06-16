@@ -4,6 +4,7 @@ import { Timestamp } from "@firebase/firestore";
 export class Practice {
 
     private nombre: string;
+    private descripcion: string;
     private fecha_creacion: Timestamp;
     private inicio: Timestamp;
     private fin: Timestamp;
@@ -16,6 +17,13 @@ export class Practice {
 
     public setNombre(nombre: string): void {
         this.nombre = nombre;
+    }
+    public getDescripcion(): string {
+        return this.descripcion;
+    }
+
+    public setDescripcion(descripcion: string): void {
+        this.descripcion = descripcion;
     }
 
     public getFecha_creacion(): Timestamp {
@@ -61,6 +69,7 @@ export class Practice {
 
   constructor(
     nombre: string, 
+    descripcion: string,
     fecha_creacion: Timestamp, 
     inicio: Timestamp, 
     fin: Timestamp, 
@@ -68,6 +77,7 @@ export class Practice {
     materia: DocumentReference
 ) {
     this.nombre = nombre
+    this.descripcion = descripcion
     this.fecha_creacion = fecha_creacion
     this.inicio = inicio
     this.fin = fin
