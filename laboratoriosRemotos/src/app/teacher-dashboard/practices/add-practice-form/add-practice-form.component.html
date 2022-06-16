@@ -1,5 +1,49 @@
-<mat-form-field appearance="fill">
-    <mat-label>Ingresa el nombre de la practica</mat-label>
-    <input matInput placeholder="nombre de practica" [formControl]="name" required>
-    <mat-error *ngIf="name.invalid">{{getErrorMessage()}}</mat-error>
-</mat-form-field>
+<mat-card>
+    <form>
+        <h2>Practica</h2>
+        <div class="oneField">
+            <mat-form-field appearance="fill" class="fullSize">
+                <mat-label>Ingresa el nombre de la practica</mat-label>
+                <input matInput placeholder="Nombre de practica" [formControl]="name" required>
+                <mat-error *ngIf="name.invalid">{{getErrorMessage()}}</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="fullSize">
+                <mat-label>Descrición de la practica (opcional)</mat-label>
+                <textarea matInput #description placeholder="Descripción"></textarea>
+                <mat-hint align="end">{{description.value.length}} / 200</mat-hint>
+            </mat-form-field>
+        </div>
+        <div class="twoFields">
+            <div class="middleWrapper">
+                <mat-form-field appearance="fill">
+                    <mat-label>Fin de la practica</mat-label>
+                    <input type="date" matInput placeholder="nombre de practica" required>
+                </mat-form-field>
+            </div>
+            <div class="middleWrapper">
+                <mat-form-field appearance="fill">
+                    <mat-label>Planta requerida</mat-label>
+                    <mat-select required>
+                        <mat-option *ngFor="let plant of plants" [value]="selectedPlant">
+                            {{plant.getObjectDB()}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="oneField">
+            documentos
+        </div>
+        <div class="twoFields">
+            <div id="startWrapper">
+                <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
+                    <mat-icon>file_upload</mat-icon>
+                </button>
+            </div>
+            <div id="endWrapper">
+                <button mat-button id="buttonCancel">Cancelar</button>
+                <button mat-raised-button color="primary">Publicar</button>
+            </div>
+        </div>
+    </form>
+</mat-card>

@@ -5,7 +5,7 @@
     </div>
 </mat-card>
 <ng-template #addPractice>
-  <app-add-practice-form></app-add-practice-form>
+    <app-add-practice-form></app-add-practice-form>
 </ng-template>
 <mat-card *ngFor="let practice of practices" (click)="showPractice(practice.getObjectDB())">
     <mat-icon mat-list-icon color="primary">task</mat-icon>
