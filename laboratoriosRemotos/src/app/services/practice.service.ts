@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 })
 export class PracticeService {
 
+  private objPracticeSelected!: ObjectDB<Practice>
   col = this.firestr.firestore.collection('Practicas');
   subcollection = 'Constantes'
 
@@ -40,6 +41,7 @@ export class PracticeService {
     return practicesRef
   }
 
+  //Metodos Jorge Solano - Modulo de estudiante
   async getPracticesBySubject(refSubject: DocumentReference) {
     var practices: ObjectDB<Practice>[] = []
     const querySnapShot = this.col.where("materia","==",refSubject).get();
@@ -49,20 +51,11 @@ export class PracticeService {
     })
     return practices
   }
-  /* async getPracticesBySubject(refSubject: DocumentReference){
-    let practices : Practice[] = []
-    this.getPracticesRefFromSubjectRef(refSubject).then(res=>{
-      res.forEach(practice =>{
-        this.col.doc(practice.id).get().then(res=>{
-          //Se convierte la respuesta a string y luego a JSON para poder castear la data a tipo Practice
-          //Esto se realiza mediante el metodo plainToInstance de la libreria externa "class-transformer"
-          let dataString = JSON.stringify(res.data())
-          let data = JSON.parse(dataString) as Object
-          let newPractice = plainToInstance(Practice, data)
-          practices.push(newPractice)
-        })
-      })
-    })
-    return practices
-  } */
+  setPracticeSelected(objPracticeSelected: ObjectDB<Practice>){
+    this.objPracticeSelected = objPracticeSelected
+  }
+  getPracticeSelected(){
+    return this.objPracticeSelected
+  }
+  
 }

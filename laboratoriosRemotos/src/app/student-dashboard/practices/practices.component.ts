@@ -28,6 +28,7 @@ export class PracticesComponent implements OnInit {
     console.log(this.practices)
   }
   goToPracticeInfo(practice: ObjectDB<Practice>) {
-    alert("hola")
+    this.practiceSvc.setPracticeSelected(practice)
+    this.router.navigate(['../practice',practice.getId()], {relativeTo: this.activatedRoute})
   }
 }
