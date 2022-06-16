@@ -61,7 +61,7 @@ export class GroupsService {
     } else {
       let newGroup = new Group([refEst], refEst)
       let refNewGroup: DocumentReference = await this.createGroup(newGroup);
-      this.groupsDB.push(new ObjectDB(newGroup, refNewGroup.id))
+      this.groupsDB.push(new ObjectDB(newGroup, refNewGroup.id));
       return refNewGroup;
     }
   }

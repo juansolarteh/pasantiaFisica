@@ -9,6 +9,8 @@ import { SubjectComponent } from './subject/subject.component';
 import { PracticesComponent } from './practices/practices.component';
 import { GroupsComponent } from './groups/groups.component';
 import { DeleteCourseMemberDialogComponent } from './groups/delete-course-member-dialog/delete-course-member-dialog.component';
+import { AddPracticeFormComponent } from './practices/add-practice-form/add-practice-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,13 +18,15 @@ import { DeleteCourseMemberDialogComponent } from './groups/delete-course-member
     SubjectComponent,
     PracticesComponent,
     GroupsComponent,
-    DeleteCourseMemberDialogComponent
+    DeleteCourseMemberDialogComponent,
+    AddPracticeFormComponent
   ],
   imports: [
     CommonModule,
     TeacherDashboardRoutingModule,
     MaterialModule,
-    ComponentsModule
+    ComponentsModule,
+    ReactiveFormsModule
   ]
 })
 export class TeacherDashboardModule { }

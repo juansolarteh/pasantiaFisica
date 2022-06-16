@@ -5,6 +5,11 @@ import { Practice } from 'src/app/models/Practice';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { convertTo } from '../models/ObjectConverter';
+import { ObjectDB } from '../models/ObjectDB';
+import { Practice } from '../models/Practice';
 
 @Injectable({
   providedIn: 'root'
@@ -41,16 +46,23 @@ export class PracticeService {
     return practicesRef
   }
 
-  //Metodos Jorge Solano - Modulo de estudiante
+//Metodos Jorge Solano - Modulo de estudiante
   async getPracticesBySubject(refSubject: DocumentReference) {
     var practices: ObjectDB<Practice>[] = []
     const querySnapShot = this.col.where("materia","==",refSubject).get();
     (await querySnapShot).forEach(doc=>{
       let newPractice = new ObjectDB(convertTo(Practice,doc.data()),doc.id)
       practices.push(newPractice)
-    })
-    return practices
+      
+      async getPracticesFromSubjectRef(subjectRef: DocumentReference){
+    let query = this.col.where('materia', '==', subjectRef)
+    const qSnapShot = await query.get();
+    return qSnapShot.docs.map(res => {
+      let practice: Practice = convertTo(Practice, res.data());
+      return new ObjectDB(practice, res.id);
+    });
   }
+      
   setPracticeSelected(objPracticeSelected: ObjectDB<Practice>){
     this.objPracticeSelected = objPracticeSelected
   }

@@ -23,7 +23,7 @@ export class SubjectService {
 
   //Methods of Group
   getWithoutGroup(){
-    return this.withoutGroup
+    return this.withoutGroup;
   }
   inStudent(refEst: DocumentReference){
     this.withoutGroup.push(refEst);
@@ -35,8 +35,8 @@ export class SubjectService {
     this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
     return refEst;
   }
-  createGroup(refNewGroup: DocumentReference){
-    this.refSubjectSelected.get().then(doc => {
+  async createGroup(refNewGroup: DocumentReference){
+    await this.refSubjectSelected.get().then(doc => {
       let groups: DocumentReference[] = doc.get('grupos');
       groups.push(refNewGroup);
       doc.ref.update('grupos', groups)
@@ -52,6 +52,11 @@ export class SubjectService {
     })
   }
   //End Methods of Group
+
+  getRefSubjectFromId(idSibject: string){
+    this.refSubjectSelected = this.col.doc(idSibject);
+    return this.refSubjectSelected
+  }
 
   deleteFromReference(refSubject: DocumentReference) {
     this.firestr.doc(refSubject).delete();
