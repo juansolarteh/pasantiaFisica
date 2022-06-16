@@ -15,6 +15,7 @@ export class SubjectService {
 
   private col = this.firestr.firestore.collection('Materias');
 
+  private objSubjectSelected!: ObjectDB<Subject>
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;
 
@@ -94,29 +95,41 @@ export class SubjectService {
   //----------------------------------------------
   //Métodos Jorge - Módulo estudiantes
   async getSubjectsWithoutGroup(studentRef: DocumentReference){
-    var listWithoutGroup : ObjectDB<Subject>[] = [];
+    var listWithoutGroup : ObjectDB<SubjectUltimo>[] = [];
     const querySnapShot = this.col.where('sinGrupo', 'array-contains', studentRef).get();
     (await querySnapShot).forEach(doc=>{
-      let subject = new ObjectDB(convertTo(Subject, doc.data()), doc.id)
+      let subject = new ObjectDB(convertTo(SubjectUltimo, doc.data()), doc.id)
+      subject.getObjectDB().setDocente(doc.get('docente'))
       listWithoutGroup.push(subject)
     })
     return listWithoutGroup
   }
 
   async getSubjectsByGroup(data: string[]) {
-    var listWithGroup : ObjectDB<Subject>[] = [];
+    var listWithGroup : ObjectDB<SubjectUltimo>[] = [];
     if (data != null) {
       let querySnapShot = this.col.get();
       (await querySnapShot).forEach(doc=>{
         let groupsSubject = doc.get('grupos') as Array<DocumentReference>
         groupsSubject.forEach(group => {
           if ((data.includes(group.id))) {
-            let subject = new ObjectDB(convertTo(Subject, doc.data()), doc.id)
+            let subject = new ObjectDB(convertTo(SubjectUltimo, doc.data()), doc.id)
+            subject.getObjectDB().setDocente(doc.get('docente'))
             listWithGroup.push(subject)
           }
         })
       })
     }
     return listWithGroup
+  }
+  async getSubjectRefById(idSubject: string){
+    let querySnapShot = await this.col.doc(idSubject).get()
+    return querySnapShot
+  }
+  setSubjectSelected(objSubjectSelected: ObjectDB<Subject>){
+    this.objSubjectSelected = objSubjectSelected
+  }
+  getSubjectSelected(){
+    return this.objSubjectSelected
   }
 }

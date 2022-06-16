@@ -1,3 +1,4 @@
+import { SubjectService } from 'src/app/services/subject.service';
 import { Subject } from '../../models/Subject';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,7 @@ export class SubjectsComponent implements OnInit {
 
   subjects: ObjectDB<Subject>[] = [];
   
-  constructor( private activatedRoute: ActivatedRoute) { }
+  constructor( private activatedRoute: ActivatedRoute, private readonly router: Router, private subjectSvc : SubjectService) { }
 
   ngOnInit(): void {
 
@@ -21,9 +22,8 @@ export class SubjectsComponent implements OnInit {
   }
 
   goToPractices(subject:ObjectDB<Subject>){
-    alert("hola")
-    //localStorage.setItem("selectedSubject" , JSON.stringify(subject))
-    //this.router.navigate(['../subject',subject.getSubjectId()], {relativeTo: this.activatedRoute})
+    this.subjectSvc.setSubjectSelected(subject)
+    this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
   }
   goToDeleteSubject(){
     alert("Yendo a elimitar asignatura")
