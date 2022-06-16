@@ -15,11 +15,7 @@ export class SubjectComponent implements OnInit {
   selectedSubject!: Subject
   
   ngOnInit(): void {
-    let subject = localStorage.getItem("selectedSubject")
-    if (subject != null) {
-      let aux = JSON.parse(subject) as Object
-      this.selectedSubject = plainToInstance(Subject, aux)
-    }
+    
   }
   changeTab(event:any){
     console.log(event.index)
