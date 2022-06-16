@@ -4,7 +4,6 @@ import { Timestamp } from "@firebase/firestore";
 export class Practice {
 
     private nombre: string;
-    private descripcion: string;
     private fecha_creacion: Timestamp;
     private inicio: Timestamp;
     private fin: Timestamp;
@@ -44,13 +43,6 @@ export class Practice {
 
     public setNombre(nombre: string): void {
         this.nombre = nombre;
-    }
-    public getDescripcion(): string {
-        return this.descripcion;
-    }
-
-    public setDescripcion(descripcion: string): void {
-        this.descripcion = descripcion;
     }
 
     public getFecha_creacion(): Timestamp {
@@ -92,4 +84,12 @@ export class Practice {
     public setMateria(materia: DocumentReference): void {
         this.materia = materia;
     }
+
+
+
+
+
+
+
+
 }
