@@ -9,6 +9,33 @@ export class Practice {
     private fin: Timestamp;
     private planta: DocumentReference;
     private materia: DocumentReference;
+    private descripcion: string;
+
+    constructor(
+        nombre: string,
+        fecha_creacion: Timestamp,
+        inicio: Timestamp,
+        fin: Timestamp,
+        planta: DocumentReference,
+        materia: DocumentReference,
+        descripcion: string
+    ) {
+        this.nombre = nombre
+        this.fecha_creacion = fecha_creacion
+        this.inicio = inicio
+        this.fin = fin
+        this.planta = planta
+        this.materia = materia
+        this.descripcion = descripcion
+    }
+
+    public getDescripcion(): string {
+        return this.descripcion;
+    }
+
+    public setDescripcion(descripcion: string): void {
+        this.descripcion = descripcion;
+    }
 
     public getNombre(): string {
         return this.nombre;
@@ -59,27 +86,10 @@ export class Practice {
     }
 
 
-  constructor(
-    nombre: string, 
-    fecha_creacion: Timestamp, 
-    inicio: Timestamp, 
-    fin: Timestamp, 
-    planta: DocumentReference, 
-    materia: DocumentReference
-) {
-    this.nombre = nombre
-    this.fecha_creacion = fecha_creacion
-    this.inicio = inicio
-    this.fin = fin
-    this.planta = planta
-    this.materia = materia
-  }
 
 
 
 
-    
 
 
-    
 }

@@ -19,7 +19,7 @@ export class SubjectService {
 
   //Methods of Group
   getWithoutGroup(){
-    return this.withoutGroup
+    return this.withoutGroup;
   }
   inStudent(refEst: DocumentReference){
     this.withoutGroup.push(refEst);
@@ -48,6 +48,11 @@ export class SubjectService {
     })
   }
   //End Methods of Group
+
+  getRefSubjectFromId(idSibject: string){
+    this.refSubjectSelected = this.col.doc(idSibject);
+    return this.refSubjectSelected
+  }
 
   deleteFromReference(refSubject: DocumentReference) {
     this.firestr.doc(refSubject).delete();

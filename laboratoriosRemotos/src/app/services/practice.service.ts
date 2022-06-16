@@ -1,7 +1,8 @@
-import { plainToInstance } from 'class-transformer';
-import { Practice } from 'src/app/models/Practice';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { convertTo } from '../models/ObjectConverter';
+import { ObjectDB } from '../models/ObjectDB';
+import { Practice } from '../models/Practice';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,15 @@ export class PracticeService {
       practicesRef.push(doc.ref)
     })
     return practicesRef
+  }
+
+  async getPracticesFromSubjectRef(subjectRef: DocumentReference){
+    let query = this.col.where('materia', '==', subjectRef)
+    const qSnapShot = await query.get();
+    return qSnapShot.docs.map(res => {
+      let practice: Practice = convertTo(Practice, res.data());
+      return new ObjectDB(practice, res.id);
+    });
   }
 
 

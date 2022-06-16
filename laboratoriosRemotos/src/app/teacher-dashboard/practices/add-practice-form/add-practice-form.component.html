@@ -1,0 +1,5 @@
+<mat-form-field appearance="fill">
+    <mat-label>Ingresa el nombre de la practica</mat-label>
+    <input matInput placeholder="nombre de practica" [formControl]="name" required>
+    <mat-error *ngIf="name.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>
