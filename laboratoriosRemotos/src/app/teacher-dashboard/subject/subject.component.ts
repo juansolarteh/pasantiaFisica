@@ -38,16 +38,21 @@ export class SubjectComponent implements OnInit, OnDestroy {
     switch (event.index) {
       case 0: this.router.navigate(['./p'], { relativeTo: this.activatedRoute });
         break;
-      case 1: this.router.navigate(['./g'], { relativeTo: this.activatedRoute })
+      case 1: this.router.navigate(['./g'], { relativeTo: this.activatedRoute });
         break;
-      default: this.router.navigate(['/'], { relativeTo: this.activatedRoute })
+      default: this.router.navigate(['/'], { relativeTo: this.activatedRoute });
     }
   }
 
   private verifyRoute() {
     var urlSegment = this.getLastPath()
-    if (urlSegment === 'g' && this.selectedTab == 0) {
-      this.selectedTab = 1
+    if (urlSegment === 'g') {
+      if (this.selectedTab == 0){
+        this.selectedTab = 1
+      }
+      this.router.navigate(['./g'], { relativeTo: this.activatedRoute });
+    }else{
+      this.router.navigate(['./p'], { relativeTo: this.activatedRoute });
     }
 
     this.managerRoute = this.router.events.pipe(

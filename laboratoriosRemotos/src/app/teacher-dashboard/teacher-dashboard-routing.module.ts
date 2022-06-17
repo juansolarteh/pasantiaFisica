@@ -16,18 +16,19 @@ const routes: Routes = [
     children: [
       {
         path: 'p',
+        pathMatch: 'full',
         component: PracticesComponent,
         resolve: { practices: PracticesResolverServiceResolver }
       },
       {
         path: 'g',
+        pathMatch: 'full',
         component: GroupsComponent,
         resolve: {
           groups: GroupsResolverServiceResolver,
           withoutGroup: WithoutGroupResolverServiceResolver
         },
       },
-      { path: '', redirectTo: 'p', pathMatch: 'full' },
     ]
   },
   {

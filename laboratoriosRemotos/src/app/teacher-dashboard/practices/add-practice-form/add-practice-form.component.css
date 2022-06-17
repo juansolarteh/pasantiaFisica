@@ -1,4 +1,4 @@
-form {
+#main {
   display: grid;
   width: 95%;
   grid-row-gap: 0.5em;
@@ -54,4 +54,9 @@ mat-label{
 
 #buttonCancel{
   margin-right: 1rem;
+}
+
+mat-list-item{
+  border: solid black;
+  cursor: pointer;
 }

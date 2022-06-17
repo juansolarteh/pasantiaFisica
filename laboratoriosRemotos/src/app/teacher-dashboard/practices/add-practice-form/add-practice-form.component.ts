@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { async } from '@firebase/util';
+import { FileLink } from 'src/app/models/FileLink';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 
 @Component({
@@ -9,23 +12,137 @@ import { ObjectDB } from 'src/app/models/ObjectDB';
 })
 export class AddPracticeFormComponent implements OnInit {
 
-  selectedPlant: string = ''
   plants: ObjectDB<String>[] = [
     new ObjectDB('ley de Hoooke', '1'),
     new ObjectDB('caida libre', '2'),
     new ObjectDB('ley de Hoooke', '3')
   ]
-  name = new FormControl('', [Validators.required, Validators.maxLength(30)]);
+  fileLinks: FileLink[] = [];
+  practiceForm!: FormGroup;
+  fieldLenght: any = {
+    name: ['nombre', 5, 30],
+    description: ['descripcion', 300],
+    end: ['fin de practica'],
+    plant: ['planta'],
+    documents: ['documentos']
+  }
 
-  constructor() { }
+  constructor(private sanitizer: DomSanitizer, private readonly fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.practiceForm = this.initForm();
   }
 
-  getErrorMessage() {
-    if (this.name.hasError('required')) {
-      return 'Debes llenar el campo';
-    }
-    return this.name.hasError('maxlength') ? 'En nombre no puede superar los 30 caracteres' : '';
+  initForm(): FormGroup {
+    return this.fb.group({
+      name: ['', [
+        Validators.required,
+        Validators.minLength(this.fieldLenght['name'][1]),
+        Validators.maxLength(this.fieldLenght['name'][2])
+      ]],
+      description: ['', Validators.maxLength(this.fieldLenght['description'][1])],
+      end: ['', [Validators.required]],
+      plant: ['', Validators.required],
+      documents: ['']
+    })
   }
+
+  onSubmit() {
+    console.log(this.practiceForm.get('documents')?.value)
+  }
+
+  getErrorMessage(field: string) {
+    if (this.practiceForm.get(field)?.errors?.['required']) {
+      return 'Debes llenar el campo';
+    } else if (this.practiceForm.get(field)?.errors?.['maxlength']) {
+      return 'El campo ' + this.fieldLenght[field][0] + ' debe tener menos de '
+        + this.fieldLenght[field][1] + ' caracteres';
+    }
+    return this.practiceForm.get(field)?.errors?.['minlength'] ?
+      'El campo ' + this.fieldLenght[field][0] + ' debe tener mas de '
+      + this.fieldLenght[field][1] + ' caracteres' : '';
+  }
+
+  event: any
+  onFileSelected($event: any) {
+    if (this.fileLinks.length < 3) {
+      const uploadFile = $event.target.files[0]
+      let nameFile: string = uploadFile.name;
+      let file: FileLink = new FileLink(nameFile, nameFile.split('.')[1])
+      this.createLink(uploadFile, file)
+    }
+    /* this.extractBase64(uploadFile).then((image: any) => {
+      console.log(image)
+    }) */
+  }
+
+  createLink(file: any, fileLink: FileLink) {
+    try {
+      const link = window.URL.createObjectURL(file);
+      fileLink.setLink(link)
+      this.fileLinks.push(fileLink);
+      return
+    } catch (e) {
+      return
+    }
+  }
+
+  downloadFile(fileLink: FileLink) {
+    if (fileLink.getLink()) {
+      const downloadLink = document.createElement('a')
+      downloadLink.href = fileLink.getLink()!
+      downloadLink.setAttribute('download', fileLink.getName())
+      document.body.appendChild(downloadLink)
+      downloadLink.click()
+    }
+  }
+
+  extractBase64 = async ($event: any) => new Promise((resolve, reject) => {
+    try {
+      const unsafeImg = window.URL.createObjectURL($event);
+      console.log(unsafeImg)
+      const downloadLink = document.createElement('a')
+      downloadLink.href = unsafeImg
+      downloadLink.setAttribute('download', 'prueba')
+      document.body.appendChild(downloadLink)
+      downloadLink.click()
+      const image = this.sanitizer.bypassSecurityTrustUrl(unsafeImg);
+      const reader = new FileReader();
+      reader.readAsDataURL($event);
+      reader.onload = () => {
+        resolve({
+          base: reader.result
+        });
+      };
+      reader.onerror = error => {
+        resolve({
+          base: null
+        });
+      };
+      return
+    } catch (e) {
+      return null
+    }
+  })
+
+
+  /*  archivosFuera: any[] = [];
+   subirArchivos() {
+     let archivos = this.event.target.files;
+     let aux;
+     for (let index = 0; index < archivos.length; index++) {
+       let reader = new FileReader();
+       reader.readAsDataURL(archivos[index]);
+       reader.onloadend = async () => {
+         this.archivosFuera.push(reader.result);
+         aux = await this.subirArchivosFire('prueba/' + archivos[index].name, reader.result);
+         await this.practicaNueva.archivos.push(aux);
+       }
+     }
+   }
+ 
+   async subirArchivosFire(nombre: string, imgBase64: any): Promise<any> {
+     let respuesta = await this.storageRef.child(nombre).putString(imgBase64, 'data_url');
+     return await respuesta.ref.getDownloadURL();
+   } */
 }

@@ -4,41 +4,43 @@ import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
 import { SubjectUltimo } from '../models/SubjectUltimo';
+import { ActivatedRoute } from '@angular/router';
+import { flatMap, Observable, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubjectService {
   private col = this.firestr.firestore.collection('Materias');
-  
+
   subjects: Subject[] = [];
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;
-  
-  constructor(private firestr: AngularFirestore) { }
+
+  constructor(private firestr: AngularFirestore, private activatedRoute: ActivatedRoute) { }
 
   //Methods of Group
-  getWithoutGroup(){
+  getWithoutGroup() {
     return this.withoutGroup;
   }
-  inStudent(refEst: DocumentReference){
+  inStudent(refEst: DocumentReference) {
     this.withoutGroup.push(refEst);
     this.refSubjectSelected.update('sinGrupo', this.withoutGroup);
   }
-  outStudent(studentId: string){
+  outStudent(studentId: string) {
     let refEst: DocumentReference = this.withoutGroup.find(m => m.id === studentId)!;
     this.withoutGroup = this.withoutGroup.filter(e => e !== refEst);
     this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
     return refEst;
   }
-  async createGroup(refNewGroup: DocumentReference){
+  async createGroup(refNewGroup: DocumentReference) {
     await this.refSubjectSelected.get().then(doc => {
       let groups: DocumentReference[] = doc.get('grupos');
       groups.push(refNewGroup);
       doc.ref.update('grupos', groups)
     })
   }
-  async deleteGroup(groupId: string){
+  async deleteGroup(groupId: string) {
     return this.refSubjectSelected.get().then(doc => {
       let groups: DocumentReference[] = doc.get('grupos');
       let groupToDelete: DocumentReference = groups.find(g => g.id === groupId)!
@@ -49,7 +51,7 @@ export class SubjectService {
   }
   //End Methods of Group
 
-  getRefSubjectFromId(idSibject: string){
+  getRefSubjectFromId(idSibject: string) {
     this.refSubjectSelected = this.col.doc(idSibject);
     return this.refSubjectSelected
   }
@@ -58,13 +60,13 @@ export class SubjectService {
     this.firestr.doc(refSubject).delete();
   }
 
-  async getStudentsWithouGroup(subjectId: string){
+  async getStudentsWithouGroup(subjectId: string) {
     const doc = await this.col.doc(subjectId).get();
     this.withoutGroup = doc.get('sinGrupo');
     return this.withoutGroup;
   }
 
-  async getRefGroupsFromSubjectId(subjectId: string){
+  async getRefGroupsFromSubjectId(subjectId: string) {
     const doc = await this.col.doc(subjectId).get();
     let refGroups: DocumentReference[] = doc.get('grupos');
     return refGroups;
@@ -76,7 +78,7 @@ export class SubjectService {
     return convertTo(SubjectUltimo, data!);
   }
 
-  async getNameSubjects(teacherRef: DocumentReference){
+  async getNameSubjects(teacherRef: DocumentReference) {
     var listSubjects: ObjectDB<string>[] = [];
     const querySnapShot = this.col.where('docente', '==', teacherRef).get();
     (await querySnapShot).forEach((res) => {
@@ -85,9 +87,9 @@ export class SubjectService {
     return listSubjects;
   }
 
-  async prueba(studentRef: DocumentReference){
+  async prueba(studentRef: DocumentReference) {
     var listSubjects: DocumentReference[] = [];
-    (await this.firestr.firestore.collection('Grupos').where('grupo', 'array-contains', studentRef).get()).forEach(r =>{
+    (await this.firestr.firestore.collection('Grupos').where('grupo', 'array-contains', studentRef).get()).forEach(r => {
       let refSubject: DocumentReference = r.get('Materia');
     })
   }
@@ -120,7 +122,7 @@ export class SubjectService {
     return this.subjects
   }
 
-  async getRefSubjectsFromRefUser(refUser: DocumentReference){
+  async getRefSubjectsFromRefUser(refUser: DocumentReference) {
     var refSubjects: DocumentReference[] = [];
     const querySnapShot = this.col.where('docente', '==', refUser).get();
     (await querySnapShot).forEach((doc) => {
@@ -128,5 +130,4 @@ export class SubjectService {
     })
     return refSubjects;
   }
-
 }

@@ -10,6 +10,7 @@ export class Practice {
     private planta: DocumentReference;
     private materia: DocumentReference;
     private descripcion: string;
+    private documentos: string[];
 
     constructor(
         nombre: string,
@@ -18,7 +19,8 @@ export class Practice {
         fin: Timestamp,
         planta: DocumentReference,
         materia: DocumentReference,
-        descripcion: string
+        descripcion: string,
+        documentos: string[]
     ) {
         this.nombre = nombre
         this.fecha_creacion = fecha_creacion
@@ -27,6 +29,7 @@ export class Practice {
         this.planta = planta
         this.materia = materia
         this.descripcion = descripcion
+        this.documentos = documentos
     }
 
     public getDescripcion(): string {
@@ -85,11 +88,11 @@ export class Practice {
         this.materia = materia;
     }
 
+    public getDocumentos(): string[] {
+        return this.documentos;
+    }
 
-
-
-
-
-
-
+    public setDocumentos(documentos: string[]): void {
+        this.documentos = documentos;
+    }
 }
