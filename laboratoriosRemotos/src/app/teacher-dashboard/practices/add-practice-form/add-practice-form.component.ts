@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
-import { async } from '@firebase/util';
 import { FileLink } from 'src/app/models/FileLink';
 import { ObjectDB } from 'src/app/models/ObjectDB';
+import { imageFile, TypeFiles } from 'src/environments/typeFiles';
 
 @Component({
   selector: 'app-add-practice-form',
   templateUrl: './add-practice-form.component.html',
-  styleUrls: ['./add-practice-form.component.css']
+  styleUrls: ['./add-practice-form.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddPracticeFormComponent implements OnInit {
 
@@ -24,10 +26,10 @@ export class AddPracticeFormComponent implements OnInit {
     description: ['descripcion', 300],
     end: ['fin de practica'],
     plant: ['planta'],
-    documents: ['documentos']
   }
+  accept: string = TypeFiles
 
-  constructor(private sanitizer: DomSanitizer, private readonly fb: FormBuilder) { }
+  constructor(private sanitizer: DomSanitizer, private readonly fb: FormBuilder, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.practiceForm = this.initForm();
@@ -43,7 +45,6 @@ export class AddPracticeFormComponent implements OnInit {
       description: ['', Validators.maxLength(this.fieldLenght['description'][1])],
       end: ['', [Validators.required]],
       plant: ['', Validators.required],
-      documents: ['']
     })
   }
 
@@ -67,13 +68,29 @@ export class AddPracticeFormComponent implements OnInit {
   onFileSelected($event: any) {
     if (this.fileLinks.length < 3) {
       const uploadFile = $event.target.files[0]
-      let nameFile: string = uploadFile.name;
-      let file: FileLink = new FileLink(nameFile, nameFile.split('.')[1])
-      this.createLink(uploadFile, file)
+      const type: string = uploadFile.type
+      if (type && type != '') {
+        if (type.includes('image') || type.includes('video') || type.includes('audio') || this.accept.includes(type)) {
+          let imgFile = imageFile(type)
+          let nameFile: string = uploadFile.name;
+          let file: FileLink = new FileLink(nameFile, nameFile.split('.')[1], imgFile)
+          this.createLink(uploadFile, file)
+        }else{
+          this.openSnackBar('Solo se aceptan archivos pdf, word, excel, powerpoint, imagenes, audios y videos')
+        }
+      } else {
+        this.openSnackBar('Solo se aceptan archivos pdf, word, excel, powerpoint, imagenes, audios y videos')
+      }
+    } else {
+      this.openSnackBar('Solo es podible agregar 3 archivos a la practica')
     }
     /* this.extractBase64(uploadFile).then((image: any) => {
       console.log(image)
     }) */
+  }
+
+  async openSnackBar(message: string) {
+    this._snackBar.open(message)._dismissAfter(6000)
   }
 
   createLink(file: any, fileLink: FileLink) {
@@ -95,6 +112,10 @@ export class AddPracticeFormComponent implements OnInit {
       document.body.appendChild(downloadLink)
       downloadLink.click()
     }
+  }
+
+  onRemoveFile(fileLink: FileLink){
+    this.fileLinks = this.fileLinks.filter((f) => f !== fileLink)
   }
 
   extractBase64 = async ($event: any) => new Promise((resolve, reject) => {

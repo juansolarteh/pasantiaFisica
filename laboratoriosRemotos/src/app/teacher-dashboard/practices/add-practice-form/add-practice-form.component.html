@@ -1,59 +1,73 @@
 <mat-card>
-    <form id="main" (ngSubmit)="onSubmit()" [formGroup]="practiceForm">
-        <h2>Practica</h2>
-        <div class="oneField">
-            <mat-form-field appearance="fill" class="fullSize">
-                <mat-label>Ingresa el nombre de la practica</mat-label>
-                <input matInput placeholder="Nombre de practica" formControlName="name" required>
-                <mat-error *ngIf="practiceForm.get('name')?.touched">{{getErrorMessage('name')}}</mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="fill" class="fullSize">
-                <mat-label>Descrición de la practica (opcional)</mat-label>
-                <textarea matInput #description placeholder="Descripción" formControlName="description"></textarea>
-                <mat-hint align="end">{{description.value.length}} / {{fieldLenght['description'][1]}}</mat-hint>
-                <mat-error *ngIf="practiceForm.get('description')?.touched">{{getErrorMessage('description')}}</mat-error>
-            </mat-form-field>
-        </div>
-        <div class="twoFields">
-            <div class="middleWrapper">
-                <mat-form-field appearance="fill">
-                    <mat-label>Fin de la practica</mat-label>
-                    <input type="date" matInput placeholder="nombre de practica" required formControlName="end">
-                    <mat-error *ngIf="practiceForm.get('end')?.touched">{{getErrorMessage('end')}}</mat-error>
+    <div id="main">
+        <div (ngSubmit)="onSubmit()" [formGroup]="practiceForm">
+            <h2>Practica</h2>
+            <div class="oneField">
+                <mat-form-field appearance="fill" class="fullSize">
+                    <mat-label>Ingresa el nombre de la practica</mat-label>
+                    <input matInput placeholder="Nombre de practica" formControlName="name" required>
+                    <mat-error *ngIf="practiceForm.get('name')?.touched">{{getErrorMessage('name')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="fullSize">
+                    <mat-label>Descrición de la practica (opcional)</mat-label>
+                    <textarea matInput #description placeholder="Descripción" formControlName="description"></textarea>
+                    <mat-hint align="end">{{description.value.length}} / {{fieldLenght['description'][1]}}</mat-hint>
+                    <mat-error *ngIf="practiceForm.get('description')?.touched">{{getErrorMessage('description')}}
+                    </mat-error>
                 </mat-form-field>
             </div>
-            <div class="middleWrapper">
-                <mat-form-field appearance="fill">
-                    <mat-label>Planta requerida</mat-label>
-                    <mat-select formControlName="plant">
-                        <mat-option *ngFor="let plant of plants" [value]="plant.getId()">
-                            {{plant.getObjectDB()}}
-                        </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="practiceForm.get('plant')?.touched">{{getErrorMessage('plant')}}</mat-error>
-                </mat-form-field>
+            <div class="twoFields">
+                <div class="middleWrapper">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Fin de la practica</mat-label>
+                        <input type="date" matInput placeholder="nombre de practica" required formControlName="end">
+                        <mat-error *ngIf="practiceForm.get('end')?.touched">{{getErrorMessage('end')}}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="middleWrapper">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Planta requerida</mat-label>
+                        <mat-select formControlName="plant">
+                            <mat-option *ngFor="let plant of plants" [value]="plant.getId()">
+                                {{plant.getObjectDB()}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="practiceForm.get('plant')?.touched">{{getErrorMessage('plant')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="oneField">
+                <mat-list>
+                    <mat-list-item *ngFor="let fileLink of fileLinks">
+                        <img src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="downloadFile(fileLink)">
+                        <div (click)="downloadFile(fileLink)" class="docs">
+                            {{fileLink.getName().split('.')[0]}}
+                            <br>
+                            {{fileLink.getExt()}}
+                        </div>
+                        <div class="optionsDocs">
+                            <button mat-icon-button color="primary" [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="onRemoveFile(fileLink)">Quitar archivo</button>
+                            </mat-menu>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <div class="oneField">
+                <div id="endWrapper">
+                    <button mat-button id="buttonCancel">Cancelar</button>
+                    <button mat-raised-button color="primary" [disabled]="practiceForm.invalid">Publicar</button>
+                </div>
             </div>
         </div>
-        <div class="oneField">
-            <mat-list>   
-                    <mat-list-item *ngFor="let fileLink of fileLinks" (click)="downloadFile(fileLink)">
-                        {{fileLink.getName()}}
-                        <br>
-                        {{fileLink.getExt()}}
-                    </mat-list-item>         
-            </mat-list>
+        <div id="startWrapper">
+            <button mat-mini-fab color="primary" (click)="fileInput.click()">
+                <mat-icon>file_upload</mat-icon>
+            </button>
+            <input hidden (change)="onFileSelected($event)" #fileInput accept='{{accept}}' type="file">
         </div>
-        <div class="twoFields">
-            <div id="startWrapper">
-                <button mat-mini-fab color="primary" (click)="fileInput.click()">
-                    <mat-icon>file_upload</mat-icon>
-                </button>
-                <input hidden (change)="onFileSelected($event)" #fileInput type="file" formControlName="documents">
-            </div>
-            <div id="endWrapper">
-                <button mat-button id="buttonCancel">Cancelar</button>
-                <button mat-raised-button color="primary" [disabled]="practiceForm.invalid">Publicar</button>
-            </div>
-        </div>
-    </form>
+    </div>
 </mat-card>

@@ -2,13 +2,23 @@ export class FileLink {
 
     private name: string;
     private link: string | undefined;
-    private ext: string
+    private ext: string;
+    private image: string;
 
-    constructor(name: string, ext: string, link?: string,) {
+    constructor(name: string, ext: string, image:string, link?: string,) {
         this.name = name
         this.link = link
         this.ext = ext
+        this.image = image
     }
+
+    public getImage(): string {
+        return this.image;
+    }
+
+    public setImage(image: string): void {
+        this.image = image;
+    } 
 
     public getName(): string {
         return this.name;

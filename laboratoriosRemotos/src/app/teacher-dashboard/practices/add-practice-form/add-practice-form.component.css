@@ -2,6 +2,7 @@
   display: grid;
   width: 95%;
   grid-row-gap: 0.5em;
+  position:relative;
 }
 
 .oneField{
@@ -34,9 +35,12 @@ mat-card{
 #startWrapper{
   display: flex;
   justify-content: flex-start;
+  position: absolute;
+  bottom: 0;
 }
 
 #endWrapper{
+  width: 100%;
   display: flex;
   justify-content: flex-end;
 }
@@ -56,7 +60,29 @@ mat-label{
   margin-right: 1rem;
 }
 
+mat-list{
+  width: 100%;
+}
+
 mat-list-item{
-  border: solid black;
+  border: 0.5px solid rgb(199, 198, 198);
   cursor: pointer;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  display: flex;
+}
+
+img{
+  width: 2rem;
+  height: 2rem;
+  margin-right: 1rem;
+}
+
+.docs{
+  width: 100%;
+}
+
+.optionsDocs{
+  display: grid;
+  justify-content: end;
 }
