@@ -1,6 +1,6 @@
 <mat-card>
     <div id="main">
-        <div (ngSubmit)="onSubmit()" [formGroup]="practiceForm">
+        <div [formGroup]="practiceForm">
             <h2>Practica</h2>
             <div class="oneField">
                 <mat-form-field appearance="fill" class="fullSize">
@@ -11,7 +11,7 @@
                 <mat-form-field appearance="fill" class="fullSize">
                     <mat-label>Descrición de la practica (opcional)</mat-label>
                     <textarea matInput #description placeholder="Descripción" formControlName="description"></textarea>
-                    <mat-hint align="end">{{description.value.length}} / {{fieldLenght['description'][1]}}</mat-hint>
+                    <mat-hint align="end">{{description.value.length}} / {{fieldFeatures['description'][1]}}</mat-hint>
                     <mat-error *ngIf="practiceForm.get('description')?.touched">{{getErrorMessage('description')}}
                     </mat-error>
                 </mat-form-field>
@@ -27,12 +27,26 @@
                 <div class="middleWrapper">
                     <mat-form-field appearance="fill">
                         <mat-label>Planta requerida</mat-label>
-                        <mat-select formControlName="plant">
+                        <mat-select formControlName="plant" (selectionChange)="onChangeSelect()">
                             <mat-option *ngFor="let plant of plants" [value]="plant.getId()">
-                                {{plant.getObjectDB()}}
+                                {{plant.getObjectDB().getNombre()}}
                             </mat-option>
                         </mat-select>
                         <mat-error *ngIf="practiceForm.get('plant')?.touched">{{getErrorMessage('plant')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <h2 *ngIf="constants.length > 0">Constantes:</h2>
+            <div id="flexFields">
+                <div *ngFor="let const of constants">
+                    <mat-form-field appearance="fill">
+                        <mat-label>{{const.getId()}} ({{units[const.getId()]}})</mat-label>
+                        <mat-select multiple formControlName={{const.getId()}}>
+                            <mat-option *ngFor="let val of const.getObjectDB(); let i = index " [value]="i+1">{{val}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="practiceForm.get(const.getId())?.touched">{{getErrorMessage(const.getId())}}
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -56,18 +70,33 @@
                     </mat-list-item>
                 </mat-list>
             </div>
-            <div class="oneField">
+            <div class="twoFields">
+                <div id="startWrapper">
+                    <button mat-mini-fab color="primary" (click)="fileInput.click()">
+                        <mat-icon>file_upload</mat-icon>
+                    </button>
+                    <input hidden (change)="onFileSelected($event)" #fileInput formControlName="documents"
+                        accept='{{accept}}' type="file">
+                </div>
                 <div id="endWrapper">
-                    <button mat-button id="buttonCancel">Cancelar</button>
-                    <button mat-raised-button color="primary" [disabled]="practiceForm.invalid">Publicar</button>
+                    <button mat-button id="buttonCancel" (click)="onCancel()">Cancelar</button>
+                    <button mat-raised-button color="primary" [disabled]="practiceForm.invalid || !flag"
+                        (click)="onSubmit()">Publicar</button>
+                    <button mat-flat-button color="primary" id="publicOptions"
+                        [disabled]="practiceForm.invalid || !flag" [matMenuTriggerFor]="menuPublic">
+                        <mat-icon>arrow_drop_down</mat-icon>
+                    </button>
+                    <mat-menu #menuPublic="matMenu">
+                        <button mat-menu-item>Publicar practica</button>
+                        <button mat-menu-item (click)="onSchedulePractice(schedulePractice)">Programar practica</button>
+                    </mat-menu>
                 </div>
             </div>
         </div>
-        <div id="startWrapper">
-            <button mat-mini-fab color="primary" (click)="fileInput.click()">
-                <mat-icon>file_upload</mat-icon>
-            </button>
-            <input hidden (change)="onFileSelected($event)" #fileInput accept='{{accept}}' type="file">
-        </div>
     </div>
 </mat-card>
+
+<ng-template #schedulePractice>
+    <app-schedule-practice [endDate]="this.practiceForm.get('end')?.value"></app-schedule-practice>
+    <!-- <app-delete-dialog [user]="deletedUser.getObjectDB()"></app-delete-dialog> -->
+</ng-template>

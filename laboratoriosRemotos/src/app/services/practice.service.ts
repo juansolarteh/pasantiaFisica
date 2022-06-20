@@ -3,6 +3,7 @@ import { ObjectDB } from './../models/ObjectDB';
 import { Practice } from 'src/app/models/Practice';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
+import { PracticeNameDate } from '../models/Practice';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +62,15 @@ export class PracticeService {
     const qSnapShot = await query.get();
     return qSnapShot.docs.map(res => {
       let practice: Practice = convertTo(Practice, res.data());
+      return new ObjectDB(practice, res.id);
+    });
+  }
+
+  async getPracticesNameDate(subjectRef: DocumentReference): Promise<ObjectDB<PracticeNameDate>[]> {
+    let query = this.col.where('materia', '==', subjectRef)
+    const qSnapShot = await query.get();
+    return qSnapShot.docs.map(res => {
+      let practice: PracticeNameDate = new PracticeNameDate(res.get('nombre'), res.get('fecha_creacion'));
       return new ObjectDB(practice, res.id);
     });
   }

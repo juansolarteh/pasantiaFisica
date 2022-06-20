@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
+import { SubjectTeacher } from 'src/app/models/SubjectTeacher';
 import { SubjectService } from 'src/app/services/subject.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { SubjectService } from 'src/app/services/subject.service';
 export class SubjectComponent implements OnInit, OnDestroy {
 
   private managerRoute!: Subscription;
-  subject !: SubjectUltimo;
+  subject !: SubjectTeacher;
   selectedTab = 0;
 
   constructor(private readonly router: Router, private activatedRoute: ActivatedRoute,

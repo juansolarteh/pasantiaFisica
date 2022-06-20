@@ -96,3 +96,33 @@ export class Practice {
         this.documentos = documentos;
     }
 }
+
+export class PracticeNameDate {
+
+    private nombre: string;
+    private fecha_creacion: Timestamp;
+
+    constructor(
+        nombre: string,
+        fecha_creacion: Timestamp,
+    ) {
+        this.nombre = nombre
+        this.fecha_creacion = fecha_creacion
+    }
+
+    public getNombre(): string {
+        return this.nombre;
+    }
+
+    public setNombre(nombre: string): void {
+        this.nombre = nombre;
+    }
+
+    public getFecha_creacion(): Timestamp {
+        return this.fecha_creacion;
+    }
+
+    public setFecha_creacion(fecha_creacion: Timestamp): void {
+        this.fecha_creacion = fecha_creacion;
+    }
+}

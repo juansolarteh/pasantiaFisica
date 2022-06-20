@@ -4,13 +4,23 @@ export class FileLink {
     private link: string | undefined;
     private ext: string;
     private image: string;
+    private file: any
 
-    constructor(name: string, ext: string, image:string, link?: string,) {
+    constructor(name: string, ext: string, image:string, file: any, link?: string) {
         this.name = name
         this.link = link
         this.ext = ext
         this.image = image
+        this.file = file
     }
+
+    public getFile(): any {
+        return this.file;
+    }
+
+    public setFile(file: any): void {
+        this.file = file;
+    } 
 
     public getImage(): string {
         return this.image;

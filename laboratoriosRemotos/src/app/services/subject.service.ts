@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
-import { SubjectUltimo } from '../models/SubjectUltimo';
+import { SubjectTeacher } from '../models/SubjectTeacher';
 import { ActivatedRoute } from '@angular/router';
 import { flatMap, Observable, Subscription } from 'rxjs';
 
@@ -18,6 +18,10 @@ export class SubjectService {
   private refSubjectSelected!: DocumentReference;
 
   constructor(private firestr: AngularFirestore, private activatedRoute: ActivatedRoute) { }
+
+  getRefSubjectSelected(){
+    return this.refSubjectSelected
+  }
 
   //Methods of Group
   getWithoutGroup() {
@@ -75,7 +79,7 @@ export class SubjectService {
   async getSubjectById(idSubject: string) {
     this.refSubjectSelected = this.col.doc(idSubject);
     let data = (await this.refSubjectSelected.get()).data();
-    return convertTo(SubjectUltimo, data!);
+    return convertTo(SubjectTeacher, data!);
   }
 
   async getNameSubjects(teacherRef: DocumentReference) {

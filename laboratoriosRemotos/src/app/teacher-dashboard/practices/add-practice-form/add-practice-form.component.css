@@ -2,10 +2,10 @@
   display: grid;
   width: 95%;
   grid-row-gap: 0.5em;
-  position:relative;
+  position: relative;
 }
 
-.oneField{
+.oneField {
   display: grid;
   justify-items: center;
   grid-row-gap: 0.5em;
@@ -15,56 +15,54 @@
   width: 100%;
 }
 
-mat-card{
+mat-card {
   border: 0.5px solid rgb(199, 198, 198);
   margin-bottom: 1rem;
   display: grid;
   justify-items: center;
 }
 
-.twoFields{
+.twoFields {
   display: grid;
   grid-template-columns: 50% 50%;
 }
 
-.middleWrapper{
+.middleWrapper {
   display: flex;
   justify-content: center;
 }
 
-#startWrapper{
+#startWrapper {
   display: flex;
   justify-content: flex-start;
-  position: absolute;
-  bottom: 0;
+ 
 }
 
-#endWrapper{
-  width: 100%;
+#endWrapper {
   display: flex;
   justify-content: flex-end;
 }
 
-textarea{
+textarea {
   resize: none;
   height: 8rem;
   min-height: 3rem;
   max-height: 8rem;
 }
 
-mat-label{
+mat-label {
   color: black;
 }
 
-#buttonCancel{
+#buttonCancel {
   margin-right: 1rem;
 }
 
-mat-list{
+mat-list {
   width: 100%;
 }
 
-mat-list-item{
+mat-list-item {
   border: 0.5px solid rgb(199, 198, 198);
   cursor: pointer;
   margin-bottom: 1rem;
@@ -72,17 +70,35 @@ mat-list-item{
   display: flex;
 }
 
-img{
+img {
   width: 2rem;
   height: 2rem;
   margin-right: 1rem;
 }
 
-.docs{
+.docs {
   width: 100%;
 }
 
-.optionsDocs{
+.optionsDocs {
   display: grid;
   justify-content: end;
+}
+
+#flexFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(33.3%, 1fr));
+}
+
+#flexFields div{
+  display: flex;
+  justify-content: center;
+}
+
+#publicOptions{
+  display: grid;
+  justify-content: center;
+  margin-left: 0.1rem;
+  min-width: 1rem;
+  max-width: 1rem;
 }

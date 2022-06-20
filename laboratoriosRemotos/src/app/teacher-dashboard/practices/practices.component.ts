@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
-import { Practice } from 'src/app/models/Practice';
+import { PracticeNameDate } from 'src/app/models/Practice';
 
 @Component({
   selector: 'app-practices',
@@ -11,7 +11,7 @@ import { Practice } from 'src/app/models/Practice';
 })
 export class PracticesComponent implements OnInit {
 
-  practices: ObjectDB<Practice>[] = [];
+  practices: ObjectDB<PracticeNameDate>[] = [];
   newPractice = false;
 
   constructor(private activatedRoute: ActivatedRoute) { }
@@ -20,8 +20,15 @@ export class PracticesComponent implements OnInit {
     this.practices = this.activatedRoute.snapshot.data['practices'];
   }
 
-  showPractice(practice: Practice){
+  showPractice(practice: PracticeNameDate){
     console.log(practice)
+  }
+
+  onAddPractice(practice: any){
+    if (practice){
+
+    }
+    this.newPractice = false;
   }
 
 }

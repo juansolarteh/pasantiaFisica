@@ -19,9 +19,6 @@ export class GroupsService {
   }
 
   //Mehtods from teacher
-  getGroups() {
-    return this.groupsDB;
-  }
   deleteGroup(refGroup: DocumentReference) {
     this.groupsDB = this.groupsDB.filter(g => g.getId() !== refGroup.id);
     refGroup.delete()
