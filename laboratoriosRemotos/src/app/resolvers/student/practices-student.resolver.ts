@@ -14,8 +14,8 @@ import { Injectable } from '@angular/core';
 export class PracticesStudentResolverService implements Resolve<ObjectDB<Practice>[]>{
     constructor(private practiceSvc: PracticeService, private subjectSvc: SubjectService) { }
     resolve(): ObjectDB<Practice>[] | Observable<ObjectDB<Practice>[]> | Promise<ObjectDB<Practice>[]> {
-        let subjectSelected = this.subjectSvc.getSubjectSelected()
-        return this.subjectSvc.getSubjectRefById(subjectSelected.getId()).then(async res => {
+        let idSubjectSelected = localStorage.getItem("subjectSelected")!
+        return this.subjectSvc.getSubjectRefById(idSubjectSelected).then(async res => {
             let practices = await this.practiceSvc.getPracticesBySubject(res.ref)
             return practices
         })

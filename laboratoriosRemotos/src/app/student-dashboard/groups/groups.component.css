@@ -33,14 +33,6 @@
     
 }
 
-.grid div:hover{
-    border: 1px solid red;
-}
-
-
-.mat-card:hover{
-    border: 1px solid red;
-}
 .botones{
     display: grid;
     justify-items: center;

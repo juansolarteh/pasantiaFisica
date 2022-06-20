@@ -18,11 +18,10 @@ export class SubjectsComponent implements OnInit {
   ngOnInit(): void {
 
     this.subjects = this.activatedRoute.snapshot.data['subjects'];
-    console.log(this.subjects)
   }
 
   goToPractices(subject:ObjectDB<Subject>){
-    this.subjectSvc.setSubjectSelected(subject)
+    localStorage.setItem("subjectSelected",subject.getId())
     this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
   }
   goToDeleteSubject(){

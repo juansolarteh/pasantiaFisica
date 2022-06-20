@@ -92,7 +92,9 @@ export class UserService {
   }
 
   async getUserName(refUser: DocumentReference) {
-    return (await this.col.doc(refUser.id).get()).data()!['nombre']
+    const doc = await this.col.doc(refUser.id).get();
+    let name = doc.get('nombre');
+    return name
   }
 
   deleteUser(refUser: DocumentReference) {

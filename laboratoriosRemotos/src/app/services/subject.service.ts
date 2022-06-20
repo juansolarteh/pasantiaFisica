@@ -122,14 +122,15 @@ export class SubjectService {
     }
     return listWithGroup
   }
+  
   async getSubjectRefById(idSubject: string){
     let querySnapShot = await this.col.doc(idSubject).get()
     return querySnapShot
   }
-  setSubjectSelected(objSubjectSelected: ObjectDB<Subject>){
-    this.objSubjectSelected = objSubjectSelected
-  }
-  getSubjectSelected(){
-    return this.objSubjectSelected
+  async getSubjectById2(idSubject: string){
+    let data = await this.col.doc(idSubject).get()
+    let subject = new ObjectDB(convertTo(SubjectUltimo, data.data()!),idSubject)
+    subject.getObjectDB().setDocente(data.get('docente'))
+    return subject;
   }
 }

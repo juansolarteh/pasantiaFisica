@@ -23,12 +23,11 @@ export class PracticesComponent implements OnInit {
   subjectSelected!: ObjectDB<Subject>
 
   ngOnInit(): void {
+    this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.practices = this.activatedRoute.snapshot.data['practices'];
-    this.subjectSelected = this.subjectSvc.getSubjectSelected()
-    console.log(this.practices)
   }
   goToPracticeInfo(practice: ObjectDB<Practice>) {
-    this.practiceSvc.setPracticeSelected(practice)
+    localStorage.setItem("practiceSelected", practice.getId())
     this.router.navigate(['../practice',practice.getId()], {relativeTo: this.activatedRoute})
   }
 }

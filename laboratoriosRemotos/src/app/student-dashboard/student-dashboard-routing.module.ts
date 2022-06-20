@@ -1,3 +1,5 @@
+import { PracticeSelectedResolverService } from './../resolvers/student/practice-selected.resolver';
+import { SubjectSelectedResolverService } from './../resolvers/student/subject-selected.resolver';
 import { PracticesStudentResolverService } from './../resolvers/student/practices-student.resolver';
 import { SubjectsStudentResolverService } from './../resolvers/student/subjects-student.resolver';
 import { GroupsComponent } from './groups/groups.component';
@@ -12,9 +14,10 @@ import { CalendarComponent } from './calendar/calendar.component';
 const routes: Routes = [
 
   {
-    path: 'subject/:subjectId', component: SubjectComponent, children: [
-      { path: 'practice/:practiceId', component: PracticeComponent },
-      { path: 'practices', component: PracticesComponent,resolve: { practices: PracticesStudentResolverService } },
+    path: 'subject/:subjectId', component: SubjectComponent, resolve: {subjectSelected: SubjectSelectedResolverService} , children: [
+      { path: 'practice/:practiceId', component: PracticeComponent, resolve: {practiceSelected: PracticeSelectedResolverService, subjectSelected: SubjectSelectedResolverService}},
+      { path: 'practices', component: PracticesComponent,resolve:
+      { subjectSelected: SubjectSelectedResolverService, practices: PracticesStudentResolverService} },
       { path: 'calendar', component: CalendarComponent },
       { path: 'groups', component: GroupsComponent },
       { path: '', redirectTo: 'practices', pathMatch: 'full' },
