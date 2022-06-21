@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { PracticeNameDate } from 'src/app/models/Practice';
@@ -24,9 +24,9 @@ export class PracticesComponent implements OnInit {
     console.log(practice)
   }
 
-  onAddPractice(practice: any){
+  onAddPractice(practice: any | ObjectDB<PracticeNameDate>){
     if (practice){
-
+      this.practices.push(practice)
     }
     this.newPractice = false;
   }

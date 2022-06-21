@@ -43,9 +43,9 @@ export class PracticeService {
   //Metodos Jorge Solano - Modulo de estudiante
   async getPracticesBySubject(refSubject: DocumentReference) {
     var practices: ObjectDB<Practice>[] = []
-    const querySnapShot = this.col.where("materia","==",refSubject).get();
-    (await querySnapShot).forEach(doc=>{
-      let newPractice = new ObjectDB(convertTo(Practice,doc.data()),doc.id)
+    const querySnapShot = this.col.where("materia", "==", refSubject).get();
+    (await querySnapShot).forEach(doc => {
+      let newPractice = new ObjectDB(convertTo(Practice, doc.data()), doc.id)
       practices.push(newPractice)
     })
     return practices
@@ -75,4 +75,25 @@ export class PracticeService {
     });
   }
 
+  addPractice(practice: Practice) {
+    return this.col.add({
+      nombre: practice.getNombre(),
+      fecha_creacion: practice.getFecha_creacion(),
+      inicio: practice.getInicio(),
+      fin: practice.getFin(),
+      planta: practice.getPlanta(),
+      materia: practice.getMateria(),
+      descripcion: practice.getDescripcion(),
+    });
+  }
+
+  addPathDocs(pathDocs: string[], idPractice: string) {
+    return this.col.doc(idPractice).update('documentos', pathDocs)
+  }
+
+  addConstants(constants: ObjectDB<any>[], practiceRef: DocumentReference){
+    constants.forEach(cons => {
+      practiceRef.collection(this.subcollection).doc(cons.getId()).set(cons.getObjectDB())
+    })
+  }
 }

@@ -53,8 +53,8 @@
             <div class="oneField">
                 <mat-list>
                     <mat-list-item *ngFor="let fileLink of fileLinks">
-                        <img src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="downloadFile(fileLink)">
-                        <div (click)="downloadFile(fileLink)" class="docs">
+                        <img src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="openFile(fileLink)">
+                        <div (click)="openFile(fileLink)" class="docs">
                             {{fileLink.getName().split('.')[0]}}
                             <br>
                             {{fileLink.getExt()}}
@@ -79,7 +79,7 @@
                         accept='{{accept}}' type="file">
                 </div>
                 <div id="endWrapper">
-                    <button mat-button id="buttonCancel" (click)="onCancel()">Cancelar</button>
+                    <button mat-button id="buttonCancel" (click)="onCancel()" [disabled]="startSubmit">Cancelar</button>
                     <button mat-raised-button color="primary" [disabled]="practiceForm.invalid || !flag"
                         (click)="onSubmit()">Publicar</button>
                     <button mat-flat-button color="primary" id="publicOptions"
@@ -94,6 +94,7 @@
             </div>
         </div>
     </div>
+    <mat-progress-bar mode="indeterminate" *ngIf="startSubmit"></mat-progress-bar>
 </mat-card>
 
 <ng-template #schedulePractice>

@@ -102,3 +102,7 @@ img {
   min-width: 1rem;
   max-width: 1rem;
 }
+
+mat-progress-bar{
+  margin-top: 1rem;
+}

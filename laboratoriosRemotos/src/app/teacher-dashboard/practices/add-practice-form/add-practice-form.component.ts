@@ -1,15 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DocumentReference, Timestamp } from '@firebase/firestore';
+import { finalize, Subject, Subscription } from 'rxjs';
 import { FileLink } from 'src/app/models/FileLink';
 import { FormValidators } from 'src/app/models/FormValidators';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { Plant } from 'src/app/models/Plant';
 import { PracticeNameDate, Practice } from 'src/app/models/Practice';
 import { PlantService } from 'src/app/services/plant.service';
+import { PracticeService } from 'src/app/services/practice.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { imageFile, TypeFiles } from 'src/environments/typeFiles';
 
@@ -19,7 +22,7 @@ import { imageFile, TypeFiles } from 'src/environments/typeFiles';
   styleUrls: ['./add-practice-form.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddPracticeFormComponent implements OnInit {
+export class AddPracticeFormComponent implements OnInit, OnDestroy {
 
   @Output() addPractice: EventEmitter<ObjectDB<PracticeNameDate> | undefined> = new EventEmitter();
 
@@ -37,17 +40,25 @@ export class AddPracticeFormComponent implements OnInit {
   units: any = [];
   flag = false;
   endDate: string = ''
+  startSubmit = false;
+  complete = new Subject<boolean>();
+  subsComplete!: Subscription
+  uploadFiles = 0
 
   constructor(private sanitizer: DomSanitizer, private readonly fb: FormBuilder,
     private _snackBar: MatSnackBar, private plantSvc: PlantService, private changeDetector: ChangeDetectorRef,
-    private dialog: MatDialog, private subjectSvc: SubjectService) { }
+    private dialog: MatDialog, private subjectSvc: SubjectService, private storageSvc: StorageService,
+    private practiceSvc: PracticeService) { }
+
+  ngOnDestroy(): void {
+    this.subsComplete.unsubscribe()
+  }
 
   ngOnInit() {
     this.plantSvc.getNamePlantsDB().then(plants => {
       this.plants = plants;
     })
     this.practiceForm = this.initForm();
-    this.onValueChanges()
   }
 
   initForm(): FormGroup {
@@ -78,6 +89,8 @@ export class AddPracticeFormComponent implements OnInit {
   }
 
   onSubmit(startDate?: string) {
+    this.flag = false;
+    this.startSubmit = true;
     let sd: Timestamp;
     let a = DocumentReference
     if (startDate) {
@@ -85,8 +98,7 @@ export class AddPracticeFormComponent implements OnInit {
     } else {
       sd = Timestamp.fromDate(new Date())
     }
-    this.uploadDocuments();
-    let practice = new Practice(
+    const practice = new Practice(
       this.practiceForm.get('name')?.value,
       Timestamp.fromDate(new Date()),
       sd,
@@ -98,16 +110,36 @@ export class AddPracticeFormComponent implements OnInit {
         return fl.getLink()!
       })
     )
+    this.practiceSvc.addPractice(practice).then(refPractice => {
+      this.subsComplete = this.complete.asObservable().subscribe(com => {
+        if (com) {
+          this.addPractice.emit(new ObjectDB(new PracticeNameDate(
+            this.practiceForm.get('name')?.value,
+            Timestamp.fromDate(new Date(this.practiceForm.get('end')?.value))
+          ), refPractice.id));
+        }
+      })
+      if (this.constants.length > 0) {
+        let constDB = this.constants.map(cons => {
+          let valueCons: number[] = this.practiceForm.get(cons.getId())?.value
+          let map = new Map()
+          valueCons.forEach(vc => {
+            map.set(vc.toString(), cons.getObjectDB()[vc - 1])
+          })
+          return new ObjectDB<any>(Object.fromEntries(map), cons.getId())
+        })
+        this.practiceSvc.addConstants(constDB, refPractice);
+      }
+      if (this.fileLinks.length > 0) {
+        this.uploadDocuments(refPractice.id);
+      } else {
+        this.complete.next(true)
+      }
+    })
   }
 
   onCancel() {
     this.addPractice.emit(undefined);
-  }
-
-  onValueChanges() {
-    let a = this.practiceForm.get('end')?.valueChanges.subscribe(val => {
-      console.log(val);
-    })
   }
 
   getErrorMessage(field: string) {
@@ -175,19 +207,31 @@ export class AddPracticeFormComponent implements OnInit {
     }
   }
 
-  uploadDocuments() {
+  uploadDocuments(pathPractice: string) {
+    let pathFile = this.subjectSvc.getRefSubjectSelected().id + '/' + pathPractice + '/';
     this.fileLinks.forEach(fl => {
-      this.extractBase64(fl.getFile()).then((fileBase64: any) => {
-        console.log(fileBase64.base)
-      })
+      let task = this.storageSvc.uploadFile(pathFile + '/' + fl.getName(), fl.getFile())
+      let a = task.snapshotChanges().pipe(
+        finalize(() => {
+          this.uploadFiles += 1
+          fl.setLink(pathFile + '/' + fl.getName())
+          if (this.uploadFiles == this.fileLinks.length) {
+            this.practiceSvc.addPathDocs(this.fileLinks.map(fl => {
+              return fl.getLink()!
+            }), pathPractice);
+            this.complete.next(true)
+          }
+        })
+      ).subscribe()
     })
   }
 
-  downloadFile(fileLink: FileLink) {
+  openFile(fileLink: FileLink) {
     if (fileLink.getLink()) {
       const downloadLink = document.createElement('a')
       downloadLink.href = fileLink.getLink()!
-      downloadLink.setAttribute('download', fileLink.getName())
+      downloadLink.setAttribute('preview', fileLink.getName())
+      downloadLink.setAttribute('target', 'blank')
       document.body.appendChild(downloadLink)
       downloadLink.click()
     }
@@ -197,54 +241,15 @@ export class AddPracticeFormComponent implements OnInit {
     this.fileLinks = this.fileLinks.filter((f) => f !== fileLink)
   }
 
-  extractBase64 = async ($doc: any) => new Promise((resolve, reject) => {
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL($doc);
-      reader.onload = () => {
-        resolve({
-          base: reader.result
-        });
-      };
-      reader.onerror = error => {
-        resolve({
-          base: null
-        });
-      };
-      return
-    } catch (e) {
-      return null
-    }
-  })
-
   onSchedulePractice(contentDialog: any) {
     this.endDate = this.practiceForm.get('end')?.value;
     const dialogRef = this.dialog.open(contentDialog);
     dialogRef.afterClosed().subscribe(async result => {
       if (result) {
+        this.startSubmit = true;
+        this.changeDetector.markForCheck();
         this.onSubmit(result)
       }
     });
   }
-
-
-  /*  archivosFuera: any[] = [];
-   subirArchivos() {
-     let archivos = this.event.target.files;
-     let aux;
-     for (let index = 0; index < archivos.length; index++) {
-       let reader = new FileReader();
-       reader.readAsDataURL(archivos[index]);
-       reader.onloadend = async () => {
-         this.archivosFuera.push(reader.result);
-         aux = await this.subirArchivosFire('prueba/' + archivos[index].name, reader.result);
-         await this.practicaNueva.archivos.push(aux);
-       }
-     }
-   }
- 
-   async subirArchivosFire(nombre: string, imgBase64: any): Promise<any> {
-     let respuesta = await this.storageRef.child(nombre).putString(imgBase64, 'data_url');
-     return await respuesta.ref.getDownloadURL();
-   } */
 }
