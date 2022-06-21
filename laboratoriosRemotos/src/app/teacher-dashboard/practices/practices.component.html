@@ -5,7 +5,7 @@
     </div>
 </mat-card>
 <ng-template #addPractice>
-  <app-add-practice-form></app-add-practice-form>
+    <app-add-practice-form (addPractice)="onAddPractice($event)"></app-add-practice-form>
 </ng-template>
 <mat-card *ngFor="let practice of practices" (click)="showPractice(practice.getObjectDB())">
     <mat-icon mat-list-icon color="primary">task</mat-icon>
@@ -13,6 +13,6 @@
         <div class="title">
             Practica: {{practice.getObjectDB().getNombre()}}
         </div>
-        {{practice.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}
+        Creado: {{practice.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}
     </div>
 </mat-card>
