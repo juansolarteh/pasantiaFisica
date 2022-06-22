@@ -1,0 +1,32 @@
+mat-card{
+    border: 0.5px solid rgb(199, 198, 198);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.text{
+    margin-left: 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.title{
+    font-size: large;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+mat-card-title{
+    font-size: large;
+}
+
+#addPractice{
+    border: 0.5px solid rgb(199, 198, 198);
+    background-color: rgb(245, 245, 245);
+}
+
+button{
+    margin-left: auto;
+}

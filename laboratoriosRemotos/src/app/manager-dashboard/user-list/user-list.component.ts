@@ -34,7 +34,6 @@ export class UserListComponent {
         var practicesaRef: DocumentReference[] = [];
         subjectsRef.forEach(async subRef => {
           practicesaRef = practicesaRef.concat(await this.practiceSvc.getPracticesRefFromSubjectRef(subRef));
-          
           this.subjectSvc.deleteFromReference(subRef);
         });
         practicesaRef.forEach(prtRef => {
