@@ -1,0 +1,8 @@
+div{
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+mat-dialog-content{
+    height: 8rem;
+}

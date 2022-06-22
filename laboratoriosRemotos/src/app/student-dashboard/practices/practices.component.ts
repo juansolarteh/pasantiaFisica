@@ -1,4 +1,3 @@
-import { ObjectDB } from './../../models/ObjectDB';
 import { Subject } from '../../models/Subject';
 import { SubjectService } from 'src/app/services/subject.service';
 import { PracticeService } from '../../services/practice.service';
@@ -14,20 +13,25 @@ import { Practice } from 'src/app/models/Practice';
 })
 export class PracticesComponent implements OnInit {
 
-  constructor(private practiceSvc: PracticeService,
-    private subjectSvc: SubjectService,
-    private readonly router: Router,
-    private activatedRoute: ActivatedRoute) { }
-
-  practices: ObjectDB<Practice>[] = []
-  subjectSelected!: ObjectDB<Subject>
+  constructor(private practiceService: PracticeService, private cursoService: SubjectService, private readonly router: Router
+    , private activatedRoute: ActivatedRoute) { }
+  subject_id !: string
+  practices: Practice[] = []
+  selectedSubject!: Subject
 
   ngOnInit(): void {
-    this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
-    this.practices = this.activatedRoute.snapshot.data['practices'];
+    let subject = localStorage.getItem("selectedSubject")
+    if (subject != null) {
+      let aux = JSON.parse(subject) as Object
+      this.selectedSubject = plainToInstance(Subject, aux)
+    }
+    //let refSubject = this.cursoService.getSubject(this.selectedSubject.getSubjectId())
+    /* this.practiceService.getPractices(refSubject).then(res => {
+      this.practices = res
+      console.log(this.practices)
+    }) */
   }
-  goToPracticeInfo(practice: ObjectDB<Practice>) {
-    localStorage.setItem("practiceSelected", practice.getId())
-    this.router.navigate(['../practice',practice.getId()], {relativeTo: this.activatedRoute})
+  goToPracticeInfo(practice: Practice) {
+    alert("hola")
   }
 }

@@ -14,7 +14,10 @@ import { MatInputModule } from '@angular/material/input';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCardModule} from '@angular/material/card';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-
+import {MatRadioModule} from '@angular/material/radio';
+import {MatSelectModule} from '@angular/material/select';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,11 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatInputModule,
     MatTooltipModule,
     MatCardModule,
-    DragDropModule
+    DragDropModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatMenuModule,
+    MatProgressBarModule
   ]
 })
 export class MaterialModule { }

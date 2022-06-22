@@ -16,8 +16,9 @@ import { SubjectService } from 'src/app/services/subject.service';
 })
 export class GroupsComponent implements OnInit {
 
-  groups: ObjectDB<GroupWithNames>[] = []
-  memberToDelete!: MemberGroup
+  groups: ObjectDB<GroupWithNames>[] = [];
+  memberToDelete!: MemberGroup;
+  private endOperation = true;
 
   constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private subjectSvc: SubjectService,
     private changeDetector: ChangeDetectorRef, private groupSvc: GroupsService) { }
@@ -48,84 +49,98 @@ export class GroupsComponent implements OnInit {
   }
 
   async drop(event: CdkDragDrop<MemberGroup[]>) {
-    if (event.previousContainer !== event.container) {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-      const indexGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.container.data);
-      const indexPreviousGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.previousContainer.data);
-      const studentId: string = this.groups[indexGroup].getObjectDB().getGrupo()[event.currentIndex].getId();
-      if (indexGroup === 0) {
-        let refEst = this.groupSvc.outGroup(this.groups[indexPreviousGroup].getId(), studentId);
-        this.subjectSvc.inStudent(refEst);
-      } else if (indexPreviousGroup === 0) {
-        let refEst = this.subjectSvc.outStudent(studentId);
-        let refNewGroup = await this.groupSvc.inGroup(this.groups[indexGroup].getId(), refEst);
-        if (refNewGroup) {
-          this.groups[indexGroup].setId(refNewGroup.id);
-          this.subjectSvc.createGroup(refNewGroup);
+    if (this.endOperation) {
+      this.endOperation = false
+      if (event.previousContainer !== event.container) {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+        );
+        const indexGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.container.data);
+        const indexPreviousGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.previousContainer.data);
+        const studentId: string = this.groups[indexGroup].getObjectDB().getGrupo()[event.currentIndex].getId();
+        if (indexGroup === 0) {
+          let refEst = this.groupSvc.outGroup(this.groups[indexPreviousGroup].getId(), studentId);
+          this.subjectSvc.inStudent(refEst);
+        } else if (indexPreviousGroup === 0) {
+          let refEst = this.subjectSvc.outStudent(studentId);
+          let refNewGroup = await this.groupSvc.inGroup(this.groups[indexGroup].getId(), refEst);
+          if (refNewGroup !== undefined) {
+            await this.subjectSvc.createGroup(refNewGroup);
+            this.groups[indexGroup].setId(refNewGroup.id);
+            //this.groups[indexGroup].getObjectDB().setLider(studentId)
+          }
+        } else {
+          let refNewGroup = await this.groupSvc.transferGroup(
+            this.groups[indexGroup].getId(),
+            this.groups[indexPreviousGroup].getId(),
+            studentId
+          );
+          if (refNewGroup !== undefined) {
+            this.groups[indexGroup].setId(refNewGroup.id);
+            await this.subjectSvc.createGroup(refNewGroup);
+            //this.groups[indexGroup].getObjectDB().setLider(studentId)
+          }
         }
-      } else {
-        let refNewGroup = await this.groupSvc.transferGroup(
-          this.groups[indexGroup].getId(),
-          this.groups[indexPreviousGroup].getId(),
-          studentId
-        )
-        if (refNewGroup) {
-          this.groups[indexGroup].setId(refNewGroup.id);
-          this.subjectSvc.createGroup(refNewGroup);
+        // if the last group is different from "withoup group"
+        if (event.previousContainer.data !== this.groups[0].getObjectDB().getGrupo()) {
+          const lengthPreviousGroup = event.previousContainer.data.length;
+          this.verifyLeader(indexGroup, event.currentIndex, indexPreviousGroup, lengthPreviousGroup);
+          await this.verifyGroupBox(indexPreviousGroup);
+        } else {
+          this.verifyLeader(indexGroup, -1, 0, 0);
         }
+        this.verifyEmptyBoxes();
+        event.container.data = this.sort(event.container.data);
       }
-      // if the last group is different from "withoup group"
-      if (event.previousContainer.data !== this.groups[0].getObjectDB().getGrupo()) {
-        const lengthPreviousGroup = event.previousContainer.data.length;
-        this.verifyLeader(indexGroup, event.currentIndex, indexPreviousGroup, lengthPreviousGroup);
-        this.verifyGroupBox(indexPreviousGroup);
-      } else {
-        this.verifyLeader(indexGroup, -1, 0, 0);
-      }
-      this.verifyEmptyBoxes();
-      event.container.data = this.sort(event.container.data);
     }
+    this.endOperation = true
   }
 
   moveWithoutGroup(indexGroup: number, memberGroup: MemberGroup) {
-    this.groups[indexGroup].getObjectDB().setGrupo(
-      this.groups[indexGroup].getObjectDB().getGrupo().filter((m: MemberGroup) => m !== memberGroup)
-    );
-    this.groups[0].getObjectDB().getGrupo().push(memberGroup)
+    if (this.endOperation) {
+      this.endOperation = false
+      this.groups[indexGroup].getObjectDB().setGrupo(
+        this.groups[indexGroup].getObjectDB().getGrupo().filter((m: MemberGroup) => m !== memberGroup)
+      );
+      this.groups[0].getObjectDB().getGrupo().push(memberGroup)
 
-    let refStudent = this.groupSvc.outGroup(this.groups[indexGroup].getId(), memberGroup.getId())
-    this.subjectSvc.inStudent(refStudent)
+      let refStudent = this.groupSvc.outGroup(this.groups[indexGroup].getId(), memberGroup.getId())
+      this.subjectSvc.inStudent(refStudent)
 
-    const indexMember = this.groups[0].getObjectDB().getGrupo().length - 1;
-    this.verifyLeader(0, indexMember, indexGroup, this.groups[indexGroup].getObjectDB().getGrupo().length)
-    this.verifyGroupBox(indexGroup)
-    this.groups[0].getObjectDB().setGrupo(this.sort(this.groups[0].getObjectDB().getGrupo()))
-    this.verifyEmptyBoxes()
+      const indexMember = this.groups[0].getObjectDB().getGrupo().length - 1;
+      this.verifyLeader(0, indexMember, indexGroup, this.groups[indexGroup].getObjectDB().getGrupo().length)
+      this.verifyGroupBox(indexGroup)
+      this.groups[0].getObjectDB().setGrupo(this.sort(this.groups[0].getObjectDB().getGrupo()))
+      this.verifyEmptyBoxes()
+    }
+    this.endOperation = true
   }
 
   deleteStudent(contentDialog: any, member: MemberGroup, indexGroup: number) {
-    this.memberToDelete = member
-    const dialogRef = this.dialog.open(contentDialog);
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const leader = member.getId() === this.groups[indexGroup].getObjectDB().getLider() ? 1 : 0;
-        this.groups[indexGroup].getObjectDB().setGrupo(
-          this.groups[indexGroup].getObjectDB().getGrupo().filter((m: MemberGroup) => m !== member)
-        );
-        this.groupSvc.outGroup(this.groups[indexGroup].getId(), member.getId());
-        this.verifyLeader(-1, leader, indexGroup, this.groups[indexGroup].getObjectDB().getGrupo().length)
-        this.verifyGroupBox(indexGroup);
-        this.verifyEmptyBoxes()
-      }
-    });
+    if (this.endOperation) {
+      this.endOperation = false
+      this.memberToDelete = member
+      const dialogRef = this.dialog.open(contentDialog);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          const leader = member.getId() === this.groups[indexGroup].getObjectDB().getLider() ? 1 : 0;
+          this.groups[indexGroup].getObjectDB().setGrupo(
+            this.groups[indexGroup].getObjectDB().getGrupo().filter((m: MemberGroup) => m !== member)
+          );
+          this.groupSvc.outGroup(this.groups[indexGroup].getId(), member.getId());
+          this.verifyLeader(-1, leader, indexGroup, this.groups[indexGroup].getObjectDB().getGrupo().length)
+          this.verifyGroupBox(indexGroup);
+          this.verifyEmptyBoxes()
+        }
+      });
+    }
+    this.endOperation = true
   }
 
-  verifyEmptyBoxes() {
+  verifyEmptyBoxes() {  
     this.groups = this.groups.filter((g) => {
       if (g.getObjectDB().getGrupo().length > 0 || g.getId() === 'SG') {
         return g;
@@ -161,18 +176,24 @@ export class GroupsComponent implements OnInit {
     if (indexGroup > 0 && this.groups[indexGroup].getObjectDB().getGrupo().length === 1) {
       let newLeader: string = this.groups[indexGroup].getObjectDB().getGrupo()[0].getId();
       this.groups[indexGroup].getObjectDB().setLider(newLeader);
-      this.groupSvc.convertLeader(newLeader, this.groups[indexGroup].getId());
+      //this.groupSvc.convertLeader(newLeader, this.groups[indexGroup].getId());
     }
   }
 
   createGroup() {
-    let newGroup = new GroupWithNames([]);
-    this.groups.push(new ObjectDB(newGroup, 'NG'));
+    if (this.groups[this.groups.length - 1].getId() !== 'NG') {
+      let newGroup = new GroupWithNames([]);
+      this.groups.push(new ObjectDB(newGroup, 'NG'));
+    }
   }
 
   chageLeader(indexGroup: number, newLeader: string) {
-    this.groups[indexGroup].getObjectDB().setLider(newLeader);
-    this.groupSvc.convertLeader(newLeader, this.groups[indexGroup].getId());
-    this.verifyEmptyBoxes();;
+    if (this.endOperation) {
+      this.endOperation = false
+      this.groups[indexGroup].getObjectDB().setLider(newLeader);
+      this.groupSvc.convertLeader(newLeader, this.groups[indexGroup].getId());
+      this.verifyEmptyBoxes();;
+    }
+    this.endOperation = true
   }
 }
