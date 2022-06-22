@@ -84,12 +84,4 @@ export class Practice {
     this.planta = planta
     this.materia = materia
   }
-
-
-
-
-    
-
-
-    
 }

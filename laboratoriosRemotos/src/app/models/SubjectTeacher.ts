@@ -1,6 +1,6 @@
 import { DocumentReference } from "@angular/fire/compat/firestore";
 
-export class SubjectUltimo{
+export class SubjectTeacher{
     private clave: string;
     private descripcion: string;
     private docente: DocumentReference;

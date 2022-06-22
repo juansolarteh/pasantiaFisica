@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SubjectService } from 'src/app/services/subject.service';
 import { UserService } from 'src/app/services/user.service';
-import { SubjectUltimo } from 'src/app/models/SubjectUltimo';
+import { SubjectTeacher } from 'src/app/models/SubjectTeacher';
 import { convertTo } from 'src/app/models/ObjectConverter';
 
 
@@ -29,7 +29,7 @@ export class SubjectsStudentResolverService implements Resolve<ObjectDB<Subject>
         })
     }
 
-    private getAllInfo(listSubjects : ObjectDB<SubjectUltimo>[]){
+    private getAllInfo(listSubjects : ObjectDB<SubjectTeacher>[]){
         let subjectsWithAllInfo : ObjectDB<Subject>[] = []
         listSubjects.forEach(async subject=>{
             let name = await this.userSvc.getUserName( subject.getObjectDB().getDocente())

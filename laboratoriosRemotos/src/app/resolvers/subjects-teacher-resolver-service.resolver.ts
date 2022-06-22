@@ -3,7 +3,7 @@ import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ObjectDB } from '../models/ObjectDB';
 import { Subject } from '../models/Subject';
-import { SubjectUltimo } from '../models/SubjectUltimo';
+import { SubjectTeacher } from '../models/SubjectTeacher';
 import { SubjectService } from '../services/subject.service';
 import { UserService } from '../services/user.service';
 
