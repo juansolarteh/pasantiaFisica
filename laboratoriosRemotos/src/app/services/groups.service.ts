@@ -97,7 +97,4 @@ export class GroupsService {
     return new ObjectDB(group, groupRef.id)
   }
 
-  deleteGroupMember(member: MemberGroup, idSubject: string) {
-
-  }
 }

@@ -10,7 +10,7 @@ import { PracticeNameDate } from '../models/Practice';
 })
 export class PracticeService {
 
-  private objPracticeSelected!: ObjectDB<Practice>
+  
   col = this.firestr.firestore.collection('Practicas');
   subcollection = 'Constantes'
 
@@ -49,12 +49,6 @@ export class PracticeService {
       practices.push(newPractice)
     })
     return practices
-  }
-  setPracticeSelected(objPracticeSelected: ObjectDB<Practice>) {
-    this.objPracticeSelected = objPracticeSelected
-  }
-  getPracticeSelected() {
-    return this.objPracticeSelected
   }
 
   async getPracticesFromSubjectRef(subjectRef: DocumentReference) {
