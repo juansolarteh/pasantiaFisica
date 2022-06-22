@@ -18,7 +18,6 @@ export class SubjectComponent implements OnInit {
   
   ngOnInit(): void {
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
-    console.log(this.subjectSelected)
   }
   changeTab(event:any){
     console.log(event.index)

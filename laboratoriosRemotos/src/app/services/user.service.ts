@@ -91,12 +91,6 @@ export class UserService {
     return listUsers;
   }
 
-  async getUserName(refUser: DocumentReference) {
-    const doc = await this.col.doc(refUser.id).get();
-    let name = doc.get('nombre');
-    return name
-  }
-
   deleteUser(refUser: DocumentReference) {
     this.firestr.doc(refUser).delete();
   }
@@ -128,4 +122,11 @@ export class UserService {
       return null
     }
   }
+  //Metodos Jorge Iván Solano - Modulo de estudiantes
+  async getUserName(refUser: DocumentReference) {
+    const doc = await this.col.doc(refUser.id).get();
+    let name = doc.get('nombre');
+    return name
+  }
+  
 }

@@ -22,27 +22,27 @@ export class SubjectService {
   constructor(private firestr: AngularFirestore) { }
 
   //Methods of Group
-  getWithoutGroup(){
+  getWithoutGroup() {
     return this.withoutGroup
   }
-  inStudent(refEst: DocumentReference){
+  inStudent(refEst: DocumentReference) {
     this.withoutGroup.push(refEst);
     this.refSubjectSelected.update('sinGrupo', this.withoutGroup);
   }
-  outStudent(studentId: string){
+  outStudent(studentId: string) {
     let refEst: DocumentReference = this.withoutGroup.find(m => m.id === studentId)!;
     this.withoutGroup = this.withoutGroup.filter(e => e !== refEst);
     this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
     return refEst;
   }
-  createGroup(refNewGroup: DocumentReference){
+  createGroup(refNewGroup: DocumentReference) {
     this.refSubjectSelected.get().then(doc => {
       let groups: DocumentReference[] = doc.get('grupos');
       groups.push(refNewGroup);
       doc.ref.update('grupos', groups)
     })
   }
-  async deleteGroup(groupId: string){
+  async deleteGroup(groupId: string) {
     return this.refSubjectSelected.get().then(doc => {
       let groups: DocumentReference[] = doc.get('grupos');
       let groupToDelete: DocumentReference = groups.find(g => g.id === groupId)!
@@ -94,10 +94,12 @@ export class SubjectService {
   }
   //----------------------------------------------
   //Métodos Jorge - Módulo estudiantes
-  async getSubjectsWithoutGroup(studentRef: DocumentReference){
-    var listWithoutGroup : ObjectDB<SubjectUltimo>[] = [];
+
+  //Obtiene las materias donde el estudiante está sin grupo
+  async getSubjectsWithoutGroup(studentRef: DocumentReference) {
+    var listWithoutGroup: ObjectDB<SubjectUltimo>[] = [];
     const querySnapShot = this.col.where('sinGrupo', 'array-contains', studentRef).get();
-    (await querySnapShot).forEach(doc=>{
+    (await querySnapShot).forEach(doc => {
       let subject = new ObjectDB(convertTo(SubjectUltimo, doc.data()), doc.id)
       subject.getObjectDB().setDocente(doc.get('docente'))
       listWithoutGroup.push(subject)
@@ -105,11 +107,12 @@ export class SubjectService {
     return listWithoutGroup
   }
 
+  //Obtiene las materias donde el estudiante pertenece a un grupo
   async getSubjectsByGroup(data: string[]) {
-    var listWithGroup : ObjectDB<SubjectUltimo>[] = [];
+    var listWithGroup: ObjectDB<SubjectUltimo>[] = [];
     if (data != null) {
       let querySnapShot = this.col.get();
-      (await querySnapShot).forEach(doc=>{
+      (await querySnapShot).forEach(doc => {
         let groupsSubject = doc.get('grupos') as Array<DocumentReference>
         groupsSubject.forEach(group => {
           if ((data.includes(group.id))) {
@@ -122,15 +125,30 @@ export class SubjectService {
     }
     return listWithGroup
   }
-  
-  async getSubjectRefById(idSubject: string){
+  //Obtiene la referencia de la materia mediante su ID
+  async getSubjectRefById(idSubject: string) {
     let querySnapShot = await this.col.doc(idSubject).get()
     return querySnapShot
   }
-  async getSubjectById2(idSubject: string){
-    let data = await this.col.doc(idSubject).get()
-    let subject = new ObjectDB(convertTo(SubjectUltimo, data.data()!),idSubject)
-    subject.getObjectDB().setDocente(data.get('docente'))
+  //Obtiene la materia mediante su UD
+  async getSubjectById2(idSubject: string) {
+    //let data = await this.col.doc(idSubject).get()
+    let querySnapShot = await this.getSubjectRefById(idSubject)
+    let subject = new ObjectDB(convertTo(SubjectUltimo, querySnapShot.data()!), idSubject)
+    subject.getObjectDB().setDocente(querySnapShot.get('docente'))
     return subject;
+  }
+  //Verifica si estudiante está sin grupo
+  async studentBelongToWithoutGroup(refStudent: DocumentReference, idSubject: string) {
+    console.log("Desde servicio: ", refStudent, idSubject)
+    let querySnapShot = await this.col.doc(idSubject).get()
+    let students: DocumentReference[] = querySnapShot.get('sinGrupo')
+    let flag = false
+    students.forEach(student=>{
+      if(student.isEqual(refStudent)){
+        flag = true
+      }
+    })
+    return flag
   }
 }
