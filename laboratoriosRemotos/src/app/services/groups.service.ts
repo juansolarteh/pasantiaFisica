@@ -1,8 +1,8 @@
+import { ObjectDB } from './../models/ObjectDB';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { Group } from '../models/Group';
 import { MemberGroup } from '../models/MemberGroup';
-import { ObjectDB } from '../models/ObjectDB';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,9 @@ export class GroupsService {
   }
 
   //Mehtods from teacher
+  getGroups() {
+    return this.groupsDB;
+  }
   deleteGroup(refGroup: DocumentReference) {
     this.groupsDB = this.groupsDB.filter(g => g.getId() !== refGroup.id);
     refGroup.delete()
@@ -58,7 +61,7 @@ export class GroupsService {
     } else {
       let newGroup = new Group([refEst], refEst)
       let refNewGroup: DocumentReference = await this.createGroup(newGroup);
-      this.groupsDB.push(new ObjectDB(newGroup, refNewGroup.id));
+      this.groupsDB.push(new ObjectDB(newGroup, refNewGroup.id))
       return refNewGroup;
     }
   }

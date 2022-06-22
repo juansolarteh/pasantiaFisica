@@ -12,10 +12,4 @@
 mat-card{
     border: 0.5px solid;
     margin-bottom: 1rem;
-    cursor: default;
-    user-select: none;
-}
-
-#router{
-    user-select: none;
 }

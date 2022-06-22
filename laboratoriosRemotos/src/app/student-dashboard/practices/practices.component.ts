@@ -1,3 +1,4 @@
+import { ObjectDB } from './../../models/ObjectDB';
 import { Subject } from '../../models/Subject';
 import { SubjectService } from 'src/app/services/subject.service';
 import { PracticeService } from '../../services/practice.service';
@@ -5,7 +6,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { plainToClass, plainToInstance } from 'class-transformer';
 import { Practice } from 'src/app/models/Practice';
-import { ObjectDB } from 'src/app/models/ObjectDB';
 
 @Component({
   selector: 'app-practices',
@@ -14,14 +14,16 @@ import { ObjectDB } from 'src/app/models/ObjectDB';
 })
 export class PracticesComponent implements OnInit {
 
-  constructor(private practiceService: PracticeService, private cursoService: SubjectService, private readonly router: Router
-    , private activatedRoute: ActivatedRoute) { }
-  subject_id !: string
-  practices: Practice[] = []
-  selectedSubject!: Subject
+  constructor(private practiceSvc: PracticeService,
+    private subjectSvc: SubjectService,
+    private readonly router: Router,
+    private activatedRoute: ActivatedRoute) { }
+
+  practices: ObjectDB<Practice>[] = []
+  subjectSelected!: ObjectDB<Subject>
 
   ngOnInit(): void {
-    this.selectedSubject = this.activatedRoute.snapshot.data['subjectSelected']
+    this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.practices = this.activatedRoute.snapshot.data['practices'];
   }
   goToPracticeInfo(practice: ObjectDB<Practice>) {

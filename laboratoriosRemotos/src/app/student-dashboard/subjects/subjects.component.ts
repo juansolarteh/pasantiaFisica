@@ -1,7 +1,6 @@
+import { SubjectService } from 'src/app/services/subject.service';
 import { Subject } from '../../models/Subject';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
-import { SubjectService } from 'src/app/services/subject.service';
 import { Component, OnInit } from '@angular/core';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 
@@ -14,10 +13,9 @@ export class SubjectsComponent implements OnInit {
 
   subjects: ObjectDB<Subject>[] = [];
   
-  constructor(private userService: UserService, private subjectService: SubjectService,
-    private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor( private activatedRoute: ActivatedRoute, private readonly router: Router, private subjectSvc : SubjectService) { }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
 
     this.subjects = this.activatedRoute.snapshot.data['subjects'];
   }
