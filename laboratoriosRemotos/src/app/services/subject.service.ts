@@ -1,12 +1,10 @@
 import { GroupsService } from 'src/app/services/groups.service';
 import { Subject } from '../models/Subject';
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
-import { SubjectUltimo } from '../models/SubjectUltimo';
-
-
+import { SubjectTeacher } from '../models/SubjectTeacher';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +12,15 @@ import { SubjectUltimo } from '../models/SubjectUltimo';
 export class SubjectService {
 
   private col = this.firestr.firestore.collection('Materias');
-
-  private objSubjectSelected!: ObjectDB<Subject>
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;
 
   constructor(private firestr: AngularFirestore) { }
+
+  getRefSubjectSelected(){
+    return this.refSubjectSelected
+  }
+
 
   //Methods of Group
   getWithoutGroup() {
@@ -90,7 +91,6 @@ export class SubjectService {
       refSubjects.push(doc.ref);
     })
     return refSubjects;
-
   }
   //----------------------------------------------
   //Métodos Jorge - Módulo estudiantes
@@ -148,6 +148,12 @@ export class SubjectService {
       if(student.isEqual(refStudent)){
         flag = true
       }
+
+  async getRefSubjectsFromRefUser(refUser: DocumentReference) {
+    var refSubjects: DocumentReference[] = [];
+    const querySnapShot = this.col.where('docente', '==', refUser).get();
+    (await querySnapShot).forEach((doc) => {
+      refSubjects.push(doc.ref);
     })
     return flag
   }
