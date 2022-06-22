@@ -1,8 +1,8 @@
+import { SubjectService } from 'src/app/services/subject.service';
 import { Subject } from '../../models/Subject';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
-import { SubjectService } from 'src/app/services/subject.service';
 import { Component, OnInit } from '@angular/core';
+import { ObjectDB } from 'src/app/models/ObjectDB';
 
 @Component({
   selector: 'app-subjects',
@@ -11,32 +11,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SubjectsComponent implements OnInit {
 
-  materias: Subject[] = [];
+  subjects: ObjectDB<Subject>[] = [];
   
-  constructor(private userService: UserService, private subjectService: SubjectService,
-    private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor( private activatedRoute: ActivatedRoute, private readonly router: Router, private subjectSvc : SubjectService) { }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
 
-    const userRef = this.userService.getUserLoggedRef()
-    this.subjectService.prueba(userRef);
-    
-    const id = localStorage.getItem('idUsuario')
-    if (id != null) {
-      const doc = await this.userService.getUser(id)
-      if (doc != undefined) {
-        this.subjectService.getSubjectsFromStudent(doc).then(res => {
-          this.materias = res
-        }).catch(e => {
-          console.log("Error", e)
-        })
-      }
-    }
+    this.subjects = this.activatedRoute.snapshot.data['subjects'];
   }
 
-  goToPractices(subject: Subject){
-    localStorage.setItem("selectedSubject" , JSON.stringify(subject))
-    //this.router.navigate(['../subject',subject.getSubjectId()], {relativeTo: this.activatedRoute})
+  goToPractices(subject:ObjectDB<Subject>){
+    localStorage.setItem("subjectSelected",subject.getId())
+    this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
   }
   goToDeleteSubject(){
     alert("Yendo a elimitar asignatura")

@@ -1,18 +1,17 @@
+import { GroupsService } from 'src/app/services/groups.service';
 import { Subject } from '../models/Subject';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
 import { SubjectTeacher } from '../models/SubjectTeacher';
-import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubjectService {
-  private col = this.firestr.firestore.collection('Materias');
 
-  
+  private col = this.firestr.firestore.collection('Materias');
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;
 
@@ -22,9 +21,10 @@ export class SubjectService {
     return this.refSubjectSelected
   }
 
+
   //Methods of Group
   getWithoutGroup() {
-    return this.withoutGroup;
+    return this.withoutGroup
   }
   inStudent(refEst: DocumentReference) {
     this.withoutGroup.push(refEst);
@@ -36,8 +36,8 @@ export class SubjectService {
     this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
     return refEst;
   }
-  async createGroup(refNewGroup: DocumentReference) {
-    await this.refSubjectSelected.get().then(doc => {
+  createGroup(refNewGroup: DocumentReference) {
+    this.refSubjectSelected.get().then(doc => {
       let groups: DocumentReference[] = doc.get('grupos');
       groups.push(refNewGroup);
       doc.ref.update('grupos', groups)
@@ -53,11 +53,6 @@ export class SubjectService {
     })
   }
   //End Methods of Group
-
-  getRefSubjectFromId(idSibject: string) {
-    this.refSubjectSelected = this.col.doc(idSibject);
-    return this.refSubjectSelected
-  }
 
   deleteFromReference(refSubject: DocumentReference) {
     this.firestr.doc(refSubject).delete();
@@ -78,7 +73,7 @@ export class SubjectService {
   async getSubjectById(idSubject: string) {
     this.refSubjectSelected = this.col.doc(idSubject);
     let data = (await this.refSubjectSelected.get()).data();
-    return convertTo(SubjectTeacher, data!);
+    return convertTo(SubjectUltimo, data!);
   }
 
   async getNameSubjects(teacherRef: DocumentReference) {
@@ -89,7 +84,6 @@ export class SubjectService {
     });
     return listSubjects;
   }
-
   async getRefSubjectsFromRefUser(refUser: DocumentReference) {
     var refSubjects: DocumentReference[] = [];
     const querySnapShot = this.col.where('docente', '==', refUser).get();
@@ -97,5 +91,70 @@ export class SubjectService {
       refSubjects.push(doc.ref);
     })
     return refSubjects;
+  }
+  //----------------------------------------------
+  //Métodos Jorge - Módulo estudiantes
+
+  //Obtiene las materias donde el estudiante está sin grupo
+  async getSubjectsWithoutGroup(studentRef: DocumentReference) {
+    var listWithoutGroup: ObjectDB<SubjectUltimo>[] = [];
+    const querySnapShot = this.col.where('sinGrupo', 'array-contains', studentRef).get();
+    (await querySnapShot).forEach(doc => {
+      let subject = new ObjectDB(convertTo(SubjectUltimo, doc.data()), doc.id)
+      subject.getObjectDB().setDocente(doc.get('docente'))
+      listWithoutGroup.push(subject)
+    })
+    return listWithoutGroup
+  }
+
+  //Obtiene las materias donde el estudiante pertenece a un grupo
+  async getSubjectsByGroup(data: string[]) {
+    var listWithGroup: ObjectDB<SubjectUltimo>[] = [];
+    if (data != null) {
+      let querySnapShot = this.col.get();
+      (await querySnapShot).forEach(doc => {
+        let groupsSubject = doc.get('grupos') as Array<DocumentReference>
+        groupsSubject.forEach(group => {
+          if ((data.includes(group.id))) {
+            let subject = new ObjectDB(convertTo(SubjectUltimo, doc.data()), doc.id)
+            subject.getObjectDB().setDocente(doc.get('docente'))
+            listWithGroup.push(subject)
+          }
+        })
+      })
+    }
+    return listWithGroup
+  }
+  //Obtiene la referencia de la materia mediante su ID
+  async getSubjectRefById(idSubject: string) {
+    let querySnapShot = await this.col.doc(idSubject).get()
+    return querySnapShot
+  }
+  //Obtiene la materia mediante su UD
+  async getSubjectById2(idSubject: string) {
+    //let data = await this.col.doc(idSubject).get()
+    let querySnapShot = await this.getSubjectRefById(idSubject)
+    let subject = new ObjectDB(convertTo(SubjectUltimo, querySnapShot.data()!), idSubject)
+    subject.getObjectDB().setDocente(querySnapShot.get('docente'))
+    return subject;
+  }
+  //Verifica si estudiante está sin grupo
+  async studentBelongToWithoutGroup(refStudent: DocumentReference, idSubject: string) {
+    console.log("Desde servicio: ", refStudent, idSubject)
+    let querySnapShot = await this.col.doc(idSubject).get()
+    let students: DocumentReference[] = querySnapShot.get('sinGrupo')
+    let flag = false
+    students.forEach(student=>{
+      if(student.isEqual(refStudent)){
+        flag = true
+      }
+
+  async getRefSubjectsFromRefUser(refUser: DocumentReference) {
+    var refSubjects: DocumentReference[] = [];
+    const querySnapShot = this.col.where('docente', '==', refUser).get();
+    (await querySnapShot).forEach((doc) => {
+      refSubjects.push(doc.ref);
+    })
+    return flag
   }
 }
