@@ -16,7 +16,7 @@ export class UserService {
 
   constructor(private firestr: AngularFirestore) { }
 
-  getUserLoggedRef() {
+  getUserLoggedRef(){
     return this.userLoggedRef;
   }
 
@@ -38,14 +38,14 @@ export class UserService {
       if (name && email) {
         const student: User = new User(name, email, 'Estudiante');
         let userRef = await this.onAddUser(student);
-        if (userRef) {
+        if (userRef){
           this.userLoggedRef = userRef;
         }
       }
     }
   }
 
-  getRefUser(idUser: string) {
+  getRefUser(idUser: string){
     return this.col.doc(idUser)
   }
 
@@ -115,18 +115,11 @@ export class UserService {
     }
   }
 
-  private onAddUser(user: User) {
+  private onAddUser(user: User){
     try {
       return this.col.add(user);
     } catch (error) {
       return null
     }
   }
-  //Metodos Jorge Iván Solano - Modulo de estudiantes
-  async getUserName(refUser: DocumentReference) {
-    const doc = await this.col.doc(refUser.id).get();
-    let name = doc.get('nombre');
-    return name
-  }
-  
 }

@@ -16,7 +16,7 @@ export class ManagerDashboardComponent implements OnInit {
   addUserRol = '';
   dialogRef: MatDialogRef<unknown, any> | undefined;
 
-  constructor(public dialog: MatDialog, private readonly route: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
+  constructor(private dialog: MatDialog, private readonly route: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     const users: ObjectDB<User>[] = this.route.snapshot.data['users'];

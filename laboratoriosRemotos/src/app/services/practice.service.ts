@@ -1,17 +1,16 @@
 import { convertTo } from 'src/app/models/ObjectConverter';
 import { ObjectDB } from './../models/ObjectDB';
-import { plainToInstance } from 'class-transformer';
-import { Practice, PracticeNameDate } from 'src/app/models/Practice';
+import { Practice } from 'src/app/models/Practice';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { Subject } from 'rxjs';
+import { PracticeNameDate } from '../models/Practice';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PracticeService {
 
-
+  private objPracticeSelected!: ObjectDB<Practice>
   col = this.firestr.firestore.collection('Practicas');
   subcollection = 'Constantes'
 
@@ -44,18 +43,20 @@ export class PracticeService {
   //Metodos Jorge Solano - Modulo de estudiante
   async getPracticesBySubject(refSubject: DocumentReference) {
     var practices: ObjectDB<Practice>[] = []
-    const querySnapShot = this.col.where("materia","==",refSubject).get();
-    (await querySnapShot).forEach(doc=>{
-      let newPractice = new ObjectDB(convertTo(Practice,doc.data()),doc.id)
+    const querySnapShot = this.col.where("materia", "==", refSubject).get();
+    (await querySnapShot).forEach(doc => {
+      let newPractice = new ObjectDB(convertTo(Practice, doc.data()), doc.id)
       practices.push(newPractice)
     })
     return practices
   }
-  async getPracticeById(idPractice: string){
-    let data = await this.col.doc(idPractice).get()
-    let practice = new ObjectDB(convertTo(Practice, data.data()!),idPractice)
-    return practice;
+  setPracticeSelected(objPracticeSelected: ObjectDB<Practice>) {
+    this.objPracticeSelected = objPracticeSelected
   }
+  getPracticeSelected() {
+    return this.objPracticeSelected
+  }
+
   async getPracticesFromSubjectRef(subjectRef: DocumentReference) {
     let query = this.col.where('materia', '==', subjectRef)
     const qSnapShot = await query.get();
@@ -64,6 +65,7 @@ export class PracticeService {
       return new ObjectDB(practice, res.id);
     });
   }
+
   async getPracticesNameDate(subjectRef: DocumentReference): Promise<ObjectDB<PracticeNameDate>[]> {
     let query = this.col.where('materia', '==', subjectRef)
     const qSnapShot = await query.get();
@@ -72,6 +74,7 @@ export class PracticeService {
       return new ObjectDB(practice, res.id);
     });
   }
+
   addPractice(practice: Practice) {
     return this.col.add({
       nombre: practice.getNombre(),
@@ -83,9 +86,11 @@ export class PracticeService {
       descripcion: practice.getDescripcion(),
     });
   }
+
   addPathDocs(pathDocs: string[], idPractice: string) {
     return this.col.doc(idPractice).update('documentos', pathDocs)
   }
+
   addConstants(constants: ObjectDB<any>[], practiceRef: DocumentReference){
     constants.forEach(cons => {
       practiceRef.collection(this.subcollection).doc(cons.getId()).set(cons.getObjectDB())
