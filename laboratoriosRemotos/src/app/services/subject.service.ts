@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import { ObjectDB } from '../models/ObjectDB';
 import { convertTo } from '../models/ObjectConverter';
-import { SubjectTeacher } from '../models/SubjectTeacher';
+import { SubjectTeacher } from '../models/SubjectTeacher'
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class SubjectService {
 
   constructor(private firestr: AngularFirestore) { }
 
-  getRefSubjectSelected(){
+  getRefSubjectSelected() {
     return this.refSubjectSelected
   }
 
@@ -73,7 +73,7 @@ export class SubjectService {
   async getSubjectById(idSubject: string) {
     this.refSubjectSelected = this.col.doc(idSubject);
     let data = (await this.refSubjectSelected.get()).data();
-    return convertTo(SubjectUltimo, data!);
+    return convertTo(SubjectTeacher, data!);
   }
 
   async getNameSubjects(teacherRef: DocumentReference) {
@@ -97,10 +97,10 @@ export class SubjectService {
 
   //Obtiene las materias donde el estudiante está sin grupo
   async getSubjectsWithoutGroup(studentRef: DocumentReference) {
-    var listWithoutGroup: ObjectDB<SubjectUltimo>[] = [];
+    var listWithoutGroup: ObjectDB<SubjectTeacher>[] = [];
     const querySnapShot = this.col.where('sinGrupo', 'array-contains', studentRef).get();
     (await querySnapShot).forEach(doc => {
-      let subject = new ObjectDB(convertTo(SubjectUltimo, doc.data()), doc.id)
+      let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
       subject.getObjectDB().setDocente(doc.get('docente'))
       listWithoutGroup.push(subject)
     })
@@ -109,14 +109,14 @@ export class SubjectService {
 
   //Obtiene las materias donde el estudiante pertenece a un grupo
   async getSubjectsByGroup(data: string[]) {
-    var listWithGroup: ObjectDB<SubjectUltimo>[] = [];
+    var listWithGroup: ObjectDB<SubjectTeacher>[] = [];
     if (data != null) {
       let querySnapShot = this.col.get();
       (await querySnapShot).forEach(doc => {
         let groupsSubject = doc.get('grupos') as Array<DocumentReference>
         groupsSubject.forEach(group => {
           if ((data.includes(group.id))) {
-            let subject = new ObjectDB(convertTo(SubjectUltimo, doc.data()), doc.id)
+            let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
             subject.getObjectDB().setDocente(doc.get('docente'))
             listWithGroup.push(subject)
           }
@@ -134,7 +134,7 @@ export class SubjectService {
   async getSubjectById2(idSubject: string) {
     //let data = await this.col.doc(idSubject).get()
     let querySnapShot = await this.getSubjectRefById(idSubject)
-    let subject = new ObjectDB(convertTo(SubjectUltimo, querySnapShot.data()!), idSubject)
+    let subject = new ObjectDB(convertTo(SubjectTeacher, querySnapShot.data()!), idSubject)
     subject.getObjectDB().setDocente(querySnapShot.get('docente'))
     return subject;
   }
@@ -144,16 +144,10 @@ export class SubjectService {
     let querySnapShot = await this.col.doc(idSubject).get()
     let students: DocumentReference[] = querySnapShot.get('sinGrupo')
     let flag = false
-    students.forEach(student=>{
-      if(student.isEqual(refStudent)){
+    students.forEach(student => {
+      if (student.isEqual(refStudent)) {
         flag = true
       }
-
-  async getRefSubjectsFromRefUser(refUser: DocumentReference) {
-    var refSubjects: DocumentReference[] = [];
-    const querySnapShot = this.col.where('docente', '==', refUser).get();
-    (await querySnapShot).forEach((doc) => {
-      refSubjects.push(doc.ref);
     })
     return flag
   }
