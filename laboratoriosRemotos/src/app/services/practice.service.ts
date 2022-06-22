@@ -1,10 +1,9 @@
 import { convertTo } from 'src/app/models/ObjectConverter';
 import { ObjectDB } from './../models/ObjectDB';
 import { plainToInstance } from 'class-transformer';
-import { Practice } from 'src/app/models/Practice';
+import { Practice, PracticeNameDate } from 'src/app/models/Practice';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
