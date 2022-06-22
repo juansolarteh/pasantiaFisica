@@ -1,64 +1,30 @@
-import { DocumentReference } from "@angular/fire/compat/firestore";
+
+import { SubjectInfo } from "./SubjectInfo";
 
 export class Subject{
-    
-    private clave: string;
-    private descripcion: string;
-    private docente: string;
-    private nombre: string;
-    private numGrupos: number;
 
-    constructor(
-        clave: string,
-        descripcion: string,
-        docente: string,
-        nombre: string,
-        numGrupos: number,
-    ) {
-        this.clave = clave
-        this.descripcion = descripcion
-        this.docente = docente
-        this.nombre = nombre
-        this.numGrupos = numGrupos
+    subject_id:string;
+    //subject_ref: DocumentReference;
+    subject_info:SubjectInfo;
+
+    constructor(prmSubject_id:string, prmSubject_info:SubjectInfo) {
+       //this.subject_ref = prmSubject_ref; 
+       this.subject_id=prmSubject_id;
+       this.subject_info=prmSubject_info;
+    }
+
+    getSubjectId(){
+        return this.subject_id
     }
     
-    public getClave(): string {
-        return this.clave;
+    getSubjectInfo(){
+        return this.subject_info
     }
 
-    public setClave(clave: string): void {
-        this.clave = clave;
+    setSubjectId(prmSubject_Id:string){
+        this.subject_id = prmSubject_Id
     }
-
-    public getDescripcion(): string {
-        return this.descripcion;
-    }
-
-    public setDescripcion(descripcion: string): void {
-        this.descripcion = descripcion;
-    }
-
-    public getDocente(): string {
-        return this.docente;
-    }
-
-    public setDocente(docente: string): void {
-        this.docente = docente;
-    }
-
-    public getNombre(): string {
-        return this.nombre;
-    }
-
-    public setNombre(nombre: string): void {
-        this.nombre = nombre;
-    }
-
-    public getNumGrupos(): number {
-        return this.numGrupos;
-    }
-
-    public setNumGrupos(numGrupos: number): void {
-        this.numGrupos = numGrupos;
+    setSubjectInfo(prmSubject_info:SubjectInfo){
+        this.subject_info = prmSubject_info
     }
 }
