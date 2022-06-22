@@ -1,72 +1,42 @@
 <div class="container">
     <div class="grid">
-        <div>
+        <div class="columna">
             <mat-card>
-                <mat-selection-list>
-                    <div mat-subheader>
-                        <mat-icon mat-list-icon>group</mat-icon>
-                        Grupo de trabajo (4 personas)
+                <mat-list>
+                    <div mat-subheader class="encabezado">
+                        <mat-icon mat-list-icon class="icon-display">group</mat-icon>
+                        <div>Equipo de trabajo</div>
                     </div>
-                    <mat-list-option disabled="true">
-                        <mat-icon mat-list-icon>account_box</mat-icon>
-                        Jorge Iván Solano (Lider)
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>person</mat-icon>
-                        Juan Pablo Solarte
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>person</mat-icon>
-                        Jefferson Campo
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>person</mat-icon>
-                        Dany Díaz
-                    </mat-list-option>
-                </mat-selection-list>
-
-                <div class="botones">
-                    <button mat-stroked-button color="accent">ELIMINAR</button>
-                </div>
+                    <ng-container *ngIf="this.studentGroup !== undefined; else noGroup">
+                        <mat-list-item *ngFor="let member of studentGroup.getObjectDB().getGrupo()">
+                            <mat-icon mat-list-icon class="icon-display">person</mat-icon>
+                            <div mat-line>{{member.getName()}}</div>
+                            <div mat-line>Miembro</div>
+                        </mat-list-item>
+                    </ng-container>
+                </mat-list>
             </mat-card>
         </div>
-        <div>
+        <div class="columna">
             <mat-card>
                 <mat-selection-list>
-                    <div mat-subheader>
-                        <mat-icon mat-list-icon>group_off</mat-icon>
-                        Estudiantes sin grupo / Mécanica - Grupo A
+                    <div mat-subheader class="encabezado">
+                        <mat-icon mat-list-icon class="icon-display">group_off</mat-icon>
+                        <div>Estudiantes sin grupo / Mécanica - Grupo A</div>
                     </div>
                     <mat-list-option>
                         <mat-icon mat-list-icon>group_add</mat-icon>
                         Pedro Perez
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>group_add</mat-icon>
-                        Ivan Sanchez
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>group_add</mat-icon>
-                        Otro estudiante
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>group_add</mat-icon>
-                        Otro estudiante
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>group_add</mat-icon>
-                        Otro estudiante
-                    </mat-list-option>
-                    <mat-list-option>
-                        <mat-icon mat-list-icon>group_add</mat-icon>
-                        Otro estudiante
                     </mat-list-option>
                 </mat-selection-list>
                 <div class="botones">
                     <button mat-stroked-button color="primary">AÑADIR AL GRUPO</button>
                 </div>
             </mat-card>
-
         </div>
     </div>
+
+    <ng-template #noGroup>
+        Sin grupo camarada
+    </ng-template>
 </div>

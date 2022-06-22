@@ -1,14 +1,14 @@
 <app-navbar></app-navbar>
 <div class="container">
     <div class="grid">
-        <div class="columna" *ngFor="let materia of materias">
-                <app-card-subject [subjectTitle]="materia.getSubjectInfo().nombre">
-                    <div extra-info>{{materia.getSubjectInfo().docente}}</div>
+        <div class="columna" *ngFor="let subject of subjects">
+                <app-card-subject [subjectTitle]="subject.getObjectDB().getNombre() | titlecase">
+                    <div extra-info>{{subject.getObjectDB().getDocente() | titlecase}}</div>
                     <div content>
-                        {{materia.getSubjectInfo().descripcion}}
+                        {{subject.getObjectDB().getDescripcion()}}
                     </div>
                     <div actions>
-                        <button mat-button (click)="goToPractices(materia)">Ver prácticas</button>
+                        <button mat-button (click)="goToPractices(subject)">Ver prácticas</button>
                         <button mat-button (click)="goToDeleteSubject()">Desmatricular</button>
                     </div>
                 </app-card-subject>

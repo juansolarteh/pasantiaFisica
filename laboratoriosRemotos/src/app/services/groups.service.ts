@@ -97,7 +97,12 @@ export class GroupsService {
     return new ObjectDB(group, groupRef.id)
   }
 
-  deleteGroupMember(member: MemberGroup, idSubject: string) {
-
+  async getGroupsByRefStudent(studentRef: DocumentReference){
+    let idGroups : string[] = []
+    let querySnapShot = this.col.where('grupo','array-contains',studentRef).get();
+    (await querySnapShot).forEach(doc=>{
+      idGroups.push(doc.id)
+    })
+    return idGroups
   }
 }

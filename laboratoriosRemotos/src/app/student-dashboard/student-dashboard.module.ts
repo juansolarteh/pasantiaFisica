@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { StudentDashboardRoutingModule } from './student-dashboard-routing.module';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { MaterialModule } from '../shared/material.module';
 import { ComponentsModule } from '../shared/components/components.module';
 import { SubjectComponent } from './subject/subject.component';
-
 import { GroupsComponent } from './groups/groups.component';
 import { PracticesComponent } from './practices/practices.component';
 import { PracticeComponent } from './practice/practice.component';

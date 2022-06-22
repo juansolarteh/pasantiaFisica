@@ -1,11 +1,10 @@
-import { GroupWithNames } from './../../models/Group';
-import { MemberGroup } from './../../models/MemberGroup';
-import { DocumentReference } from '@angular/fire/compat/firestore';
 import { GroupsService } from './../../services/groups.service';
-import { SubjectService } from 'src/app/services/subject.service';
+import { SubjectService } from './../../services/subject.service';
+import { GroupWithNames } from './../../models/Group';
+import { DocumentReference } from '@angular/fire/compat/firestore';
 import { Injectable } from "@angular/core";
 import { Resolve } from "@angular/router";
-import { Observable, retry } from "rxjs";
+import { Observable } from "rxjs";
 import { Group } from "src/app/models/Group";
 import { ObjectDB } from "src/app/models/ObjectDB";
 import { UserService } from 'src/app/services/user.service';

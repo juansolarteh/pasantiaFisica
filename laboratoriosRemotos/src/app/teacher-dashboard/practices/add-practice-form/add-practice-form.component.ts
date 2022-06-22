@@ -51,7 +51,9 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     private practiceSvc: PracticeService) { }
 
   ngOnDestroy(): void {
-    this.subsComplete.unsubscribe()
+    if(this.subsComplete){
+      this.subsComplete.unsubscribe()
+    }
   }
 
   ngOnInit() {

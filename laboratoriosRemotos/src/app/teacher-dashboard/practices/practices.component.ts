@@ -14,7 +14,7 @@ export class PracticesComponent implements OnInit {
   practices: ObjectDB<PracticeNameDate>[] = [];
   newPractice = false;
 
-  constructor(private activatedRoute: ActivatedRoute) { }
+  constructor(private activatedRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.practices = this.activatedRoute.snapshot.data['practices'];

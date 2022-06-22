@@ -1,8 +1,9 @@
+import { PracticeService } from './../../services/practice.service';
+import { SubjectService } from 'src/app/services/subject.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { plainToInstance } from 'class-transformer';
+import { ObjectDB } from 'src/app/models/ObjectDB';
 import { Subject } from 'src/app/models/Subject';
-import { PracticeService } from 'src/app/services/practice.service';
 
 @Component({
   selector: 'app-subject',
@@ -11,15 +12,11 @@ import { PracticeService } from 'src/app/services/practice.service';
 })
 export class SubjectComponent implements OnInit {
 
-  constructor(private practiceService : PracticeService, private readonly router: Router, private activatedRoute: ActivatedRoute) { }
-  selectedSubject!: Subject
+  constructor(private practiceService : PracticeService, private subjectSvc : SubjectService,  private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  subjectSelected!: ObjectDB<Subject>
   
   ngOnInit(): void {
-    let subject = localStorage.getItem("selectedSubject")
-    if (subject != null) {
-      let aux = JSON.parse(subject) as Object
-      this.selectedSubject = plainToInstance(Subject, aux)
-    }
+    this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
   }
   changeTab(event:any){
     console.log(event.index)

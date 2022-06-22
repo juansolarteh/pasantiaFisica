@@ -10,7 +10,7 @@ import { PracticeNameDate } from '../models/Practice';
 })
 export class PracticeService {
 
-  private objPracticeSelected!: ObjectDB<Practice>
+  
   col = this.firestr.firestore.collection('Practicas');
   subcollection = 'Constantes'
 
@@ -50,13 +50,13 @@ export class PracticeService {
     })
     return practices
   }
-  setPracticeSelected(objPracticeSelected: ObjectDB<Practice>) {
-    this.objPracticeSelected = objPracticeSelected
-  }
-  getPracticeSelected() {
-    return this.objPracticeSelected
-  }
 
+  async getPracticeById(idPractice: string){
+    let data = await this.col.doc(idPractice).get()
+    let practice = new ObjectDB(convertTo(Practice, data.data()!),idPractice)
+    return practice;
+  }
+  
   async getPracticesFromSubjectRef(subjectRef: DocumentReference) {
     let query = this.col.where('materia', '==', subjectRef)
     const qSnapShot = await query.get();

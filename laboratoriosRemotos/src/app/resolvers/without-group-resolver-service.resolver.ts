@@ -1,13 +1,10 @@
+import { SubjectService } from './../services/subject.service';
 import { Injectable } from '@angular/core';
-import {
-  Router, Resolve,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot
-} from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Resolve } from '@angular/router';
+import { Observable } from 'rxjs';
 import { GroupWithNames } from '../models/Group';
 import { ObjectDB } from '../models/ObjectDB';
-import { SubjectService } from '../services/subject.service';
+
 import { UserService } from '../services/user.service';
 
 @Injectable({

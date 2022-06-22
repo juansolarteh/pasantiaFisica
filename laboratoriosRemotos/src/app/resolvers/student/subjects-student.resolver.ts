@@ -1,14 +1,13 @@
-import { DocumentReference } from '@angular/fire/compat/firestore';
 import { GroupsService } from 'src/app/services/groups.service';
 import { Subject } from './../../models/Subject';
 import { ObjectDB } from './../../models/ObjectDB';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { Resolve } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SubjectService } from 'src/app/services/subject.service';
 import { UserService } from 'src/app/services/user.service';
 import { SubjectTeacher } from 'src/app/models/SubjectTeacher';
-import { convertTo } from 'src/app/models/ObjectConverter';
+
 
 
 @Injectable({

@@ -28,7 +28,7 @@ const routes: Routes = [
           groups: GroupsResolverServiceResolver,
           withoutGroup: WithoutGroupResolverServiceResolver
         },
-      },
+      }
     ]
   },
   {
