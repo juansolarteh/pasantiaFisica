@@ -11,4 +11,8 @@ export class StorageService {
   uploadFile(filePath: string, file: any) {
     return this.storage.upload(filePath, file);
   }
+
+  deleteFilesFromPractice(subjectPath: string, practicePath: string){
+    let a = this.storage.ref('/as').delete()
+  }
 }

@@ -12,6 +12,7 @@ import { DeleteCourseMemberDialogComponent } from './groups/delete-course-member
 import { AddPracticeFormComponent } from './practices/add-practice-form/add-practice-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SchedulePracticeComponent } from './practices/add-practice-form/schedule-practice/schedule-practice.component';
+import { DeletePracticeDialogComponent } from './practices/delete-practice-dialog/delete-practice-dialog.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { SchedulePracticeComponent } from './practices/add-practice-form/schedul
     GroupsComponent,
     DeleteCourseMemberDialogComponent,
     AddPracticeFormComponent,
-    SchedulePracticeComponent
+    SchedulePracticeComponent,
+    DeletePracticeDialogComponent,
   ],
   imports: [
     CommonModule,

@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { PracticeNameDate } from 'src/app/models/Practice';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-practices',
@@ -13,8 +15,9 @@ export class PracticesComponent implements OnInit {
 
   practices: ObjectDB<PracticeNameDate>[] = [];
   newPractice = false;
+  practiceSelected!: ObjectDB<PracticeNameDate>;
 
-  constructor(private activatedRoute: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
+  constructor(private activatedRoute: ActivatedRoute, private dialog: MatDialog, private storageSvc: StorageService) { }
 
   ngOnInit(): void {
     this.practices = this.activatedRoute.snapshot.data['practices'];
@@ -31,4 +34,13 @@ export class PracticesComponent implements OnInit {
     this.newPractice = false;
   }
 
+  onDeletePractice(contentDialog: any, practice: ObjectDB<PracticeNameDate>){
+    this.practiceSelected = practice;
+    const dialogRef = this.dialog.open(contentDialog);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        let task = this.storageSvc.deleteFilesFromPractice('asd', 'dasdss')
+      }
+    });
+  }
 }

@@ -45,7 +45,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
   subsComplete!: Subscription
   uploadFiles = 0
 
-  constructor(private sanitizer: DomSanitizer, private readonly fb: FormBuilder,
+  constructor(private readonly fb: FormBuilder,
     private _snackBar: MatSnackBar, private plantSvc: PlantService, private changeDetector: ChangeDetectorRef,
     private dialog: MatDialog, private subjectSvc: SubjectService, private storageSvc: StorageService,
     private practiceSvc: PracticeService) { }
@@ -216,7 +216,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
       let a = task.snapshotChanges().pipe(
         finalize(() => {
           this.uploadFiles += 1
-          fl.setLink(pathFile + '/' + fl.getName())
+          fl.setLink(pathFile + fl.getName())
           if (this.uploadFiles == this.fileLinks.length) {
             this.practiceSvc.addPathDocs(this.fileLinks.map(fl => {
               return fl.getLink()!

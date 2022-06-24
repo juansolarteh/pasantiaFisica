@@ -59,7 +59,10 @@ export class SubjectComponent implements OnInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       var urlSegment = this.getLastPath()
-      if (urlSegment == 'g' && this.selectedTab == 0) {
+      if (!urlSegment){
+        this.router.navigate(['subjects'], { relativeTo: this.activatedRoute.parent });
+      }
+      else if (urlSegment == 'g' && this.selectedTab == 0) {
         this.selectedTab = 1
       } else {
         this.selectedTab = 0
