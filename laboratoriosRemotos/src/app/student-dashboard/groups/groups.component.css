@@ -34,11 +34,16 @@
 }
 .botones{
     display: flex;
-    justify-items: center;
+    justify-content: stretch;
+    flex-direction: column;
+    margin-top: 1rem;
 }
 .encabezado{
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 1rem;
+}
+#currentUser{
+  margin-top: 1rem;
 }

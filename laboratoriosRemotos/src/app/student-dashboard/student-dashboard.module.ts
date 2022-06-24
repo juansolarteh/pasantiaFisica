@@ -10,6 +10,8 @@ import { PracticesComponent } from './practices/practices.component';
 import { PracticeComponent } from './practice/practice.component';
 import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subject-card.component';
 import { CalendarComponent } from './calendar/calendar.component';
+import { FormsModule } from '@angular/forms';
+import { DialogComponent } from './dialog/dialog.component';
 
 
 @NgModule({
@@ -21,12 +23,15 @@ import { CalendarComponent } from './calendar/calendar.component';
     GroupsComponent,
     CodeSubjectCardComponent,
     CalendarComponent,
+    DialogComponent,
   ],
+  entryComponents: [DialogComponent],
   imports: [
     CommonModule,
     StudentDashboardRoutingModule,
     MaterialModule,
-    ComponentsModule
+    ComponentsModule,
+    FormsModule
   ]
 })
 export class StudentDashboardModule { }

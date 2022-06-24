@@ -157,4 +157,16 @@ export class SubjectService {
     })
     return flag
   }
+  
+  async takeOutStudents(studentsRef:DocumentReference[], idSubject: string){
+    let querySnapShot = await this.col.doc(idSubject).get()
+    let students : DocumentReference[]= querySnapShot.get('sinGrupo')
+    let studentsRefIds = studentsRef.map(std=> std.id)
+    let newStudentsWithOutGroup = students.filter(student=>{
+      return !studentsRefIds.includes(student.id)
+    })
+    console.log("Sin grupo Materia",newStudentsWithOutGroup)
+    this.col.doc(idSubject).update('sinGrupo',newStudentsWithOutGroup)
+    //this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
+  }
 }

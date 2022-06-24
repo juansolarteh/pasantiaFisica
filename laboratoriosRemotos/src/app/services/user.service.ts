@@ -128,4 +128,10 @@ export class UserService {
     let name = doc.get('nombre');
     return name
   }
+  async getCurrentUser(){
+    let refUser = this.getUserLoggedRef()
+    const doc = await this.col.doc(refUser.id).get()
+    let name = doc.get('nombre')
+    return new MemberGroup(refUser.id,name)
+  }
 }
