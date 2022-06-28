@@ -6,7 +6,7 @@ export class FileLink {
     private image: string;
     private file: any
 
-    constructor(name: string, ext: string, image:string, file: any, link?: string) {
+    constructor(name: string, ext: string, image:string, file?: any, link?: string) {
         this.name = name
         this.link = link
         this.ext = ext

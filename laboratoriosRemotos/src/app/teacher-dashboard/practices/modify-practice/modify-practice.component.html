@@ -1,0 +1,79 @@
+<h2 mat-dialog-title>Actualizar practica</h2>
+<mat-dialog-content>
+    <div id="main">
+        <div [formGroup]="practiceForm">
+            <div class="oneField">
+                <mat-form-field appearance="fill" class="fullSize">
+                    <mat-label>Ingresa el nombre de la practica</mat-label>
+                    <input matInput placeholder="Nombre de practica" formControlName="name" required>
+                    <mat-error *ngIf="practiceForm.get('name')?.touched">{{getErrorMessage('name')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="fullSize">
+                    <mat-label>Descrición de la practica (opcional)</mat-label>
+                    <textarea matInput #description placeholder="Descripción" formControlName="description"></textarea>
+                    <mat-hint align="end">{{description.value.length}} / {{fieldFeatures['description'][1]}}</mat-hint>
+                    <mat-error *ngIf="practiceForm.get('description')?.touched">{{getErrorMessage('description')}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="twoFields">
+                <mat-form-field appearance="fill">
+                    <mat-label>Inicio de la practica</mat-label>
+                    <input type="date" matInput placeholder="nombre de practica" required formControlName="start">
+                    <mat-error *ngIf="practiceForm.get('start')?.touched">{{getErrorMessage('start')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Fin de la practica</mat-label>
+                    <input type="date" matInput placeholder="nombre de practica" required formControlName="end">
+                    <mat-error *ngIf="practiceForm.get('end')?.touched">{{getErrorMessage('end')}}</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="middleWrapper">
+                <mat-form-field appearance="fill">
+                    <mat-label>Planta</mat-label>
+                    <input matInput formControlName="plant">
+                </mat-form-field>
+            </div>
+            <h2 *ngIf="constants.length > 0">Constantes:</h2>
+            <div id="flexFields">
+                <div *ngFor="let const of constants">
+                    <mat-form-field appearance="fill">
+                        <mat-label>{{const.getId()}} ({{units[const.getId()]}})</mat-label>
+                        <mat-select multiple formControlName={{const.getId()}}>
+                            <mat-option *ngFor="let val of const.getObjectDB(); let i = index " [value]="i+1">{{val}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="practiceForm.get(const.getId())?.touched">{{getErrorMessage(const.getId())}}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="oneField">
+                <mat-list>
+                    <mat-list-item *ngFor="let fileLink of fileLinks">
+                        <img src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="openFile(fileLink)">
+                        <div (click)="openFile(fileLink)" class="docs">
+                            {{fileLink.getName().split('.')[0]}}
+                            <br>
+                            {{fileLink.getExt()}}
+                        </div>
+                        <div class="optionsDocs">
+                            <button mat-icon-button color="primary" [matMenuTriggerFor]="menu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="onRemoveFile(fileLink)">Quitar archivo</button>
+                            </mat-menu>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </div>
+    </div>
+    <mat-progress-bar mode="indeterminate" *ngIf="startSubmit"></mat-progress-bar>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close [disabled]="startSubmit">Cancelar</button>
+    <span class="spacer"></span>
+    <button mat-button [mat-dialog-close]="onUpload()" [disabled]="practiceForm.invalid || !flag">Actualizar</button>
+</mat-dialog-actions>

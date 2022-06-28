@@ -1,0 +1,65 @@
+#main {
+  display: grid;
+  grid-row-gap: 0.5em;
+}
+
+.oneField {
+  display: grid;
+  justify-items: center;
+  grid-row-gap: 0.5em;
+}
+
+.oneField mat-form-field{
+  width: 100%;
+}
+
+.twoFields {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 15rem 15rem;
+}
+
+.middleWrapper {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+textarea {
+  resize: none;
+  height: 8rem;
+  min-height: 3rem;
+  max-height: 8rem;
+}
+
+mat-progress-bar {
+  margin-top: 1rem;
+}
+
+#flexFields{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  justify-items: center;
+}
+
+img {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 1rem;
+}
+
+mat-list {
+  width: 100%;
+}
+
+mat-list-item {
+  border: 0.5px solid rgb(199, 198, 198);
+  cursor: pointer;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  display: flex;
+}
+
+.docs {
+  width: 100%;
+}

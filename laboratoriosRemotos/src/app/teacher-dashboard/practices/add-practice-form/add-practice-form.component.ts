@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, On
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DomSanitizer } from '@angular/platform-browser';
 import { DocumentReference, Timestamp } from '@firebase/firestore';
 import { finalize, Subject, Subscription } from 'rxjs';
 import { FileLink } from 'src/app/models/FileLink';
@@ -51,13 +50,13 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     private practiceSvc: PracticeService) { }
 
   ngOnDestroy(): void {
-    if(this.subsComplete){
+    if (this.subsComplete) {
       this.subsComplete.unsubscribe()
     }
   }
 
   ngOnInit() {
-    this.plantSvc.getNamePlantsDB().then(plants => {
+    this.plantSvc.getPlantsDB().then(plants => {
       this.plants = plants;
     })
     this.practiceForm = this.initForm();
@@ -172,7 +171,6 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  event: any
   onFileSelected($event: any) {
     if (this.fileLinks.length < 3) {
       const uploadFile = $event.target.files[0]
@@ -198,7 +196,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     this._snackBar.open(message)._dismissAfter(6000)
   }
 
-  createLink(file: any, fileLink: FileLink) {
+  createLink(file: File, fileLink: FileLink) {
     try {
       const link = window.URL.createObjectURL(file);
       fileLink.setLink(link)
@@ -210,10 +208,10 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
   }
 
   uploadDocuments(pathPractice: string) {
-    let pathFile = this.subjectSvc.getRefSubjectSelected().id + '/' + pathPractice + '/';
+    let pathFile = this.subjectSvc.getRefSubjectSelected().id + '_' + pathPractice + '_';
     this.fileLinks.forEach(fl => {
-      let task = this.storageSvc.uploadFile(pathFile + '/' + fl.getName(), fl.getFile())
-      let a = task.snapshotChanges().pipe(
+      let task = this.storageSvc.uploadFile(pathFile + fl.getName(), fl.getFile())
+      task.snapshotChanges().pipe(
         finalize(() => {
           this.uploadFiles += 1
           fl.setLink(pathFile + fl.getName())
@@ -232,7 +230,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     if (fileLink.getLink()) {
       const downloadLink = document.createElement('a')
       downloadLink.href = fileLink.getLink()!
-      downloadLink.setAttribute('preview', fileLink.getName())
+      //downloadLink.setAttribute('preview', fileLink.getName())
       downloadLink.setAttribute('target', 'blank')
       document.body.appendChild(downloadLink)
       downloadLink.click()
