@@ -4,7 +4,7 @@ import { GroupWithNames } from './../../models/Group';
 import { DocumentReference } from '@angular/fire/compat/firestore';
 import { Injectable } from "@angular/core";
 import { Resolve } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, retry } from "rxjs";
 import { Group } from "src/app/models/Group";
 import { ObjectDB } from "src/app/models/ObjectDB";
 import { UserService } from 'src/app/services/user.service';

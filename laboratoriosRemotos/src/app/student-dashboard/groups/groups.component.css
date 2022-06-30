@@ -22,9 +22,10 @@
   }
 .grid{
     display: grid;
-    grid-template-columns: 40% 50%;
+    grid-template-columns: 45% 45%;
     grid-template-rows: auto;
-    gap: 5rem;
+    gap: 10%;
+    
 }
 .columna {
   padding: 1rem;
@@ -34,11 +35,27 @@
 }
 .botones{
     display: flex;
-    justify-items: center;
+    justify-content: stretch;
+    flex-direction: column;
+    margin-top: 1rem;
 }
 .encabezado{
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  gap: 1rem;
+}
+#currentUser{
+  margin-top: 1rem;
+}
+#no-group-svg{
+  width: 80%;
+  height: auto;
+}
+.no-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   gap: 1rem;
 }
