@@ -12,6 +12,8 @@ import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subj
 import { CalendarComponent } from './calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
 import { DialogComponent } from './dialog/dialog.component';
+import { MyGroupComponent } from './groups/my-group/my-group.component';
+import { StudentsWithoutGroupComponent } from './groups/students-without-group/students-without-group.component';
 
 
 @NgModule({
@@ -24,6 +26,8 @@ import { DialogComponent } from './dialog/dialog.component';
     CodeSubjectCardComponent,
     CalendarComponent,
     DialogComponent,
+    MyGroupComponent,
+    StudentsWithoutGroupComponent,
   ],
   entryComponents: [DialogComponent],
   imports: [

@@ -27,8 +27,6 @@ export class GroupsComponent implements OnInit {
   studentsWithOutGroup!: ObjectDB<GroupWithNames>
   subjectSelected!: ObjectDB<Subject>
   selectedGroup!: MemberGroup[]
-
-
   ngOnInit() {
     this.currentUser = this.activatedRoute.snapshot.data['currentUser']
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
@@ -49,30 +47,23 @@ export class GroupsComponent implements OnInit {
         const idSubjectSelected = localStorage.getItem("subjectSelected")!
         let leaderRef = this.userSvc.getRefUser(leader[0].getId())
         let groupRefs = this.selectedGroup.map(member => this.userSvc.getRefUser(member.getId()))
-        this.subjectSvc.takeOutStudents(groupRefs,idSubjectSelected)
+        this.subjectSvc.takeOutStudents(groupRefs, idSubjectSelected)
         let newGroup = new Group(groupRefs, leaderRef)
         this.groupSvc.createGroup(newGroup).then(res => {
-          let refNewGroup = res
           this.subjectSvc.getRefSubjectFromId(idSubjectSelected)
-          this.subjectSvc.createGroup(refNewGroup)
+          this.subjectSvc.createGroup(res)
+          let newG = new GroupWithNames(this.selectedGroup,leader[0].getId())
+          this.studentGroup = new ObjectDB<GroupWithNames>(newG,'new') 
         })
       })
       dialogRef.afterClosed().subscribe((result) => {
-        if(result === 'close'){
+        if (result === 'close') {
           sub.unsubscribe()
-        }else{
+        } else {
           sub.unsubscribe()
-          //window.location.reload()
         }
-        //let leader =  result._value
-        //console.log('Dialog result:' , leader[0].getId())
-        
-        //window.location.reload()
-        
       })
     }
-    //TO-DO - Abrir dialog para configurar grupo y roles
-    //Mapear datos a Tipo de dato Group
   }
 
   onGroupsChange(auxGroup: MemberGroup[]) {
