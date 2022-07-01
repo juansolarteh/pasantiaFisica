@@ -21,7 +21,7 @@ export class UserListComponent {
   @Output() deleteUser: EventEmitter<ObjectDB<User>> = new EventEmitter();
   deletedUser!: ObjectDB<User>;
 
-  constructor(public dialog: MatDialog, private userSvc: UserService, private groupSvc: GroupsService,
+  constructor(public dialog: MatDialog, private userSvc: UserService,
     private practiceSvc: PracticeService, private scheduleSvc: ScheduleService, private subjectSvc: SubjectService) { }
 
   delete(contentDialog: any, user: ObjectDB<User>) {
@@ -37,7 +37,7 @@ export class UserListComponent {
           this.subjectSvc.deleteFromReference(subRef);
         });
         practicesaRef.forEach(prtRef => {
-          this.scheduleSvc.deleteFromPracticaReference(prtRef);
+          this.scheduleSvc.deleteFromPracticeReference(prtRef);
           this.practiceSvc.delete(prtRef);
         });
         this.userSvc.deleteUser(userRef);

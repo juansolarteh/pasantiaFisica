@@ -28,7 +28,24 @@ export class PracticeService {
   }
 
   async delete(practiceRef: DocumentReference) {
+    let subColEmpty = (await practiceRef.collection(this.subcollection).get()).empty
+    if (!subColEmpty){
+      (await practiceRef.collection(this.subcollection).get()).docs.forEach(snap => {
+        snap.ref.delete()
+      })
+    }
     this.firestr.doc(practiceRef).delete();
+  }
+
+  async getRefByPracticeId(practiceId: string){
+    const snaps = await this.col.doc(practiceId).get();
+    return snaps.ref
+  }
+  
+  async getDocumentsByPracticeRef(practiceRef: DocumentReference){
+    const snaps = await practiceRef.get();
+    let documents: string[] = snaps.get('documentos');
+    return documents
   }
 
   async getPracticesRefFromSubjectRef(refSubject: DocumentReference) {
@@ -54,6 +71,7 @@ export class PracticeService {
   async getPracticeById(idPractice: string){
     let data = await this.col.doc(idPractice).get()
     let practice = new ObjectDB(convertTo(Practice, data.data()!),idPractice)
+    practice.getObjectDB().setPlanta(data.get('planta'))
     return practice;
   }
   
@@ -87,6 +105,15 @@ export class PracticeService {
     });
   }
 
+  updatePractice(practice: Practice, idPractice: string) {
+    return this.col.doc(idPractice).update({
+      nombre: practice.getNombre(),
+      inicio: practice.getInicio(),
+      fin: practice.getFin(),
+      descripcion: practice.getDescripcion(),
+    });
+  }
+
   addPathDocs(pathDocs: string[], idPractice: string) {
     return this.col.doc(idPractice).update('documentos', pathDocs)
   }
@@ -94,6 +121,12 @@ export class PracticeService {
   addConstants(constants: ObjectDB<any>[], practiceRef: DocumentReference){
     constants.forEach(cons => {
       practiceRef.collection(this.subcollection).doc(cons.getId()).set(cons.getObjectDB())
+    })
+  }
+
+  addConstantsById(constants: ObjectDB<any>[], practiceId: string){
+    constants.forEach(cons => {
+      this.col.doc(practiceId).collection(this.subcollection).doc(cons.getId()).set(cons.getObjectDB())
     })
   }
 }

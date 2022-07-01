@@ -11,11 +11,15 @@ export class PlantService {
 
   private col = this.firestr.firestore.collection('Plantas');
   private sub = 'Constantes';
-  private withoutGroup: DocumentReference[] = [];
 
   constructor(private firestr: AngularFirestore) { }
 
-  async getNamePlantsDB(): Promise<ObjectDB<Plant>[]>{
+  async getPlant(refPlant: DocumentReference){
+    const docSnap = await refPlant.get();
+    return convertTo(Plant, docSnap.data()!)
+  }
+
+  async getPlantsDB(): Promise<ObjectDB<Plant>[]>{
     const snap = await this.col.get();
     let docs = snap.docs;
     return docs.map(doc => {

@@ -15,4 +15,21 @@
         </div>
         Creado: {{practice.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}
     </div>
+    <div class="optionsDocs">
+        <button mat-icon-button color="primary" [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onDeletePractice(deleteDialog, practice)">Eliminar practica</button>
+            <button mat-menu-item (click)="onModifyPractice(modifyDialog, practice.getId())">Modificar practica</button>
+        </mat-menu>
+    </div>
 </mat-card>
+
+<ng-template #deleteDialog>
+    <app-delete-practice-dialog [practice]="practiceSelected"></app-delete-practice-dialog>
+</ng-template>
+
+<ng-template #modifyDialog>
+    <app-modify-practice [practiceId]="practiceUpdatedId" (updatePractice)="updatePractice($event)"></app-modify-practice>
+</ng-template>

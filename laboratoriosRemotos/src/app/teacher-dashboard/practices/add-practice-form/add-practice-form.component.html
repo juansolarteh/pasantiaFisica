@@ -72,7 +72,7 @@
             </div>
             <div class="twoFields">
                 <div id="startWrapper">
-                    <button mat-mini-fab color="primary" (click)="fileInput.click()">
+                    <button mat-mini-fab color="primary" (click)="fileInput.click()" [disabled]="startSubmit">
                         <mat-icon>file_upload</mat-icon>
                     </button>
                     <input hidden (change)="onFileSelected($event)" #fileInput formControlName="documents"
