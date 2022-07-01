@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, On
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentReference, Timestamp } from '@firebase/firestore';
+import { Timestamp } from '@firebase/firestore';
+import * as moment from 'moment';
 import { finalize, Subject, Subscription } from 'rxjs';
 import { FileLink } from 'src/app/models/FileLink';
 import { FormValidators } from 'src/app/models/FormValidators';
@@ -30,8 +31,8 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
   accept: string = TypeFiles
   practiceForm!: FormGroup;
   fieldFeatures: any = {
-    name: ['nombre', 5, 30],
-    description: ['descripcion', 300],
+    name: ['nombre', 5, 60],
+    description: ['descripcion', 400],
     end: ['fin de practica'],
     plant: ['planta'],
   }
@@ -93,17 +94,17 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     this.flag = false;
     this.startSubmit = true;
     let sd: Timestamp;
-    let a = DocumentReference
     if (startDate) {
-      sd = Timestamp.fromDate(new Date(startDate))
+      sd = Timestamp.fromDate(new Date(moment(startDate + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss')))
     } else {
       sd = Timestamp.fromDate(new Date())
     }
+    let creationDate = Timestamp.fromDate(new Date())
     const practice = new Practice(
       this.practiceForm.get('name')?.value,
-      Timestamp.fromDate(new Date()),
+      creationDate,
       sd,
-      Timestamp.fromDate(new Date(this.practiceForm.get('end')?.value)),
+      Timestamp.fromDate(new Date(moment(this.practiceForm.get('end')?.value + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss'))),
       this.plantSvc.getPlantRefFromId(this.practiceForm.get('plant')?.value),
       this.subjectSvc.getRefSubjectSelected(),
       this.practiceForm.get('description')?.value,
@@ -116,7 +117,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
         if (com) {
           this.addPractice.emit(new ObjectDB(new PracticeNameDate(
             this.practiceForm.get('name')?.value,
-            Timestamp.fromDate(new Date(this.practiceForm.get('end')?.value))
+            creationDate
           ), refPractice.id));
         }
       })
@@ -208,7 +209,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
   }
 
   uploadDocuments(pathPractice: string) {
-    let pathFile = this.subjectSvc.getRefSubjectSelected().id + '_' + pathPractice + '_';
+    let pathFile = this.subjectSvc.getRefSubjectSelected().id + '/' + pathPractice + '/';
     this.fileLinks.forEach(fl => {
       let task = this.storageSvc.uploadFile(pathFile + fl.getName(), fl.getFile())
       task.snapshotChanges().pipe(
@@ -230,7 +231,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     if (fileLink.getLink()) {
       const downloadLink = document.createElement('a')
       downloadLink.href = fileLink.getLink()!
-      //downloadLink.setAttribute('preview', fileLink.getName())
+      downloadLink.setAttribute('preview', fileLink.getName())
       downloadLink.setAttribute('target', 'blank')
       document.body.appendChild(downloadLink)
       downloadLink.click()

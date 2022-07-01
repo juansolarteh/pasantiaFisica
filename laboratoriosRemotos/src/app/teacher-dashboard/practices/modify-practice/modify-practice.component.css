@@ -63,3 +63,12 @@ mat-list-item {
 .docs {
   width: 100%;
 }
+
+#endWrapper {
+  justify-self: flex-end;
+}
+
+mat-dialog-actions{
+  display: grid;
+  grid-template-columns: 50% 50%;
+}

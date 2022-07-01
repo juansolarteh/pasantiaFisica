@@ -1,4 +1,5 @@
 <h2 mat-dialog-title>Actualizar practica</h2>
+<mat-progress-bar mode="indeterminate" *ngIf="startSubmit"></mat-progress-bar>
 <mat-dialog-content>
     <div id="main">
         <div [formGroup]="practiceForm">
@@ -70,10 +71,18 @@
             </div>
         </div>
     </div>
-    <mat-progress-bar mode="indeterminate" *ngIf="startSubmit"></mat-progress-bar>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-button mat-dialog-close [disabled]="startSubmit">Cancelar</button>
-    <span class="spacer"></span>
-    <button mat-button [mat-dialog-close]="onUpload()" [disabled]="practiceForm.invalid || !flag">Actualizar</button>
+    <div>
+        <button mat-button mat-dialog-close [disabled]="startSubmit">Cancelar</button>
+        <span class="spacer"></span>
+        <button mat-button (click)="onUpload()"
+            [disabled]="practiceForm.invalid || !flag">Actualizar</button>
+    </div>
+    <div id="endWrapper">
+        <button mat-mini-fab color="primary" (click)="fileInput.click()" [disabled]="startSubmit">
+            <mat-icon>file_upload</mat-icon>
+        </button>
+        <input hidden (change)="onFileSelected($event)" #fileInput accept='{{accept}}' type="file">
+    </div>
 </mat-dialog-actions>

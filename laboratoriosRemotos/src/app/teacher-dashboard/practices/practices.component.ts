@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { PracticeNameDate } from 'src/app/models/Practice';
@@ -19,6 +19,7 @@ export class PracticesComponent implements OnInit {
   newPractice = false;
   practiceSelected!: ObjectDB<PracticeNameDate>;
   practiceUpdatedId!: string;
+  dialogRefUpdate!: MatDialogRef<unknown, any>
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -39,7 +40,8 @@ export class PracticesComponent implements OnInit {
 
   onAddPractice(practice: any | ObjectDB<PracticeNameDate>) {
     if (practice) {
-      this.practices.push(practice)
+      let auxArray = [practice]
+      this.practices = auxArray.concat(this.practices)
     }
     this.newPractice = false;
   }
@@ -64,11 +66,14 @@ export class PracticesComponent implements OnInit {
 
   onModifyPractice(contentDialog: any, practiceId: string) {
     this.practiceUpdatedId = practiceId;
-    const dialogRef = this.dialog.open(contentDialog);
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log(result)
-      }
-    });
+    this.dialogRefUpdate = this.dialog.open(contentDialog)
+  }
+
+  updatePractice($event: any){
+    let practiceND: ObjectDB<PracticeNameDate> = $event
+    let index = this.practices.findIndex(p => p.getId() === practiceND.getId())
+    this.practices[index] = practiceND
+    this.changeDetector.markForCheck();
+    this.dialogRefUpdate.close()
   }
 }

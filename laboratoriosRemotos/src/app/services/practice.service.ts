@@ -105,6 +105,15 @@ export class PracticeService {
     });
   }
 
+  updatePractice(practice: Practice, idPractice: string) {
+    return this.col.doc(idPractice).update({
+      nombre: practice.getNombre(),
+      inicio: practice.getInicio(),
+      fin: practice.getFin(),
+      descripcion: practice.getDescripcion(),
+    });
+  }
+
   addPathDocs(pathDocs: string[], idPractice: string) {
     return this.col.doc(idPractice).update('documentos', pathDocs)
   }
@@ -112,6 +121,12 @@ export class PracticeService {
   addConstants(constants: ObjectDB<any>[], practiceRef: DocumentReference){
     constants.forEach(cons => {
       practiceRef.collection(this.subcollection).doc(cons.getId()).set(cons.getObjectDB())
+    })
+  }
+
+  addConstantsById(constants: ObjectDB<any>[], practiceId: string){
+    constants.forEach(cons => {
+      this.col.doc(practiceId).collection(this.subcollection).doc(cons.getId()).set(cons.getObjectDB())
     })
   }
 }

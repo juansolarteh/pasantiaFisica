@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { AbstractControl, FormControl, ValidationErrors, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { FormValidators } from 'src/app/models/FormValidators';
@@ -8,7 +8,7 @@ import { FormValidators } from 'src/app/models/FormValidators';
   templateUrl: './schedule-practice.component.html',
   styleUrls: ['./schedule-practice.component.css']
 })
-export class SchedulePracticeComponent implements OnInit {
+export class SchedulePracticeComponent{
 
   @Input() endDate: string = '';
   noPrevDates = (
@@ -24,11 +24,6 @@ export class SchedulePracticeComponent implements OnInit {
     return null
   }
   start = new FormControl('', [Validators.required, FormValidators.noPrevDatesFromNow, this.noPrevDates]);
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   getErrorMessage() {
     if (this.start.hasError('required')) {

@@ -31,5 +31,5 @@
 </ng-template>
 
 <ng-template #modifyDialog>
-    <app-modify-practice [practiceId]="practiceUpdatedId"></app-modify-practice>
+    <app-modify-practice [practiceId]="practiceUpdatedId" (updatePractice)="updatePractice($event)"></app-modify-practice>
 </ng-template>
