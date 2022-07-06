@@ -1,3 +1,4 @@
+import { FullcalendarModule } from './../shared/fullcalendar.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StudentDashboardRoutingModule } from './student-dashboard-routing.module';
@@ -35,7 +36,8 @@ import { StudentsWithoutGroupComponent } from './groups/students-without-group/s
     StudentDashboardRoutingModule,
     MaterialModule,
     ComponentsModule,
-    FormsModule
+    FormsModule,
+    FullcalendarModule
   ]
 })
 export class StudentDashboardModule { }
