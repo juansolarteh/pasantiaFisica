@@ -4,10 +4,6 @@
             <mat-icon mat-list-icon class="icon-display">manage_accounts</mat-icon>
            Seleccione el líder del grupo
         </div>
-        <!-- <mat-list-option>
-            <mat-icon mat-list-icon class="icon-display">supervisor_account</mat-icon>
-            {{data.currentUser.getName()}} • (Tú)
-        </mat-list-option> -->
         <mat-list-option *ngFor="let member of data.selectedGroup" [value]="member">
             <mat-icon mat-list-icon class="icon-display">supervisor_account</mat-icon>
             <ng-container *ngIf="member.getId() != data.currentUser.getId(); else currentUser">

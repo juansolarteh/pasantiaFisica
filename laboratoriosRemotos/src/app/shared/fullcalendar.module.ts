@@ -5,6 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin  from '@fullcalendar/list';
 import timeGridPlugin  from '@fullcalendar/timegrid';
+import { FormsModule } from '@angular/forms';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -15,7 +16,8 @@ FullCalendarModule.registerPlugins([
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   exports:[
     FullCalendarModule

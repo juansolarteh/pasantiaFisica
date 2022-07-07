@@ -33,7 +33,12 @@ const routes: Routes = [
           practices: PracticesStudentResolverService
         }
       },
-      { path: 'calendar', component: CalendarComponent },
+      {
+        path: 'calendar', component: CalendarComponent,
+        resolve: {
+          practices: PracticesStudentResolverService
+        }
+      },
       {
         path: 'groups', component: GroupsComponent,
         resolve: {

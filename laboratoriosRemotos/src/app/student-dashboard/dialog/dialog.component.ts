@@ -13,7 +13,7 @@ export class DialogComponent implements OnInit {
   @ViewChild('btnSetLeader') btnSetLeader!: MatButton
 
   leaderSelected!: MemberGroup
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {selectedGroup:MemberGroup[],currentUser:MemberGroup}, private activatedRoute: ActivatedRoute, private _snackBar: MatSnackBar) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {selectedGroup:MemberGroup[],currentUser:MemberGroup}, private _snackBar: MatSnackBar) { }
 
   onLeaderSelected : EventEmitter<MemberGroup> = new EventEmitter<MemberGroup>()
 

@@ -1,0 +1,8 @@
+<h1>Selecciona la práctica</h1>
+<mat-divider id="header-divider"></mat-divider>
+<mat-selection-list [multiple]="false" [(ngModel)]="practiceSelected" (ngModelChange)="onPracticeChange($event)">
+    <mat-list-option *ngFor="let practice of practices" [value]="practice">
+        {{practice.getObjectDB().getNombre()}}
+        <mat-divider></mat-divider>
+    </mat-list-option>
+</mat-selection-list>

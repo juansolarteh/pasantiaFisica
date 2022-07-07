@@ -67,7 +67,6 @@ export class GroupsComponent implements OnInit {
   }
 
   onGroupsChange(auxGroup: MemberGroup[]) {
-    console.log(auxGroup)
     if (auxGroup.length <= this.subjectSelected.getObjectDB().getNumGrupos() - 1) {
       this.btnAddGroup.disabled = false
     } else if (auxGroup.length === 0) {
