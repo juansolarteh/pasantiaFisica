@@ -12,10 +12,11 @@ import { PracticeComponent } from './practice/practice.component';
 import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subject-card.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
-import { DialogComponent } from './dialog/dialog.component';
+import { DialogComponent } from './groups/dialog/dialog.component';
 import { MyGroupComponent } from './groups/my-group/my-group.component';
 import { StudentsWithoutGroupComponent } from './groups/students-without-group/students-without-group.component';
 import { PracticeFilterComponent } from './calendar/practice-filter/practice-filter.component';
+import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/check-booking-dialog.component';
 
 
 @NgModule({
@@ -31,8 +32,9 @@ import { PracticeFilterComponent } from './calendar/practice-filter/practice-fil
     MyGroupComponent,
     StudentsWithoutGroupComponent,
     PracticeFilterComponent,
+    CheckBookingDialogComponent,
   ],
-  entryComponents: [DialogComponent],
+  entryComponents: [DialogComponent,CheckBookingDialogComponent],
   imports: [
     CommonModule,
     StudentDashboardRoutingModule,

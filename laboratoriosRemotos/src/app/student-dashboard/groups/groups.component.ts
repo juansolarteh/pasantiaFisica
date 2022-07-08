@@ -1,5 +1,5 @@
 import { UserService } from 'src/app/services/user.service';
-import { DialogComponent } from './../dialog/dialog.component';
+import { DialogComponent } from './dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupsService } from 'src/app/services/groups.service';
 import { SubjectService } from 'src/app/services/subject.service';
@@ -20,13 +20,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class GroupsComponent implements OnInit {
 
   @ViewChild('btnAddGroup') btnAddGroup!: MatButton
-  constructor(private activatedRoute: ActivatedRoute, private userSvc: UserService, private groupSvc: GroupsService, private subjectSvc: SubjectService, private _snackBar: MatSnackBar, public groupDialog: MatDialog) { }
+  constructor(private activatedRoute: ActivatedRoute,
+    private userSvc: UserService, 
+    private groupSvc: GroupsService,
+    private subjectSvc: SubjectService,
+    private _snackBar: MatSnackBar,
+    public groupDialog: MatDialog) { }
 
   currentUser!: MemberGroup
   studentGroup!: ObjectDB<GroupWithNames>
   studentsWithOutGroup!: ObjectDB<GroupWithNames>
   subjectSelected!: ObjectDB<Subject>
   selectedGroup!: MemberGroup[]
+
   ngOnInit() {
     this.currentUser = this.activatedRoute.snapshot.data['currentUser']
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']

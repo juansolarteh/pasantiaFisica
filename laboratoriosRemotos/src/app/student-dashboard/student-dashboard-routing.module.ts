@@ -36,7 +36,9 @@ const routes: Routes = [
       {
         path: 'calendar', component: CalendarComponent,
         resolve: {
-          practices: PracticesStudentResolverService
+          practices: PracticesStudentResolverService,
+          studentGroup: GroupStudentResolverService,
+          subjectSelected: SubjectSelectedResolverService,
         }
       },
       {

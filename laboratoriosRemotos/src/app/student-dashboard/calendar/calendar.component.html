@@ -1,11 +1,9 @@
-<div class="container">
+
     <div class="grid">
         <div class="practice-filter">
-            <app-practice-filter [practices]="practices" (onPracticeSelected)="getPracticeSelected($event)"></app-practice-filter>
+            <app-practice-filter [practices]="practices" (onPracticeSelected)="onPracticeSelected($event)"></app-practice-filter>
         </div>
         <div class="calendar">
             <full-calendar [options]="calendarOptions"></full-calendar>
         </div>
     </div>
-
-</div>

@@ -1,0 +1,33 @@
+<ng-container *ngIf="this.studentGroup; else noGroup">
+    <h2 mat-dialog-title>Realiza tu reserva</h2>
+    <mat-dialog-content>
+        <mat-list>
+            <div mat-subheader>Información de reserva</div>
+            <mat-list-item dense>
+                <mat-icon mat-list-icon>collections_bookmark</mat-icon>
+                <div mat-line>Práctica</div>
+                <div mat-line>{{this.practiceSelected.getObjectDB().getNombre()}} •
+                    {{this.subjectSelected.getObjectDB().getNombre()}}</div>
+            </mat-list-item>
+            <mat-list-item dense>
+                <mat-icon mat-list-icon>event</mat-icon>
+                <div mat-line>Fecha de reserva</div>
+                <div mat-line>{{this.selectedDate | date: "MMMM d - y - h:mm:ss a"}}</div>
+            </mat-list-item>
+
+            <div mat-subheader>Grupo de trabajo</div>
+            <mat-list-item dense *ngFor="let student of studentGroup.getObjectDB().getGrupo()">
+                <mat-icon mat-list-icon>person</mat-icon>
+                <div mat-line>{{student.getName()}}</div>
+                <div mat-line>Asistente</div>
+            </mat-list-item>
+        </mat-list>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button mat-dialog-close color="primary">Cerrar</button>
+        <button mat-raised-button mat-dialog-close color="primary">Confirmar</button>
+    </mat-dialog-actions>
+</ng-container>
+<ng-template #noGroup>
+    Por favor haz un grupo
+</ng-template>

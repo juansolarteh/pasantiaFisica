@@ -1,4 +1,4 @@
-.container {
+/* .container {
     padding-right: 40px;
     padding-left: 40px;
     margin-top: 20px;
@@ -19,15 +19,14 @@
     .container {
       width: 1250px;
     }
-  }
+  } */
 
 .grid{
     display: grid;
     grid-template-columns: 25% auto;
     grid-template-rows: auto;
-    gap: 2rem;
 }
 .grid > div{
-    padding: 1rem;
+    padding: 2rem;
 }
 
