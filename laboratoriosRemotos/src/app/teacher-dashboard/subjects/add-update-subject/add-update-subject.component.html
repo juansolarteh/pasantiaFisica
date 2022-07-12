@@ -1,0 +1,44 @@
+<h2 mat-dialog-title *ngIf="subjectId; else addSubjectTitle">Actualizar curso</h2>
+<ng-template #addSubjectTitle>
+    <h2 mat-dialog-title>Crear Curso</h2>
+</ng-template>
+<mat-progress-bar mode="indeterminate" *ngIf="processing"></mat-progress-bar>
+<mat-dialog-content>
+    <div id="main">
+        <div [formGroup]="subjectForm">
+            <div class="oneField">
+                <mat-form-field appearance="fill" class="fullSize">
+                    <mat-label>Nombre del curso:</mat-label>
+                    <input matInput placeholder="Ingresa el nombre del curso" formControlName="name" required>
+                    <mat-error *ngIf="subjectForm.get('name')?.touched">{{getErrorMessage('name')}}</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="fullSize">
+                    <mat-label>Descrición del curso (opcional)</mat-label>
+                    <textarea matInput #description placeholder="Descripción" formControlName="description"></textarea>
+                    <mat-hint align="end">{{description.value.length}} / {{fieldFeatures['description'][2]}}</mat-hint>
+                    <mat-error *ngIf="subjectForm.get('description')?.touched">{{getErrorMessage('description')}}
+                    </mat-error>
+                </mat-form-field>
+                <div class="middleWrapper">
+                    <mat-form-field appearance="fill" class="fullSize">
+                        <mat-label>Numero de participantes de los grupos:</mat-label>
+                        <input matInput placeholder="Ingresa el nombre de maximo de participantes" type="number"
+                            formControlName="numGroup">
+                        <mat-error *ngIf="subjectForm.get('numGroup')?.touched">{{getErrorMessage('numGroup')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div>
+        <button mat-button mat-dialog-close [disabled]="processing">Cancelar</button>
+        <span class="spacer"></span>
+        <button mat-button (click)="onUpdate()" [disabled]="subjectForm.invalid || processing"
+            *ngIf="subjectId; else addSubjectButton">Actualizar</button>
+        <ng-template #addSubjectButton>
+            <button mat-button (click)="onCreate()" [disabled]="subjectForm.invalid || processing">Crear</button>
+        </ng-template>
+    </div>
+</mat-dialog-actions>
