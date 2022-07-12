@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SchedulePracticeComponent } from './practices/add-practice-form/schedule-practice/schedule-practice.component';
 import { DeletePracticeDialogComponent } from './practices/delete-practice-dialog/delete-practice-dialog.component';
 import { ModifyPracticeComponent } from './practices/modify-practice/modify-practice.component';
+import { AddUpdateSubjectComponent } from './subjects/add-update-subject/add-update-subject.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ModifyPracticeComponent } from './practices/modify-practice/modify-prac
     SchedulePracticeComponent,
     DeletePracticeDialogComponent,
     ModifyPracticeComponent,
+    AddUpdateSubjectComponent
   ],
   imports: [
     CommonModule,

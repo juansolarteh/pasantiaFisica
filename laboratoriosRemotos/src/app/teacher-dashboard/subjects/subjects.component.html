@@ -1,5 +1,5 @@
 <app-navbar>
-    <button mat-icon-button rightOptions matTooltip="Crear curso">
+    <button mat-icon-button rightOptions matTooltip="Crear curso" (click)="onAddSubject(addSubject)">
         <mat-icon>add</mat-icon>
     </button>
 </app-navbar>
@@ -23,3 +23,11 @@
         </mat-card>
     </div>
 </div>
+
+<ng-template #addSubject>
+    <app-add-update-subject></app-add-update-subject>
+</ng-template>
+
+<ng-template #updateSubject>
+    <app-add-update-subject></app-add-update-subject>
+</ng-template>
