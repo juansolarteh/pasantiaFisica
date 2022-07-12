@@ -11,14 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SubjectService {
 
-  
+
   private col = this.firestr.firestore.collection('Materias');
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;
 
   constructor(private firestr: AngularFirestore, private activatedRoute: ActivatedRoute) { }
 
-  getRefSubjectSelected(){
+  getRefSubjectSelected() {
     return this.refSubjectSelected
   }
 
@@ -157,16 +157,47 @@ export class SubjectService {
     })
     return flag
   }
-  
-  async takeOutStudents(studentsRef:DocumentReference[], idSubject: string){
+
+  async takeOutStudents(studentsRef: DocumentReference[], idSubject: string) {
     let querySnapShot = await this.col.doc(idSubject).get()
-    let students : DocumentReference[]= querySnapShot.get('sinGrupo')
-    let studentsRefIds = studentsRef.map(std=> std.id)
-    let newStudentsWithOutGroup = students.filter(student=>{
+    let students: DocumentReference[] = querySnapShot.get('sinGrupo')
+    let studentsRefIds = studentsRef.map(std => std.id)
+    let newStudentsWithOutGroup = students.filter(student => {
       return !studentsRefIds.includes(student.id)
     })
-    console.log("Sin grupo Materia",newStudentsWithOutGroup)
-    this.col.doc(idSubject).update('sinGrupo',newStudentsWithOutGroup)
+    console.log("Sin grupo Materia", newStudentsWithOutGroup)
+    this.col.doc(idSubject).update('sinGrupo', newStudentsWithOutGroup)
     //this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
+  }
+
+  async verifyCode(code: string) {
+    const doc = await this.col.doc('Claves').get();
+    let codes: Array<string> = doc.get('claves');
+    if (codes.find(c => c === code)) {
+      return false;
+    }
+    codes.push(code)
+    this.col.doc('Claves').update({claves: codes})
+    return true;
+  }
+
+  addSubject(subject: SubjectTeacher) {
+    return this.col.add({
+      clave: subject.getClave(),
+      descripcion: subject.getDescripcion(),
+      docente: subject.getDocente(),
+      nombre: subject.getNombre(),
+      numGrupos: subject.getNumGrupos(),
+      sinGrupo: [],
+      grupos: []
+    })
+  }
+
+  updateSubject(subject: SubjectTeacher, subjectId: string) {
+    return this.col.doc(subjectId).update({
+      descripcion: subject.getDescripcion(),
+      nombre: subject.getNombre(),
+      numGrupos: subject.getNumGrupos(),
+    })
   }
 }

@@ -1,5 +1,5 @@
 <app-navbar>
-    <button mat-icon-button rightOptions matTooltip="Crear curso" (click)="onAddSubject(addSubject)">
+    <button mat-icon-button rightOptions matTooltip="Crear curso" (click)="openModal(addSubjectModal)">
         <mat-icon>add</mat-icon>
     </button>
 </app-navbar>
@@ -16,18 +16,22 @@
             </mat-card-content>
             <mat-divider></mat-divider>
             <mat-card-actions align="end">
-                <button mat-icon-button color="primary">
+                <button mat-icon-button color="primary" [matMenuTriggerFor]="menu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="openModal(updateSubjectModal, subject.getId())">Modificar curso</button>
+                    <button mat-menu-item>Eliminar curso</button>
+                </mat-menu>
             </mat-card-actions>
         </mat-card>
     </div>
 </div>
 
-<ng-template #addSubject>
-    <app-add-update-subject></app-add-update-subject>
+<ng-template #addSubjectModal>
+    <app-add-update-subject (successOperation)="addSubject($event)" ></app-add-update-subject>
 </ng-template>
 
-<ng-template #updateSubject>
-    <app-add-update-subject></app-add-update-subject>
+<ng-template #updateSubjectModal>
+    <app-add-update-subject [subjectId]="idSelectedSubject" (successOperation)="updateSubject($event)"></app-add-update-subject>
 </ng-template>
