@@ -24,7 +24,6 @@ export class SubjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.subjects = this.route.snapshot.data['subjects'];
-
   }
 
   goToSubject(subjectId: string) {
