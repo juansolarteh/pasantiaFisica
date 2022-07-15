@@ -1,1 +1,54 @@
-<p>students-without-group works!</p>
+<mat-dialog-content>
+    <h2 mat-dialog-title>Crear grupo de trabajo</h2>
+    <mat-stepper #stepper linear>
+        <mat-step completed="false">
+            <ng-template matStepLabel>Selección de estudiantes</ng-template>
+            <br>
+            <div class="mat-body-2">Selecciona los estudiantes que conformarán tu grupo de trabajo para
+                {{this.data.subjectSelected.getObjectDB().getNombre()}} • Número máximo de integrantes
+                {{this.data.subjectSelected.getObjectDB().getNumGrupos()}}</div>
+            <br>
+            <ng-container *ngIf="this.data.studentsWithOutGroup.getObjectDB().getGrupo().length > 0">
+                <mat-selection-list [multiple]="true" color="primary" [(ngModel)]="selectedGroup"
+                    (ngModelChange)="onGroupsChange($event)" ngDefaultControl>
+                    <mat-list-option selected disabled [value]="this.data.currentUser">
+                        {{this.data.currentUser.getName()}} • (Tú)
+                    </mat-list-option>
+                    <ng-container *ngFor="let student of this.data.studentsWithOutGroup.getObjectDB().getGrupo()">
+                        <mat-list-option [value]="student">
+                            {{student.getName()}}
+                        </mat-list-option>
+                    </ng-container>
+                </mat-selection-list>
+            </ng-container>
+            <div class="buttons-stepper">
+                <button mat-button color="primary" (click)="onGroupSelected()">Siguiente</button>
+            </div>
+        </mat-step>
+        <mat-step completed="false">
+            <ng-template matStepLabel>Selección de lider</ng-template>
+            <div class="mat-body-2">Selecciona el líder del grupo de trabajo</div>
+            <mat-selection-list [multiple]="false" color="primary" [(ngModel)]="leaderSelected" ngDefaultControl>
+                <mat-list-option [value]="this.data.currentUser">
+                    {{this.data.currentUser.getName()}} • (Tú)
+                </mat-list-option>
+                <ng-container *ngFor="let member of this.selectedGroup">
+                    <mat-list-option [value]="member" *ngIf="member.getId() != this.data.currentUser.getId()">
+                        {{member.getName()}}
+                    </mat-list-option>
+                </ng-container>
+            </mat-selection-list>
+            <div class="buttons-stepper">
+                <button mat-button matStepperPrevious  color="primary">Atrás</button>
+                <button mat-button (click)="onLeaderSelected()" color="primary">Seleccionar líder</button>
+            </div>
+        </mat-step>
+        <mat-step completed="false">
+            <ng-template matStepLabel>Confirmación de grupo</ng-template>
+            <div class="buttons-stepper">
+                <button mat-button matStepperPrevious color="primary">Atrás</button>
+                <button mat-button (click)="onCreateGroup()" mat-dialog-close="groupCreated" color="primary">Crear grupo</button>
+            </div>
+        </mat-step>
+    </mat-stepper>
+</mat-dialog-content>

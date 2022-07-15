@@ -1,3 +1,4 @@
+import { StudentsWithoutGroupComponent } from './students-without-group/students-without-group.component';
 import { UserService } from 'src/app/services/user.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -38,9 +39,22 @@ export class GroupsComponent implements OnInit {
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.studentGroup = this.activatedRoute.snapshot.data['studentGroup']
     this.studentsWithOutGroup = this.activatedRoute.snapshot.data['studentsWithoutGroup']
+    console.log(this.studentsWithOutGroup);
   }
 
-  onAddToGroup() {
+  onCreateGroup(){
+    //this.studentsWithOutGroup.getObjectDB().getGrupo().push(this.currentUser)
+    let dialogRef = this.groupDialog.open(StudentsWithoutGroupComponent,
+      { data: {studentsWithOutGroup : this.studentsWithOutGroup, currentUser: this.currentUser, subjectSelected : this.subjectSelected},
+      height: 'auto', width: '750px'} )
+      const dialogSuscription = dialogRef.componentInstance.onGroupCreated.subscribe(groupCreated =>{
+        console.log("Recibiendo desde grupos",groupCreated);
+        this.studentGroup = new ObjectDB<GroupWithNames>(groupCreated,'new')
+        this.openSnackBar("Grupo creado exitosamente","Cerrar")
+        dialogSuscription.unsubscribe()
+      })
+  }
+  /* onAddToGroup() {
 
     if (this.selectedGroup === undefined) {
       this.openSnackBar("Seleccione al menos un estudiante ", "Cerrar")
@@ -70,7 +84,7 @@ export class GroupsComponent implements OnInit {
         }
       })
     }
-  }
+  } */
 
   onGroupsChange(auxGroup: MemberGroup[]) {
     if (auxGroup.length <= this.subjectSelected.getObjectDB().getNumGrupos() - 1) {

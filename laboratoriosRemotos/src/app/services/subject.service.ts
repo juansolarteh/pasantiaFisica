@@ -11,14 +11,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SubjectService {
 
-  
+
   private col = this.firestr.firestore.collection('Materias');
   private withoutGroup: DocumentReference[] = [];
   private refSubjectSelected!: DocumentReference;
 
   constructor(private firestr: AngularFirestore, private activatedRoute: ActivatedRoute) { }
 
-  getRefSubjectSelected(){
+  getRefSubjectSelected() {
     return this.refSubjectSelected
   }
 
@@ -119,14 +119,16 @@ export class SubjectService {
     if (data != null) {
       let querySnapShot = this.col.get();
       (await querySnapShot).forEach(doc => {
-        let groupsSubject = doc.get('grupos') as Array<DocumentReference>
-        groupsSubject.forEach(group => {
-          if ((data.includes(group.id))) {
-            let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
-            subject.getObjectDB().setDocente(doc.get('docente'))
-            listWithGroup.push(subject)
-          }
-        })
+        if (doc.id != 'Claves') {
+          let groupsSubject = doc.get('grupos') as Array<DocumentReference>
+          groupsSubject.forEach(group => {
+            if ((data.includes(group.id))) {
+              let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
+              subject.getObjectDB().setDocente(doc.get('docente'))
+              listWithGroup.push(subject)
+            }
+          })
+        }
       })
     }
     return listWithGroup
@@ -157,16 +159,16 @@ export class SubjectService {
     })
     return flag
   }
-  
-  async takeOutStudents(studentsRef:DocumentReference[], idSubject: string){
+
+  async takeOutStudents(studentsRef: DocumentReference[], idSubject: string) {
     let querySnapShot = await this.col.doc(idSubject).get()
-    let students : DocumentReference[]= querySnapShot.get('sinGrupo')
-    let studentsRefIds = studentsRef.map(std=> std.id)
-    let newStudentsWithOutGroup = students.filter(student=>{
+    let students: DocumentReference[] = querySnapShot.get('sinGrupo')
+    let studentsRefIds = studentsRef.map(std => std.id)
+    let newStudentsWithOutGroup = students.filter(student => {
       return !studentsRefIds.includes(student.id)
     })
-    console.log("Sin grupo Materia",newStudentsWithOutGroup)
-    this.col.doc(idSubject).update('sinGrupo',newStudentsWithOutGroup)
+    console.log("Sin grupo Materia", newStudentsWithOutGroup)
+    this.col.doc(idSubject).update('sinGrupo', newStudentsWithOutGroup)
     //this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
   }
 }

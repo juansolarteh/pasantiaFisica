@@ -1,13 +1,17 @@
 <div class="container">
-    <div class="grid">
-        <div class="columna">
-            <mat-card *ngIf="this.studentGroup; else noGroup">
+    <div class="columna">
+        <div class="header-groups">
+            <div id="label-groups" class="mat-display-1">Grupo de trabajo</div>
+            <mat-icon *ngIf="!this.studentGroup" mat-list-icon>group_add</mat-icon>
+        </div>
+        <mat-divider></mat-divider>
+        <ng-container *ngIf="this.studentGroup; else noGroup">
                 <mat-list>
-                    <div mat-subheader class="encabezado">
+<!--                     <div mat-subheader class="encabezado">
                         <mat-icon mat-list-icon class="icon-display">group</mat-icon>
                         <div>Equipo de trabajo • {{this.subjectSelected.getObjectDB().getNumGrupos()}} estudiantes
                             máximo</div>
-                    </div>
+                    </div> -->
                     <ng-container [(ngModel)]="studentGroup" ngDefaultControl>
                         <mat-list-item *ngFor="let member of studentGroup.getObjectDB().getGrupo()">
                             <mat-icon mat-list-icon class="icon-display">person</mat-icon>
@@ -16,60 +20,18 @@
                         </mat-list-item>
                     </ng-container>
                 </mat-list>
-            </mat-card>
-            <ng-template #noGroup>
-                <div class="no-group">
-                    <img src="../../../assets/imagenes/nogroup.png" alt="" id="no-group-svg">
-                    <div class="mat-headline">No tienes grupo de trabajo, crea uno.</div>
-                </div>
-            </ng-template>
-        </div>
-        <div class="columna">
-            <mat-card>
-                <mat-selection-list color="primary" #studentsList [(ngModel)]="selectedGroup"
-                    (ngModelChange)="onGroupsChange($event)" ngDefaultControl>
-                    <div mat-subheader class="encabezado">
-                        <mat-icon mat-list-icon class="icon-display">group_off</mat-icon>
-                        <div class="info">Estudiantes sin grupo • {{this.subjectSelected.getObjectDB().getNombre()}}
-                            <br>
-                            Número máximo de estudiantes: {{this.subjectSelected.getObjectDB().getNumGrupos()}}
-                        </div>
-                    </div>
-                    <mat-list-item disabled="true" id="currentUser" *ngIf="this.studentGroup === undefined">
-                        <mat-icon mat-list-icon class="icon-display">person</mat-icon>
-                        {{this.currentUser.getName()}} • (Tú)
-                    </mat-list-item>
-                    <ng-container *ngIf="this.studentsWithOutGroup !== undefined;">
-                        <mat-list-option *ngFor="let student of studentsWithOutGroup.getObjectDB().getGrupo()"
-                            [value]="student">
-                            <mat-icon mat-list-icon class="icon-display">person_add</mat-icon>
-                            {{student.getName()}}
-                        </mat-list-option>
-                    </ng-container>
-
-                </mat-selection-list>
-                <div class="botones" *ngIf="studentGroup === undefined">
-                    <button #btnAddGroup mat-stroked-button color="primary" disabled="true"
-                        (click)="onAddToGroup()">Añadir a mi grupo</button>
-                </div>
-            </mat-card>
-        </div>
-    </div>
-</div>
-<!-- <div class="container">
-    <div class="info-group">
-        <ng-container *ngIf="!studentGroup && !showAllStudents else studentsWithoutGroup">
-            <div class="img-svg">
-                <img src="../../../assets/imagenes/nogroup.svg" alt="" class="img-svg">
-            </div>
-            <div class="mat-display-1">No tienes grupos creados</div> 
-            <div class="mat-headline">¡Crea un grupo ahora!</div>  
-            <button mat-button color="primary" (click)="showAllStudents = !showAllStudents">Crear grupo</button>
         </ng-container>
-        <ng-template #studentsWithoutGroup>
-            Con grupo
-            <button mat-button color="primary" (click)="showAllStudents = !showAllStudents">Volver</button>
+
+        <ng-template #noGroup>
+            <mat-divider></mat-divider>
+            <div class="no-group">
+                <img src="../../../assets/imagenes/nogroup.png" alt="" id="no-group-svg">
+                <div class="mat-body-2">Agregar estudiantes a tu grupo de trabajo</div>
+                <button mat-button color="primary" (click)="onCreateGroup()">
+                    <mat-icon>group_add</mat-icon>
+                    Crear grupo
+                </button>
+            </div>
         </ng-template>
     </div>
-    
-</div> -->
+</div>
