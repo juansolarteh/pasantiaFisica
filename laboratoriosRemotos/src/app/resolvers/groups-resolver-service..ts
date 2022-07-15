@@ -17,7 +17,7 @@ export class GroupsResolverServiceResolver implements Resolve<ObjectDB<GroupWith
   constructor(private subjectSvc: SubjectService, private groupSvc: GroupsService, private userSvc: UserService) { }
   
   resolve(): ObjectDB<GroupWithNames>[] | Observable<ObjectDB<GroupWithNames>[]> | Promise<ObjectDB<GroupWithNames>[]> {
-    const subjectId = localStorage.getItem('subjectId');
+    const subjectId = this.subjectSvc.getRefSubjectSelected().id
     return this.subjectSvc.getRefGroupsFromSubjectId(subjectId!).then(async refGroups => {
       let groupsDB = await this.groupSvc.getFromRefs(refGroups);
       let promMembers = groupsDB.map(async groupDB => {

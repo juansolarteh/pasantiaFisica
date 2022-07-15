@@ -14,7 +14,7 @@ export class WithoutGroupResolverServiceResolver implements Resolve<ObjectDB<Gro
   constructor(private subjectSvc: SubjectService, private userSvc: UserService) { }
   
   resolve(): ObjectDB<GroupWithNames> | Observable<ObjectDB<GroupWithNames>> | Promise<ObjectDB<GroupWithNames>> {
-    const subjectId = localStorage.getItem('subjectId');
+    const subjectId = this.subjectSvc.getRefSubjectSelected().id
     return this.subjectSvc.getStudentsWithouGroup(subjectId!).then(async refUsers => {
       let users = await this.userSvc.getGroupMembers(refUsers);
       let groupWithNames = new GroupWithNames(users);
