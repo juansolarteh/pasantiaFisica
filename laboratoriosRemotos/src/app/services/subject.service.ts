@@ -119,14 +119,16 @@ export class SubjectService {
     if (data != null) {
       let querySnapShot = this.col.get();
       (await querySnapShot).forEach(doc => {
-        let groupsSubject = doc.get('grupos') as Array<DocumentReference>
-        groupsSubject.forEach(group => {
-          if ((data.includes(group.id))) {
-            let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
-            subject.getObjectDB().setDocente(doc.get('docente'))
-            listWithGroup.push(subject)
-          }
-        })
+        if (doc.id != 'Claves') {
+          let groupsSubject = doc.get('grupos') as Array<DocumentReference>
+          groupsSubject.forEach(group => {
+            if ((data.includes(group.id))) {
+              let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
+              subject.getObjectDB().setDocente(doc.get('docente'))
+              listWithGroup.push(subject)
+            }
+          })
+        }
       })
     }
     return listWithGroup
