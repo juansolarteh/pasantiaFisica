@@ -5,20 +5,20 @@
     </nav>
 </app-navbar>
 
-<mat-tab-nav-panel #tabPanel>
-    <div id="centered-wrapper">
-        <div id="wrapper">
-            <div>
-                <mat-card>
-                    <p>{{subject?.getNombre()}}</p>
-                    <p>{{subject?.getClave()}}</p>
-                    <p>{{subject?.getDescripcion()}}</p>
-                    <p>{{subject?.getNumGrupos()}}</p>
-                </mat-card>
-            </div>
-            <div id="router">
+<div id="centered-wrapper">
+    <div id="wrapper">
+        <div>
+            <mat-card>
+                <p>{{subject?.getNombre()}}</p>
+                <p>{{subject?.getClave()}}</p>
+                <p>{{subject?.getDescripcion()}}</p>
+                <p>{{subject?.getNumGrupos()}}</p>
+            </mat-card>
+        </div>
+        <div id="router">
+            <mat-tab-nav-panel #tabPanel>
                 <router-outlet></router-outlet>
-            </div>
+            </mat-tab-nav-panel>
         </div>
     </div>
-</mat-tab-nav-panel>
+</div>

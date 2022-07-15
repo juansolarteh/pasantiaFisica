@@ -14,13 +14,11 @@ export class GroupsService {
 
   constructor(private firestr: AngularFirestore) { }
 
-  async deleteGrupos(refSubject: DocumentReference) {
-
-  }
-
   //Mehtods from teacher
   deleteGroup(refGroup: DocumentReference) {
-    this.groupsDB = this.groupsDB.filter(g => g.getId() !== refGroup.id);
+    if (this.groupsDB) {
+      this.groupsDB = this.groupsDB.filter(g => g.getId() !== refGroup.id);
+    }
     refGroup.delete()
   }
   outGroup(groupId: string, studentId: string) {
@@ -37,7 +35,7 @@ export class GroupsService {
       this.groupsDB[indexGroup].getObjectDB().getGrupo().push(studentRef);
       this.col.doc(groupId).update('grupo', this.groupsDB[indexGroup].getObjectDB().getGrupo())
       return undefined;
-    }else{
+    } else {
       let newGroup = new Group([studentRef], studentRef);
       let refNewGroup: DocumentReference = await this.createGroup(newGroup);
       this.groupsDB.push(new ObjectDB(newGroup, refNewGroup.id))
@@ -97,10 +95,10 @@ export class GroupsService {
     return new ObjectDB(group, groupRef.id)
   }
 
-  async getGroupsByRefStudent(studentRef: DocumentReference){
-    let idGroups : string[] = []
-    let querySnapShot = this.col.where('grupo','array-contains',studentRef).get();
-    (await querySnapShot).forEach(doc=>{
+  async getGroupsByRefStudent(studentRef: DocumentReference) {
+    let idGroups: string[] = []
+    let querySnapShot = this.col.where('grupo', 'array-contains', studentRef).get();
+    (await querySnapShot).forEach(doc => {
       idGroups.push(doc.id)
     })
     return idGroups
