@@ -15,6 +15,7 @@ import { SchedulePracticeComponent } from './practices/add-practice-form/schedul
 import { DeletePracticeDialogComponent } from './practices/delete-practice-dialog/delete-practice-dialog.component';
 import { ModifyPracticeComponent } from './practices/modify-practice/modify-practice.component';
 import { AddUpdateSubjectComponent } from './subjects/add-update-subject/add-update-subject.component';
+import { DeleteSubjectComponent } from './subjects/delete-subject/delete-subject.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { AddUpdateSubjectComponent } from './subjects/add-update-subject/add-upd
     SchedulePracticeComponent,
     DeletePracticeDialogComponent,
     ModifyPracticeComponent,
-    AddUpdateSubjectComponent
+    AddUpdateSubjectComponent,
+    DeleteSubjectComponent,
   ],
   imports: [
     CommonModule,

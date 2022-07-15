@@ -31,7 +31,9 @@ export class PracticesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.practices = this.activatedRoute.snapshot.data['practices'];
+    this.activatedRoute.data.subscribe(data => {
+      this.practices = data['practices']
+    })
   }
 
   showPractice(practice: PracticeNameDate) {

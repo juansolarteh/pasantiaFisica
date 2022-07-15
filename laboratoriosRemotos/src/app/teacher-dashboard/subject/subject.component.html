@@ -1,9 +1,10 @@
 <app-navbar>
-    <mat-tab-group animationDuration="0ms" midOptions [selectedIndex]=selectedTab (selectedTabChange)="changeTab($event)">
-        <mat-tab label="Practicas"></mat-tab>
-        <mat-tab label="Grupos"></mat-tab>
-    </mat-tab-group>
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" midOptions>
+        <a mat-tab-link *ngFor="let link of links" [routerLink]="link.link" (click)="activeLink = link.link"
+            [active]="activeLink == link.link"> {{link.label}}</a>
+    </nav>
 </app-navbar>
+
 <div id="centered-wrapper">
     <div id="wrapper">
         <div>
@@ -12,10 +13,12 @@
                 <p>{{subject?.getClave()}}</p>
                 <p>{{subject?.getDescripcion()}}</p>
                 <p>{{subject?.getNumGrupos()}}</p>
-            </mat-card>     
+            </mat-card>
         </div>
         <div id="router">
-            <router-outlet></router-outlet>
+            <mat-tab-nav-panel #tabPanel>
+                <router-outlet></router-outlet>
+            </mat-tab-nav-panel>
         </div>
     </div>
 </div>

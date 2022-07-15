@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material.module';
 import { CardSubjectComponent } from './card-subject/card-subject.component';
 import { NavbarComponent } from './navbar/navbarComponent';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { NavbarComponent } from './navbar/navbarComponent';
   imports: [
     CommonModule,
     MaterialModule,
+    MatSidenavModule,
   ],
   exports: [
     NavbarComponent,

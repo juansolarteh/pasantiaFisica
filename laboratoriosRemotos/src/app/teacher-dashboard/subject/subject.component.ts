@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { filter, map, Subscription } from 'rxjs';
 import { SubjectTeacher } from 'src/app/models/SubjectTeacher';
 import { SubjectService } from 'src/app/services/subject.service';
 
@@ -12,69 +12,35 @@ import { SubjectService } from 'src/app/services/subject.service';
 })
 export class SubjectComponent implements OnInit, OnDestroy {
 
-  private managerRoute!: Subscription;
+  private subscriber!: Subscription;
   subject !: SubjectTeacher;
-  selectedTab = 0;
+  links = [
+    {
+      label: 'practicas',
+      link: 'p'
+    },
+    {
+      label: 'grupos',
+      link: 'g'
+    }
+  ];
+  activeLink = this.links[0].link;
 
-  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute,
-    private subjectSvc: SubjectService, private changeDetector: ChangeDetectorRef) { }
+  constructor(private readonly router: Router, private route: ActivatedRoute) { }
 
   ngOnDestroy(): void {
-    this.managerRoute?.unsubscribe();
-    localStorage.removeItem('subjectId')
+    this.subscriber?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(async params => {
-      let subjectId = params['subjectId'];
-      localStorage.setItem('subjectId', subjectId)
-      this.subject = await this.subjectSvc.getSubjectById(subjectId);
-      this.changeDetector.markForCheck();
-    })
-    this.verifyRoute()
-  }
-
-  changeTab(event: any) {
-    switch (event.index) {
-      case 0: this.router.navigate(['./p'], { relativeTo: this.activatedRoute });
-        break;
-      case 1: this.router.navigate(['./g'], { relativeTo: this.activatedRoute });
-        break;
-      default: this.router.navigate(['/'], { relativeTo: this.activatedRoute });
-    }
-  }
-
-  private verifyRoute() {
-    var urlSegment = this.getLastPath()
-    if (urlSegment === 'g') {
-      if (this.selectedTab == 0){
-        this.selectedTab = 1
-      }
-      this.router.navigate(['./g'], { relativeTo: this.activatedRoute });
-    }else{
-      this.router.navigate(['./p'], { relativeTo: this.activatedRoute });
-    }
-
-    this.managerRoute = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      var urlSegment = this.getLastPath()
-      if (!urlSegment){
-        this.router.navigate(['subjects'], { relativeTo: this.activatedRoute.parent });
-      }
-      else if (urlSegment == 'g' && this.selectedTab == 0) {
-        this.selectedTab = 1
-      } else {
-        this.selectedTab = 0
-      }
-    })
-  }
-
-  private getLastPath() {
-    let lastPath!: string
-    this.activatedRoute.firstChild?.url.forEach(urlSeg => {
-      lastPath = urlSeg[0].path;
-    })
-    return lastPath
+    this.route.data.subscribe(data => {
+      this.subject = data['subject']
+    });
+    this.activeLink = this.router.url.split('/').pop()!
+    this.subscriber = this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event) => {
+      this.activeLink = event.url.split('/').pop()!
+    });
   }
 }

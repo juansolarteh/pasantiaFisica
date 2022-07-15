@@ -21,8 +21,14 @@ export class UserListComponent {
   @Output() deleteUser: EventEmitter<ObjectDB<User>> = new EventEmitter();
   deletedUser!: ObjectDB<User>;
 
-  constructor(public dialog: MatDialog, private userSvc: UserService,
-    private practiceSvc: PracticeService, private scheduleSvc: ScheduleService, private subjectSvc: SubjectService) { }
+  constructor(
+    public dialog: MatDialog,
+    private userSvc: UserService,
+    private practiceSvc: PracticeService,
+    private scheduleSvc: ScheduleService,
+    private subjectSvc: SubjectService,
+    private groupSvc: GroupsService
+  ) { }
 
   delete(contentDialog: any, user: ObjectDB<User>) {
     this.deletedUser = user;
@@ -31,14 +37,19 @@ export class UserListComponent {
       if (result) {
         const userRef = this.userSvc.getRefUser(user.getId());
         const subjectsRef = await this.subjectSvc.getRefSubjectsFromRefUser(userRef);
-        var practicesaRef: DocumentReference[] = [];
+        let practicesRef: DocumentReference[] = [];
+        let groupsRef: DocumentReference[] = [];
         subjectsRef.forEach(async subRef => {
-          practicesaRef = practicesaRef.concat(await this.practiceSvc.getPracticesRefFromSubjectRef(subRef));
+          practicesRef = practicesRef.concat(await this.practiceSvc.getPracticesRefFromSubjectRef(subRef));
+          groupsRef = groupsRef.concat(await this.subjectSvc.getRefGroupsFromSubjectId(subRef.id))
           this.subjectSvc.deleteFromReference(subRef);
         });
-        practicesaRef.forEach(prtRef => {
+        practicesRef.forEach(prtRef => {
           this.scheduleSvc.deleteFromPracticeReference(prtRef);
           this.practiceSvc.delete(prtRef);
+        });
+        groupsRef.forEach(group => {
+          this.groupSvc.deleteGroup(group);
         });
         this.userSvc.deleteUser(userRef);
         this.deleteUser.emit(this.deletedUser);
