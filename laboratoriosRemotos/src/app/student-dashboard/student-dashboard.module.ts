@@ -17,6 +17,7 @@ import { MyGroupComponent } from './groups/my-group/my-group.component';
 import { StudentsWithoutGroupComponent } from './groups/students-without-group/students-without-group.component';
 import { PracticeFilterComponent } from './calendar/practice-filter/practice-filter.component';
 import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/check-booking-dialog.component';
+import { PracticeExecutionComponent } from './practice-execution/practice-execution.component';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/che
     StudentsWithoutGroupComponent,
     PracticeFilterComponent,
     CheckBookingDialogComponent,
+    PracticeExecutionComponent,
   ],
   entryComponents: [DialogComponent,CheckBookingDialogComponent],
   imports: [
