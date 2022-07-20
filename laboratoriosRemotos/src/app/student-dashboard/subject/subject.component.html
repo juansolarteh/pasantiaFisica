@@ -6,7 +6,19 @@
     <mat-tab label="Grupos"></mat-tab>
   </mat-tab-group>
 </app-navbar>
-
 <div>
   <router-outlet></router-outlet>
 </div>
+<!-- <nav mat-tab-nav-bar [backgroundColor]="background" [tabPanel]="tabPanel">
+  <button mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button> 
+  <h3>hola</h3>
+  <span class="spacer"></span>
+  <a mat-tab-link *ngFor="let link of links" (click)="activeLink = link" [active]="activeLink == link"> {{link}} </a>
+  <a mat-tab-link disabled>Disabled Link</a>
+  <span class="spacer"></span>
+  <h3>salir</h3>
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+ -->

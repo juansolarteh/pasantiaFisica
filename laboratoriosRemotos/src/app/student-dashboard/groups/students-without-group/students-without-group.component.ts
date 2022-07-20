@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { GroupWithNames } from 'src/app/models/Group';
+import { Subject } from 'src/app/models/Subject';
+import { Component, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Group, GroupWithNames } from 'src/app/models/Group';
+import { MemberGroup } from 'src/app/models/MemberGroup';
 import { ObjectDB } from 'src/app/models/ObjectDB';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatStepper } from '@angular/material/stepper';
+import { UserService } from 'src/app/services/user.service';
+import { SubjectService } from 'src/app/services/subject.service';
+import { GroupsService } from 'src/app/services/groups.service';
 
 @Component({
   selector: 'app-students-without-group',
@@ -10,11 +17,65 @@ import { ObjectDB } from 'src/app/models/ObjectDB';
 })
 export class StudentsWithoutGroupComponent implements OnInit {
 
-  constructor(private activatedRoute: ActivatedRoute) { }
-  studentsWithOutGroup!: ObjectDB<GroupWithNames>
+  
+  constructor(@Inject(MAT_DIALOG_DATA)
+  public data: { studentsWithOutGroup: ObjectDB<GroupWithNames>, currentUser: MemberGroup, subjectSelected: ObjectDB<Subject> },
+    private _snackBar: MatSnackBar,private userSvc: UserService,private subjectSvc: SubjectService,private groupSvc: GroupsService) { }
+  
+  selectedGroup!: MemberGroup[]
+  leaderSelected!: MemberGroup[]
+  @ViewChild('stepper') stepper!: MatStepper;
+  onGroupCreated : EventEmitter<GroupWithNames> = new EventEmitter<GroupWithNames>()
 
   ngOnInit(): void {
-    this.studentsWithOutGroup = this.activatedRoute.snapshot.data['studentsWithoutGroup']
+    
   }
-
+  onGroupsChange(auxGroup: MemberGroup[]) {
+    if (auxGroup.length > this.data.subjectSelected.getObjectDB().getNumGrupos()) {
+      this.openSnackBar("El número de estudiantes no debe ser mayor a " + this.data.subjectSelected.getObjectDB().getNumGrupos(), "Cerrar")
+    }
+  }
+  onGroupSelected(){
+    if(this.stepper.selected != undefined){
+      this.stepper.selected.completed = true
+      this.stepper.next();
+    }
+  }
+  onCreateGroup(){
+    if(this.stepper.selected != undefined){
+      console.log("Lider seleccionado", this.leaderSelected);
+      console.log("Grupo seleccionado", this.selectedGroup);
+      let leaderRef = this.userSvc.getRefUser(this.leaderSelected[0].getId())
+      let groupRefs = this.selectedGroup.map(member => this.userSvc.getRefUser(member.getId()))
+      this.subjectSvc.takeOutStudents(groupRefs, this.data.subjectSelected.getId())
+      let newGroup = new Group(groupRefs, leaderRef)
+      this.groupSvc.createGroup(newGroup).then(res=>{
+        this.subjectSvc.getRefSubjectFromId(this.data.subjectSelected.getId())
+        this.subjectSvc.createGroup(res)
+        let groupCreated = new GroupWithNames(this.selectedGroup,this.leaderSelected[0].getId())
+        console.log("Emitiendo desde modal", groupCreated);
+        this.onGroupCreated.emit(groupCreated)
+        /* if(this.stepper.selected != undefined){
+          this.stepper.selected.completed = true
+        } */
+      })
+    }
+  }
+  onLeaderSelected(){
+    if(this.leaderSelected){
+      console.log("Lider",this.leaderSelected);
+      
+      if(this.stepper.selected != undefined){
+        this.stepper.selected.completed = true
+        this.stepper.next();
+      }
+    }else{
+      this.openSnackBar("Por favor, seleccione un líder", "Cerrar")
+    }
+  }
+  private openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
+  }
 }

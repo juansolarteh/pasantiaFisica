@@ -1,5 +1,6 @@
+import { StudentsWithoutGroupComponent } from './students-without-group/students-without-group.component';
 import { UserService } from 'src/app/services/user.service';
-import { DialogComponent } from './../dialog/dialog.component';
+import { DialogComponent } from './dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GroupsService } from 'src/app/services/groups.service';
 import { SubjectService } from 'src/app/services/subject.service';
@@ -20,21 +21,40 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class GroupsComponent implements OnInit {
 
   @ViewChild('btnAddGroup') btnAddGroup!: MatButton
-  constructor(private activatedRoute: ActivatedRoute, private userSvc: UserService, private groupSvc: GroupsService, private subjectSvc: SubjectService, private _snackBar: MatSnackBar, public groupDialog: MatDialog) { }
+  constructor(private activatedRoute: ActivatedRoute,
+    private userSvc: UserService, 
+    private groupSvc: GroupsService,
+    private subjectSvc: SubjectService,
+    private _snackBar: MatSnackBar,
+    public groupDialog: MatDialog) { }
 
   currentUser!: MemberGroup
   studentGroup!: ObjectDB<GroupWithNames>
   studentsWithOutGroup!: ObjectDB<GroupWithNames>
   subjectSelected!: ObjectDB<Subject>
   selectedGroup!: MemberGroup[]
+
   ngOnInit() {
     this.currentUser = this.activatedRoute.snapshot.data['currentUser']
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.studentGroup = this.activatedRoute.snapshot.data['studentGroup']
     this.studentsWithOutGroup = this.activatedRoute.snapshot.data['studentsWithoutGroup']
+    console.log(this.studentsWithOutGroup);
   }
 
-  onAddToGroup() {
+  onCreateGroup(){
+    //this.studentsWithOutGroup.getObjectDB().getGrupo().push(this.currentUser)
+    let dialogRef = this.groupDialog.open(StudentsWithoutGroupComponent,
+      { data: {studentsWithOutGroup : this.studentsWithOutGroup, currentUser: this.currentUser, subjectSelected : this.subjectSelected},
+      height: 'auto', width: '750px'} )
+      const dialogSuscription = dialogRef.componentInstance.onGroupCreated.subscribe(groupCreated =>{
+        console.log("Recibiendo desde grupos",groupCreated);
+        this.studentGroup = new ObjectDB<GroupWithNames>(groupCreated,'new')
+        this.openSnackBar("Grupo creado exitosamente","Cerrar")
+        dialogSuscription.unsubscribe()
+      })
+  }
+  /* onAddToGroup() {
 
     if (this.selectedGroup === undefined) {
       this.openSnackBar("Seleccione al menos un estudiante ", "Cerrar")
@@ -64,10 +84,9 @@ export class GroupsComponent implements OnInit {
         }
       })
     }
-  }
+  } */
 
   onGroupsChange(auxGroup: MemberGroup[]) {
-    console.log(auxGroup)
     if (auxGroup.length <= this.subjectSelected.getObjectDB().getNumGrupos() - 1) {
       this.btnAddGroup.disabled = false
     } else if (auxGroup.length === 0) {

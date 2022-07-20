@@ -1,6 +1,6 @@
 import { FullcalendarModule } from './../shared/fullcalendar.module';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { StudentDashboardRoutingModule } from './student-dashboard-routing.module';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { MaterialModule } from '../shared/material.module';
@@ -12,9 +12,11 @@ import { PracticeComponent } from './practice/practice.component';
 import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subject-card.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { FormsModule } from '@angular/forms';
-import { DialogComponent } from './dialog/dialog.component';
+import { DialogComponent } from './groups/dialog/dialog.component';
 import { MyGroupComponent } from './groups/my-group/my-group.component';
 import { StudentsWithoutGroupComponent } from './groups/students-without-group/students-without-group.component';
+import { PracticeFilterComponent } from './calendar/practice-filter/practice-filter.component';
+import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/check-booking-dialog.component';
 
 
 @NgModule({
@@ -29,8 +31,10 @@ import { StudentsWithoutGroupComponent } from './groups/students-without-group/s
     DialogComponent,
     MyGroupComponent,
     StudentsWithoutGroupComponent,
+    PracticeFilterComponent,
+    CheckBookingDialogComponent,
   ],
-  entryComponents: [DialogComponent],
+  entryComponents: [DialogComponent,CheckBookingDialogComponent],
   imports: [
     CommonModule,
     StudentDashboardRoutingModule,
@@ -38,6 +42,9 @@ import { StudentsWithoutGroupComponent } from './groups/students-without-group/s
     ComponentsModule,
     FormsModule,
     FullcalendarModule
+  ],
+  providers:[
+    DatePipe
   ]
 })
 export class StudentDashboardModule { }
