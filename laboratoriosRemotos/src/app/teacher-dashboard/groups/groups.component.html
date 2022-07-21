@@ -2,7 +2,7 @@
     <mat-card class="group-wrapper" *ngFor="let group of groups; let i = index">
         <mat-card-title *ngIf="group.getId() === 'SG'">Sin grupo</mat-card-title>
         <mat-card-title *ngIf="group.getId() !== 'SG'">Grupo {{i}}</mat-card-title>
-        <mat-list cdkDropList [cdkDropListData]="group.getObjectDB().getGrupo()" (cdkDropListDropped)="drop($event)">
+        <mat-list cdkDropList [cdkDropListData]="group.getObjectDB().getGrupo()" (cdkDropListDropped)="drop($event, deleteGroup)">
             <mat-list-item cdkDrag *ngFor="let member of group.getObjectDB().getGrupo(); let ii = index">
                 <mat-icon mat-list-icon>person</mat-icon>
                 <p mat-line>{{member.getName()}}</p>
@@ -12,12 +12,12 @@
                         matTooltip="Cambiar a lider" (click)="chageLeader(i, member.getId())">
                         <img class="leader" src="../assets/imagenes/leader.png">
                     </button>
-                    <button mat-icon-button matTooltip="Retirar del grupo {{i}}" (click)="moveWithoutGroup(i, member)">
+                    <button mat-icon-button matTooltip="Retirar del grupo {{i}}" (click)="moveWithoutGroup(i, member, deleteGroup)">
                         <mat-icon>cancel</mat-icon>
                     </button>
                 </ng-container>
                 <button mat-icon-button color="primary" matTooltip="Expulsar estudiante del curso"
-                    (click)="deleteStudent(deleteMessage, member, i)">
+                    (click)="deleteStudent(deleteMessage, member, i, deleteGroup)">
                     <mat-icon>delete</mat-icon>
                 </button>
             </mat-list-item>
@@ -32,4 +32,8 @@
 
 <ng-template #deleteMessage>
     <app-delete-course-member-dialog [memberGroup]="memberToDelete"></app-delete-course-member-dialog>
+</ng-template>
+
+<ng-template #deleteGroup>
+    <app-delete-group-dialog></app-delete-group-dialog>
 </ng-template>

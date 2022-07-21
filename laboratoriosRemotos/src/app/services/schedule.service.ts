@@ -18,6 +18,13 @@ export class ScheduleService {
     })
   }
 
+  async deleteFromGroupRef(groupRef: DocumentReference){
+    const querySnapShot = this.col.where('grupo', '==', groupRef).get();
+    (await querySnapShot).forEach((doc) => {
+      this.firestr.doc(doc.ref).delete()
+    })
+  }
+
   async getBookingsByPracticeRef(practiceRef: DocumentReference) {
     var arrBookings: Timestamp[] = [];
     const querySnapShot = this.col.where('practica', '==', practiceRef).get();
