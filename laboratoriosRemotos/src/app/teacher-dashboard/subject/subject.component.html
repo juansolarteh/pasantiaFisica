@@ -9,10 +9,13 @@
     <div id="wrapper">
         <div>
             <mat-card>
-                <p>{{subject?.getNombre()}}</p>
-                <p>{{subject?.getClave()}}</p>
-                <p>{{subject?.getDescripcion()}}</p>
-                <p>{{subject?.getNumGrupos()}}</p>
+                <div>
+                    <div class="mat-display-1">{{subject.getNombre() | titlecase}}</div>
+                    <div class="mat-body-strong">{{subject.getDescripcion()}}</div>
+                    <br>
+                    <div class="mat-body-strong">Numero maximo de participantes: {{subject.getNumGrupos()}}</div>
+                    <div class="mat-body-strong">Clave de curso: {{subject.getClave()}}</div>
+                </div>
             </mat-card>
         </div>
         <div id="router">

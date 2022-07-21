@@ -38,7 +38,7 @@ import { DeleteGroupDialogComponent } from './groups/delete-group-dialog/delete-
     TeacherDashboardRoutingModule,
     MaterialModule,
     ComponentsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ]
 })
 export class TeacherDashboardModule { }
