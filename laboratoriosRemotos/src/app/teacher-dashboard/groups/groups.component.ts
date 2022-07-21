@@ -1,6 +1,7 @@
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { GroupWithNames } from 'src/app/models/Group';
 import { MemberGroup } from 'src/app/models/MemberGroup';
@@ -18,14 +19,17 @@ export class GroupsComponent implements OnInit {
 
   groups: ObjectDB<GroupWithNames>[] = [];
   memberToDelete!: MemberGroup;
+  maxNumGorup!: number
   private endOperation = true;
 
   constructor(private readonly route: ActivatedRoute, public dialog: MatDialog, private subjectSvc: SubjectService,
-    private changeDetector: ChangeDetectorRef, private groupSvc: GroupsService) { }
+    private changeDetector: ChangeDetectorRef, private groupSvc: GroupsService, private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.groups = this.route.snapshot.data['groups'];
     let sg: ObjectDB<GroupWithNames> = this.route.snapshot.data['withoutGroup'];
+    this.maxNumGorup = Number.parseInt(localStorage.getItem('numGroup')!);
+    localStorage.removeItem('numGroup')
     if (this.groups.length > 0) {
       let aux = this.groups[0];
       this.groups[0] = sg;
@@ -50,7 +54,12 @@ export class GroupsComponent implements OnInit {
 
   async drop(event: CdkDragDrop<MemberGroup[]>) {
     if (this.endOperation) {
-      this.endOperation = false
+      this.endOperation = false;
+      const indexGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.container.data);
+      if(indexGroup !== 0 && event.container.data.length === this.maxNumGorup){
+        this.openSnackBar('No se puede agregar mas estudiantes. Solo puede haber maximo ' + this.maxNumGorup + ' estudiantes')
+        return
+      }
       if (event.previousContainer !== event.container) {
         transferArrayItem(
           event.previousContainer.data,
@@ -58,7 +67,6 @@ export class GroupsComponent implements OnInit {
           event.previousIndex,
           event.currentIndex,
         );
-        const indexGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.container.data);
         const indexPreviousGroup = this.groups.findIndex((g) => g.getObjectDB().getGrupo() === event.previousContainer.data);
         const studentId: string = this.groups[indexGroup].getObjectDB().getGrupo()[event.currentIndex].getId();
         if (indexGroup === 0) {
@@ -97,6 +105,10 @@ export class GroupsComponent implements OnInit {
       }
     }
     this.endOperation = true
+  }
+
+  async openSnackBar(message: string) {
+    this._snackBar.open(message)._dismissAfter(5000)
   }
 
   moveWithoutGroup(indexGroup: number, memberGroup: MemberGroup) {

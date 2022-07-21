@@ -35,6 +35,7 @@ export class SubjectComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.subject = data['subject']
+      localStorage.setItem('numGroup', this.subject.getNumGrupos().toString())
     });
     this.activeLink = this.router.url.split('/').pop()!
     this.subscriber = this.router.events.pipe(
