@@ -13,7 +13,7 @@ import {ThemePalette} from '@angular/material/core';
 })
 export class SubjectComponent implements OnInit {
 
-  constructor(private practiceService : PracticeService, private subjectSvc : SubjectService,  private readonly router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private readonly router: Router, private activatedRoute: ActivatedRoute) { }
   subjectSelected!: ObjectDB<Subject>
   /* links = ['Prácticas', 'Calendario', 'Grupo'];
   activeLink = ""

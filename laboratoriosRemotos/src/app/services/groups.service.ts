@@ -103,4 +103,8 @@ export class GroupsService {
     })
     return idGroups
   }
+  async getGroupRefById(groupId : string){
+    let querySnapShot = await this.col.doc(groupId).get()
+    return querySnapShot.ref
+  }
 }

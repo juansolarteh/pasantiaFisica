@@ -1,5 +1,9 @@
 .buttons-stepper{
+    margin-top: 1.5rem;
     display: flex;
     justify-content: flex-end;
-    gap: 4px;
+    gap: 1.5rem;
 }
+.mat-list-icon {
+    color: rgba(0, 0, 0, 0.54);
+  }

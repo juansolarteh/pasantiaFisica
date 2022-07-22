@@ -64,3 +64,6 @@
 #label-groups{
   margin-bottom: 10px;
 }
+#icon-create-group:hover{
+  cursor: pointer;
+}

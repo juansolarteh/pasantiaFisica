@@ -1,3 +1,4 @@
+import { Booking } from './../models/Booking';
 import { Timestamp } from '@firebase/firestore';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference, DocumentData } from '@angular/fire/compat/firestore';
@@ -27,4 +28,22 @@ export class ScheduleService {
     return arrBookings
   }
 
+  createBooking(newBooking : Booking){
+    this.col.add({
+      fecha: newBooking.fecha,
+      practica: newBooking.practica,
+      grupo: newBooking.grupo
+    })
+  }
+  async isGroupBooked(refGroup : DocumentReference, refPractice : DocumentReference){
+    let flag = false
+    const querySnapShot = this.col.where('practica','==', refPractice).get();
+    (await querySnapShot).forEach(doc=>{
+      if(doc.get('grupo').id == refGroup.id){
+        flag = true
+      }
+    })
+    console.log("Desde servicio",flag);
+    return flag
+  }
 }
