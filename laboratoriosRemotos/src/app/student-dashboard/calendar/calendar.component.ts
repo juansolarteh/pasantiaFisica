@@ -49,7 +49,7 @@ export class CalendarComponent implements OnInit {
     height: 500,
     expandRows: true,
     selectable: true,
-    editable: true,
+    editable: false,
     slotDuration: '00:60:00',
     eventBackgroundColor: "#6d1a1d",
     eventBorderColor: "#6d1a1d",
