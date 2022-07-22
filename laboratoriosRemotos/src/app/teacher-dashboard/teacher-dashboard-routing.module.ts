@@ -40,7 +40,7 @@ const routes: Routes = [
     pathMatch: 'full',
     resolve: { subjects: SubjectsTeacherResolverServiceResolver }
   },
-  { path: '', redirectTo: 'subjects', pathMatch: 'full' },
+  { path: '**', redirectTo: 'subjects', pathMatch: 'full' },
 ];
 
 @NgModule({

@@ -15,6 +15,9 @@ export class GroupsService {
   constructor(private firestr: AngularFirestore) { }
 
   //Mehtods from teacher
+  getGroupRef(idGroup: string){
+    return this.col.doc(idGroup)
+  }
   deleteGroup(refGroup: DocumentReference) {
     if (this.groupsDB) {
       this.groupsDB = this.groupsDB.filter(g => g.getId() !== refGroup.id);

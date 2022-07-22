@@ -95,16 +95,18 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     this.startSubmit = true;
     let sd: Timestamp;
     if (startDate) {
-      sd = Timestamp.fromDate(new Date(moment(startDate + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss')))
+      let aux = moment(startDate)
+      sd = Timestamp.fromDate(new Date(aux.format('YYYY-MM-DD HH:mm:ss')))
     } else {
       sd = Timestamp.fromDate(new Date())
     }
     let creationDate = Timestamp.fromDate(new Date())
+    let fnPractice = moment(this.practiceForm.get('end')?.value).hour(20)
     const practice = new Practice(
       this.practiceForm.get('name')?.value,
       creationDate,
       sd,
-      Timestamp.fromDate(new Date(moment(this.practiceForm.get('end')?.value + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss'))),
+      Timestamp.fromDate(new Date(fnPractice.format('YYYY-MM-DD HH:mm:ss'))),
       this.plantSvc.getPlantRefFromId(this.practiceForm.get('plant')?.value),
       this.subjectSvc.getRefSubjectSelected(),
       this.practiceForm.get('description')?.value,

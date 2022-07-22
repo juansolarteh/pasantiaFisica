@@ -1,15 +1,18 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Timestamp } from '@firebase/firestore';
 import * as moment from 'moment';
 import { Subject, finalize, Subscription } from 'rxjs';
 import { FileLink } from 'src/app/models/FileLink';
+import { FormValidators } from 'src/app/models/FormValidators';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { Plant } from 'src/app/models/Plant';
 import { Practice, PracticeNameDate } from 'src/app/models/Practice';
 import { PlantService } from 'src/app/services/plant.service';
 import { PracticeService } from 'src/app/services/practice.service';
+import { ScheduleService } from 'src/app/services/schedule.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { imageFile, TypeFiles } from 'src/environments/typeFiles';
@@ -34,8 +37,9 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
   fieldFeatures: any = {
     name: ['nombre', 5, 60],
     description: ['descripcion', 400],
-    end: ['fin de practica'],
+    end: ['fin de la practica'],
     plant: ['planta'],
+    start: ['inicio de la practica'],
   }
   startSubmit = false;
   flag = true;
@@ -50,13 +54,19 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
   //aux for compare changes
   filesComparator: FileLink[] = [];
 
+  //Date Comparation
+  start!: Date
+  end!: Date
+
   constructor(
     private readonly practiceSvc: PracticeService,
     private readonly fb: FormBuilder,
     private _snackBar: MatSnackBar,
     private readonly plantSvc: PlantService,
     private readonly storageSvc: StorageService,
-    private subjectSvc: SubjectService
+    private subjectSvc: SubjectService,
+    private dialog: MatDialog,
+    private scheduleSvc: ScheduleService
   ) { }
 
   ngOnDestroy(): void {
@@ -81,13 +91,11 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
     this.practiceForm.get('name')?.setValue(this.practice.getObjectDB().getNombre());
     this.practiceForm.get('description')?.setValue(this.practice.getObjectDB().getDescripcion())
     let date = new Date(this.practice.getObjectDB().getInicio().seconds * 1000);
-    let dateFormated = moment(date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate());
-    dateFormated.add(1, 'months')
-    this.practiceForm.get('start')?.setValue(dateFormated.format('YYYY-MM-DD'));
+    this.start = date
+    this.practiceForm.get('start')?.setValue(date);
     date = new Date(this.practice.getObjectDB().getFin().seconds * 1000);
-    dateFormated = moment(date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate());
-    dateFormated.add(1, 'months');
-    this.practiceForm.get('end')?.setValue(dateFormated.format('YYYY-MM-DD'));
+    this.end = date
+    this.practiceForm.get('end')?.setValue(date);
     this.plantSvc.getPlant(this.practice.getObjectDB().getPlanta()).then(plant => {
       this.plant = plant
       this.practiceForm.get('plant')?.setValue(this.plant.getNombre());
@@ -150,7 +158,9 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
       return 'El campo ' + this.fieldFeatures[field][0] + ' debe tener menos de '
         + this.fieldFeatures[field][2] + ' caracteres';
     } else if (this.practiceForm.get(field)?.errors?.['noPrevDatesFromNow']) {
-      return 'La fecha final no puede ser antes de la fecha actual';
+      return 'No puede cambiar el ' + this.fieldFeatures[field][0] + ' para antes de la fecha actual';
+    } else if (this.practiceForm.get(field)?.hasError('noPrevDates')) {
+      return 'La fecha de inicio no puede ser despues o igual a la fecha de finalización';
     }
     return this.practiceForm.get(field)?.errors?.['minlength'] ?
       'El campo ' + this.fieldFeatures[field][0] + ' debe tener mas de '
@@ -208,11 +218,41 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
     this._snackBar.open(message)._dismissAfter(6000)
   }
 
-  onUpload() {
+  verifyDate(field: string, event: any) {
+    if (!this.practiceForm.get(field)!.hasValidator(FormValidators.noPrevDatesFromNow)) {
+      this.practiceForm.get(field)!.setValidators(FormValidators.noPrevDatesFromNow);
+      this.practiceForm.get(field)!.setValue(event.target.value);
+    }
+  }
+
+  onUpload(contentDialog: any) {
     this.flag = false;
     this.startSubmit = true;
-    this.replacePractice();
+    const end: Date = this.practiceForm.get('end')?.value
+    const start: Date = this.practiceForm.get('start')?.value
+    const momentEnd = moment(end).hour(20)
+    if (
+      momentEnd.isBefore(this.end) ||
+      moment(start).isAfter(this.start)
+    ) {
+      const dialogRef = this.dialog.open(contentDialog);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.practiceSvc.getRefByPracticeId(this.practice.getId()).then(refPractice => {
+            this.scheduleSvc.deleteFromPracticeReferenceChangeStart(refPractice, start);
+            this.scheduleSvc.deleteFromPracticeReferenceChangeEnd(refPractice, new Date(momentEnd.format('YYYY-MM-DD HH:mm:ss')))
+          })
+          this.replacePractice(momentEnd);
+          this.upload();
+        }
+      });
+    } else {
+      this.replacePractice(momentEnd);
+      this.upload();
+    }
+  }
 
+  private upload() {
     this.practiceSvc.updatePractice(this.practice.getObjectDB(), this.practice.getId()).then(() => {
       this.subsComplete = this.complete.asObservable().subscribe(com => {
         if (com && this.stepComplete === 2) {
@@ -247,13 +287,12 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
       this.deleteOtherfiles();
       this.uploadDocuments(newFiles, oldFileNames);
     } else {
-      console.log('iguales')
       this.stepComplete = 2;
       this.complete.next(true)
     }
   }
 
-  deleteOtherfiles(){
+  deleteOtherfiles() {
     let toDelete = this.filesComparator.filter(fc => !this.fileLinks.some(f => f === fc))
     let pathFilesToDelete = toDelete.map(fl => {
       return this.subjectSvc.getRefSubjectSelected().id + '/' + this.practice.getId() + '/' + fl.getName();
@@ -263,16 +302,16 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
     this.complete.next(true)
   }
 
-  replacePractice() {
+  replacePractice(momentEnd: moment.Moment) {
     this.practice.getObjectDB().setDescripcion(this.practiceForm.get('description')?.value);
-    this.practice.getObjectDB().setFin(Timestamp.fromDate(new Date(moment(this.practiceForm.get('end')?.value + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss'))));
-    this.practice.getObjectDB().setInicio(Timestamp.fromDate(new Date(moment(this.practiceForm.get('start')?.value + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss'))));
+    this.practice.getObjectDB().setFin(Timestamp.fromDate(new Date(momentEnd.format('YYYY-MM-DD HH:mm:ss'))));
+    this.practice.getObjectDB().setInicio(Timestamp.fromDate(new Date(this.practiceForm.get('start')?.value)));
     this.practice.getObjectDB().setNombre(this.practiceForm.get('name')?.value);
   }
 
   uploadDocuments(files: FileLink[], oldFileNames: string[]) {
     let pathFile = this.subjectSvc.getRefSubjectSelected().id + '/' + this.practice.getId() + '/';
-    if (files.length > 0){
+    if (files.length > 0) {
       files.forEach(fl => {
         let task = this.storageSvc.uploadFile(pathFile + fl.getName(), fl.getFile())
         task.snapshotChanges().pipe(
@@ -283,7 +322,6 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
               let pathOldFiles = oldFileNames.map(ofn => {
                 return pathFile + ofn
               })
-              console.log(pathFile)
               this.practiceSvc.addPathDocs(pathOldFiles.concat(
                 files.map(fl => {
                   return fl.getLink()!
@@ -294,7 +332,7 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
           })
         ).subscribe()
       });
-    }else{
+    } else {
       let pathOldFiles = oldFileNames.map(ofn => {
         return pathFile + ofn
       })

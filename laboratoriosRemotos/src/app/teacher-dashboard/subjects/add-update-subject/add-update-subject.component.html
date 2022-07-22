@@ -19,14 +19,16 @@
                     <mat-error *ngIf="subjectForm.get('description')?.touched">{{getErrorMessage('description')}}
                     </mat-error>
                 </mat-form-field>
-                <div class="middleWrapper">
-                    <mat-form-field appearance="fill" class="fullSize">
-                        <mat-label>Numero de participantes de los grupos:</mat-label>
-                        <input matInput placeholder="Ingresa el nombre de maximo de participantes" type="number"
-                            formControlName="numGroup">
-                        <mat-error *ngIf="subjectForm.get('numGroup')?.touched">{{getErrorMessage('numGroup')}}</mat-error>
-                    </mat-form-field>
-                </div>
+                <mat-form-field appearance="fill" class="fullSize">
+                    <mat-label>Numero maximo de participantes en los grupos:</mat-label>
+                    <mat-select formControlName="numGroup">
+                        <mat-option [value]="1">1</mat-option>
+                        <mat-option [value]="2">2</mat-option>
+                        <mat-option [value]="3">3</mat-option>
+                        <mat-option [value]="4">4</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="subjectForm.get('numGroup')?.touched">{{getErrorMessage('numGroup')}}</mat-error>
+                </mat-form-field>
             </div>
         </div>
     </div>

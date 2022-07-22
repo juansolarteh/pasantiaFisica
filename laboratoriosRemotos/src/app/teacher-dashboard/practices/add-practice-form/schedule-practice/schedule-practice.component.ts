@@ -16,7 +16,6 @@ export class SchedulePracticeComponent{
   ): ValidationErrors | null => {
     const start = control.value
     if (start || start != '') {
-      console.log(this.endDate)
       return moment(start).isSameOrBefore(this.endDate)
         ? null
         : { noPrevDates: true }
@@ -29,9 +28,9 @@ export class SchedulePracticeComponent{
     if (this.start.hasError('required')) {
       return 'Debes llenar el campo';
     } else if (this.start.hasError('noPrevDatesFromNow')) {
-      return 'La fecha de publicación no puede ser antes de la fecha actual';
+      return 'La fecha de inicio no puede ser antes de la fecha actual';
     }
-    return this.start.hasError('noPrevDates') ? 'La fecha de publicación no puede ser despues de la fecha de finalización' : '';
+    return this.start.hasError('noPrevDates') ? 'La fecha de inicio no puede ser despues de fecha de finalización' : '';
   }
 
 }

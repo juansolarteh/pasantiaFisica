@@ -16,6 +16,8 @@ import { DeletePracticeDialogComponent } from './practices/delete-practice-dialo
 import { ModifyPracticeComponent } from './practices/modify-practice/modify-practice.component';
 import { AddUpdateSubjectComponent } from './subjects/add-update-subject/add-update-subject.component';
 import { DeleteSubjectComponent } from './subjects/delete-subject/delete-subject.component';
+import { DeleteGroupDialogComponent } from './groups/delete-group-dialog/delete-group-dialog.component';
+import { ConfirmDatesComponent } from './practices/modify-practice/confirm-dates/confirm-dates.component';
 
 @NgModule({
   declarations: [
@@ -30,13 +32,15 @@ import { DeleteSubjectComponent } from './subjects/delete-subject/delete-subject
     ModifyPracticeComponent,
     AddUpdateSubjectComponent,
     DeleteSubjectComponent,
+    DeleteGroupDialogComponent,
+    ConfirmDatesComponent,
   ],
   imports: [
     CommonModule,
     TeacherDashboardRoutingModule,
     MaterialModule,
     ComponentsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ]
 })
 export class TeacherDashboardModule { }

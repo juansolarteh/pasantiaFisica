@@ -20,7 +20,9 @@
                 <div class="middleWrapper">
                     <mat-form-field appearance="fill">
                         <mat-label>Fin de la practica</mat-label>
-                        <input type="date" matInput placeholder="nombre de practica" required formControlName="end">
+                        <input matInput [matDatepicker]="picker" required formControlName="end">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
                         <mat-error *ngIf="practiceForm.get('end')?.touched">{{getErrorMessage('end')}}</mat-error>
                     </mat-form-field>
                 </div>

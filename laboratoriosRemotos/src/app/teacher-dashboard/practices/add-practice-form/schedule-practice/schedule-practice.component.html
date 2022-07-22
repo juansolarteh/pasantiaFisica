@@ -3,13 +3,16 @@
     <mat-dialog-content>
         <mat-form-field appearance="fill">
             <mat-label>Inicio de la practica</mat-label>
-            <input type="date" matInput placeholder="Inicio practica" [formControl]="start" required>
+            <input matInput [matDatepicker]="picker" [formControl]="start" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
             <mat-error *ngIf="start.touched">{{getErrorMessage()}}</mat-error>
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-button mat-dialog-close>Cancelar</button>
         <span class="spacer"></span>
-        <button mat-raised-button color="primary" [mat-dialog-close]="start.value" [disabled]="start.invalid" >Programar</button>
+        <button mat-raised-button color="primary" [mat-dialog-close]="start.value"
+            [disabled]="start.invalid">Programar</button>
     </mat-dialog-actions>
 </div>
