@@ -5,12 +5,12 @@
         <mat-card-subtitle>Pídele a tu profesor el código de clase e introdúcelo aquí.</mat-card-subtitle>
     </mat-card-header>
     <div class="codigo-materia">
-        <form class="codigo-form">
+        <form class="codigo-form" (submit)="handleRegister()">
             <mat-form-field appearance="fill">
               <mat-label>Código de clase</mat-label>
-              <input matInput placeholder="Ej. AJ12SL">
+              <input [(ngModel)]="codeSubject" matInput name="code" placeholder="Ej. AJ12SL">
             </mat-form-field>
         </form>
-        <button mat-button>Unirme</button>
+        <button (click)="handleRegister()" mat-button color="primary">Unirme</button>
     </div>
 </mat-card>

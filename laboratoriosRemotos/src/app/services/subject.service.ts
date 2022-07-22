@@ -202,4 +202,14 @@ export class SubjectService {
       numGrupos: subject.getNumGrupos(),
     })
   }
+
+  async getSubjectByKey(key : string){
+    let querySnapShot = this.col.where('clave','==',key).get();
+    let subject = (await querySnapShot).docs[0]
+    if(subject){
+      let data = subject.data()
+      return new ObjectDB(convertTo(SubjectTeacher,data),subject.id)
+    }
+   return
+  }
 }

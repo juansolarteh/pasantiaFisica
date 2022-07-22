@@ -24,7 +24,6 @@ export class SubjectComponent implements OnInit {
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
   }
   changeTab(event:any){
-    console.log(event.index)
     switch(event.index){
       case 0: this.router.navigate(['./practices'], {relativeTo: this.activatedRoute});
       break;

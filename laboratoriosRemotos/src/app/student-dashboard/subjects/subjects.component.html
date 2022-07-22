@@ -8,8 +8,8 @@
                         {{subject.getObjectDB().getDescripcion()}}
                     </div>
                     <div actions>
-                        <button mat-button (click)="goToPractices(subject)">Ver prácticas</button>
-                        <button mat-button (click)="goToDeleteSubject()">Desmatricular</button>
+                        <button mat-button color="primary" (click)="goToDeleteSubject(subject)">Desmatricular</button>
+                        <button mat-flat-button color="primary" (click)="goToPractices(subject)">Ver prácticas</button>
                     </div>
                 </app-card-subject>
         </div>

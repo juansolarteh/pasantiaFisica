@@ -103,8 +103,26 @@ export class GroupsService {
     })
     return idGroups
   }
-  async getGroupRefById(groupId : string){
+  async getGroupRefById(groupId: string) {
     let querySnapShot = await this.col.doc(groupId).get()
     return querySnapShot.ref
+  }
+  async studentBelongAnyGroup(refStudent: DocumentReference, refGroups: DocumentReference[]) {
+    let flag = false
+    const validate = refGroups.forEach(async ref=>{
+      let qs = await ref.get();
+      let grupo = qs.get('grupo') as Array<DocumentReference>
+      const belongAnyGroup = grupo.forEach(async group =>{
+        if(group.id == refStudent.id){
+          console.log("Si esta");
+          
+          flag = true
+        }
+      })
+      console.log("Flag", flag);
+      return flag
+    })
+    console.log("Validate",validate);
+    return validate
   }
 }

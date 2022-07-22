@@ -24,7 +24,7 @@ export class SubjectsComponent implements OnInit {
     localStorage.setItem("subjectSelected",subject.getId())
     this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
   }
-  goToDeleteSubject(){
-    alert("Yendo a elimitar asignatura")
+  goToDeleteSubject(subject:ObjectDB<Subject>){
+   
   }
 }
