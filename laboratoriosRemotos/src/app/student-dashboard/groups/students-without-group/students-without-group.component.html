@@ -5,9 +5,10 @@
             <ng-template matStepLabel>Selección de estudiantes</ng-template>
             <br>
             <div class="mat-body-2">Selecciona los estudiantes que conformarán tu grupo de trabajo para
-                {{this.data.subjectSelected.getObjectDB().getNombre()}} • Número máximo de integrantes
-                {{this.data.subjectSelected.getObjectDB().getNumGrupos()}}</div>
-            <br>
+                {{this.data.subjectSelected.getObjectDB().getNombre()}}
+                <br>
+                Número máximo de integrantes {{this.data.subjectSelected.getObjectDB().getNumGrupos()}}
+            </div>
             <ng-container *ngIf="this.data.studentsWithOutGroup.getObjectDB().getGrupo().length > 0">
                 <mat-selection-list [multiple]="true" color="primary" [(ngModel)]="selectedGroup"
                     (ngModelChange)="onGroupsChange($event)" ngDefaultControl>
@@ -22,11 +23,12 @@
                 </mat-selection-list>
             </ng-container>
             <div class="buttons-stepper">
-                <button mat-button color="primary" (click)="onGroupSelected()">Siguiente</button>
+                <button mat-raised-button color="primary" (click)="onGroupSelected()">Siguiente</button>
             </div>
         </mat-step>
         <mat-step completed="false">
             <ng-template matStepLabel>Selección de lider</ng-template>
+            <br>
             <div class="mat-body-2">Selecciona el líder del grupo de trabajo</div>
             <mat-selection-list [multiple]="false" color="primary" [(ngModel)]="leaderSelected" ngDefaultControl>
                 <mat-list-option [value]="this.data.currentUser">
@@ -39,15 +41,42 @@
                 </ng-container>
             </mat-selection-list>
             <div class="buttons-stepper">
-                <button mat-button matStepperPrevious  color="primary">Atrás</button>
-                <button mat-button (click)="onLeaderSelected()" color="primary">Seleccionar líder</button>
+                <button mat-raised-button matStepperPrevious>Atrás</button>
+                <button mat-raised-button (click)="onLeaderSelected()" color="primary">Seleccionar líder</button>
             </div>
         </mat-step>
         <mat-step completed="false">
             <ng-template matStepLabel>Confirmación de grupo</ng-template>
+            <br>
+            <div class="mat-body-2">Verifica la información de tu grupo de trabajo</div>
+            <mat-list *ngIf="leaderSelected">
+                <!-- <mat-list-item *ngIf="leaderSelected">
+                    <mat-icon mat-list-icon>badge</mat-icon>
+                    <div mat-line>{{leaderSelected[0].getName()}}</div>
+                    <div mat-line>Líder</div>
+                </mat-list-item> -->
+                <mat-list-item *ngFor="let member of selectedGroup">
+                    <ng-container *ngIf="member != leaderSelected[0]; else leader">
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>person</mat-icon>
+                            <div mat-line>{{member.getName()}}</div>
+                            <div mat-line>Miembro</div>
+                        </mat-list-item>
+                    </ng-container>
+                    <ng-template #leader>
+                        <mat-list-item>
+                            <mat-icon mat-list-icon>badge</mat-icon>
+                            <div mat-line>{{leaderSelected[0].getName()}}</div>
+                            <div mat-line>Líder</div>
+                        </mat-list-item>
+                    </ng-template>
+                </mat-list-item>
+            </mat-list>
             <div class="buttons-stepper">
-                <button mat-button matStepperPrevious color="primary">Atrás</button>
-                <button mat-button (click)="onCreateGroup()" mat-dialog-close="groupCreated" color="primary">Crear grupo</button>
+                <button mat-raised-button matStepperPrevious>Atrás</button>
+                <button mat-raised-button (click)="onCreateGroup()" mat-dialog-close="groupCreated"
+                    color="primary">Crear
+                    grupo</button>
             </div>
         </mat-step>
     </mat-stepper>

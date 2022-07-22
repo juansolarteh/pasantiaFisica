@@ -1,10 +1,11 @@
+import { GroupsService } from 'src/app/services/groups.service';
 import { CheckBookingDialogComponent } from './check-booking-dialog/check-booking-dialog.component';
 import { Timestamp } from '@firebase/firestore';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { PracticeService } from 'src/app/services/practice.service';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { CalendarOptions, EventSourceInput } from '@fullcalendar/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Calendar, CalendarOptions, EventSourceInput, FullCalendarComponent } from '@fullcalendar/angular';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { Practice } from 'src/app/models/Practice';
 import { DatePipe } from '@angular/common';
@@ -14,6 +15,7 @@ import { GroupWithNames } from 'src/app/models/Group';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'src/app/models/Subject';
 
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -21,18 +23,22 @@ import { Subject } from 'src/app/models/Subject';
 })
 export class CalendarComponent implements OnInit {
 
+  @ViewChild('calendar') calendar!: FullCalendarComponent;
   practices: ObjectDB<Practice>[] = []
   practiceSelected!: ObjectDB<Practice>
   practiceBookings: Object[] = []
   studentGroup!: ObjectDB<GroupWithNames>
   subjectSelected!: ObjectDB<Subject>
-  
+
   constructor(private activatedRoute: ActivatedRoute,
     private practiceSvc: PracticeService,
     private scheduleSvc: ScheduleService,
+    private groupSvc: GroupsService,
     private datePipe: DatePipe,
     private _snackBar: MatSnackBar,
-    public checkBookingDialog: MatDialog) { }
+    public checkBookingDialog: MatDialog,
+    private readonly router: Router) { }
+
 
   calendarOptions: CalendarOptions = {
     initialView: 'timeGridWeek',
@@ -43,7 +49,7 @@ export class CalendarComponent implements OnInit {
     height: 500,
     expandRows: true,
     selectable: true,
-    editable: false,
+    editable: true,
     slotDuration: '00:60:00',
     eventBackgroundColor: "#6d1a1d",
     eventBorderColor: "#6d1a1d",
@@ -88,19 +94,33 @@ export class CalendarComponent implements OnInit {
       if (bookings.length > 0) this.setBookingsOnCalendar(bookings)
     })
   }
-
-  handleDateClick(arg: any) {
+  onGoToGroups() {
+    console.log(this.activatedRoute.url);
+    this.router.navigate(['groups'])
+  }
+  async handleDateClick(arg: any) {
     if (this.practiceSelected) {
-      let selectedDate = this.datePipe.transform(arg.startStr, "yyyy-MM-ddTHH:mm:ss")!
-      let currentDate = this.datePipe.transform(new Date(), "yyyy-MM-ddTHH:mm:ss")!
-      if (this.isValidSelectedDate(selectedDate,currentDate) && this.isSelectedDateInBookingRange(selectedDate)) {
-        let dialogRef = this.checkBookingDialog.open(CheckBookingDialogComponent,
-          { data: { studentGroup: this.studentGroup, practiceSelected: this.practiceSelected, selectedDate: selectedDate, subjectSelected : this.subjectSelected }, height: 'auto', width: '600px' })
-        dialogRef.afterClosed().subscribe(res => {
-          console.log(res)
-        })
-      } else {
-        this.openSnackBar("Seleccione una fecha válida", "Cerrar")
+      let validate = await this.isGroupBooked()
+      if (!validate) {
+        let selectedDate = this.datePipe.transform(arg.startStr, "yyyy-MM-ddTHH:mm:ss")!
+        let currentDate = this.datePipe.transform(new Date(), "yyyy-MM-ddTHH:mm:ss")!
+        if (this.isValidSelectedDate(selectedDate, currentDate) && this.isSelectedDateInBookingRange(selectedDate)) {
+          let dialogRef = this.checkBookingDialog.open(CheckBookingDialogComponent, { data: { studentGroup: this.studentGroup, practiceSelected: this.practiceSelected, selectedDate: selectedDate, subjectSelected: this.subjectSelected }, height: 'auto', width: '600px' })
+          const dialogSuscription = dialogRef.componentInstance.onBookingCreated.subscribe(dateBooking => {
+            let dateBookingStart = this.datePipe.transform(dateBooking.seconds * 1000, "yyyy-MM-ddTHH:mm:ss")
+            let dateBookingEnd = this.datePipe.transform((dateBooking.seconds + 3600) * 1000, "yyyy-MM-ddTHH:mm:ss")
+            let newEvent = { title: 'Planta Reservada', start: dateBookingStart, end: dateBookingEnd }
+            this.practiceBookings.push(newEvent)
+            this.calendar.getApi().removeAllEvents()
+            this.calendar.getApi().addEventSource(this.practiceBookings)
+            this.openSnackBar("Agendamiento creado exitosamente", "Cerrar")
+            dialogSuscription.unsubscribe()
+          })
+        } else {
+          this.openSnackBar("Seleccione una fecha válida", "Cerrar")
+        }
+      }else{
+        this.openSnackBar("Ya existe un agendamiento para esta práctica", "Cerrar")
       }
     } else {
       this.openSnackBar("Seleccione una práctica para ver sus reservas", "Cerrar")
@@ -108,13 +128,22 @@ export class CalendarComponent implements OnInit {
   }
 
   private initializeView() {
-    let calendarDateStart = this.practiceSelected.getObjectDB().getInicio().seconds * 1000
-    //let calendarDateEnd = this.practiceSelected.getObjectDB().getFin().seconds*1000
+    let calendarDateStart = this.datePipe.transform(this.practiceSelected.getObjectDB().getInicio().seconds * 1000, "yyyy-MM-ddTHH:mm:ss")?.toString()
+    let calendarDateEnd = this.datePipe.transform(this.practiceSelected.getObjectDB().getFin().seconds * 1000, "yyyy-MM-ddTHH:mm:ss")?.toString()
+    this.calendarOptions.initialDate = calendarDateStart
     this.calendarOptions.validRange = {
-      start: this.datePipe.transform(calendarDateStart, "yyyy-MM-ddTHH:mm:ss")?.toString(),
+      start: calendarDateStart,
+      end: calendarDateEnd
     }
-    this.calendarOptions.events = undefined
+    this.calendar.getApi().removeAllEvents()
     this.practiceBookings = []
+  }
+
+  private async isGroupBooked() {
+    let groupRef = await this.groupSvc.getGroupRefById(this.studentGroup.getId())
+    let practiceRef = await this.practiceSvc.getRefByPracticeId(this.practiceSelected.getId())
+    let isGroupBooked = await this.scheduleSvc.isGroupBooked(groupRef, practiceRef)
+    return isGroupBooked
   }
   private setBookingsOnCalendar(bookings: Timestamp[]) {
     bookings.map(booking => {
@@ -125,7 +154,7 @@ export class CalendarComponent implements OnInit {
       }
       this.practiceBookings.push(newEvent)
     })
-    this.calendarOptions.events = this.practiceBookings
+    this.calendar.getApi().addEventSource(this.practiceBookings)
   }
 
   private isValidSelectedDate(selectedDate: string, currentDate: string) {

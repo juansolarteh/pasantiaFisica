@@ -29,4 +29,16 @@
 .grid > div{
     padding: 2rem;
 }
-
+.no-group{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1rem;
+  gap: 8px;
+}
+#booking-svg{
+  width: 35%;
+  height: auto;
+  /* filter: grayscale(100%); */
+}

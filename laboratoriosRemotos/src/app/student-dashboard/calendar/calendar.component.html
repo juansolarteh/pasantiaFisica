@@ -1,9 +1,21 @@
-
+<ng-container *ngIf="studentGroup; else noGroup">
     <div class="grid">
         <div class="practice-filter">
-            <app-practice-filter [practices]="practices" (onPracticeSelected)="onPracticeSelected($event)"></app-practice-filter>
+            <app-practice-filter [practices]="practices" (onPracticeSelected)="onPracticeSelected($event)">
+            </app-practice-filter>
         </div>
         <div class="calendar">
-            <full-calendar [options]="calendarOptions"></full-calendar>
+            <full-calendar #calendar [options]="calendarOptions"></full-calendar>
         </div>
     </div>
+</ng-container>
+<ng-template #noGroup>
+    <div class="no-group">
+        <img src="../../../assets/imagenes/booking.png" alt="" id="booking-svg">
+        <div class="mat-body-2">Para realizar un agendamiento debes tener un grupo de trabajo establecido</div>
+        <button mat-button color="primary" (click)="onGoToGroups()">
+            <mat-icon>input</mat-icon>
+            Ir a grupos
+        </button>
+    </div>
+</ng-template>

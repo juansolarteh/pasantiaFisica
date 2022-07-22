@@ -36,6 +36,8 @@ export class StudentsWithoutGroupComponent implements OnInit {
     }
   }
   onGroupSelected(){
+    console.log(this.selectedGroup);
+    
     if(this.stepper.selected != undefined){
       this.stepper.selected.completed = true
       this.stepper.next();
@@ -55,16 +57,11 @@ export class StudentsWithoutGroupComponent implements OnInit {
         let groupCreated = new GroupWithNames(this.selectedGroup,this.leaderSelected[0].getId())
         console.log("Emitiendo desde modal", groupCreated);
         this.onGroupCreated.emit(groupCreated)
-        /* if(this.stepper.selected != undefined){
-          this.stepper.selected.completed = true
-        } */
       })
     }
   }
   onLeaderSelected(){
     if(this.leaderSelected){
-      console.log("Lider",this.leaderSelected);
-      
       if(this.stepper.selected != undefined){
         this.stepper.selected.completed = true
         this.stepper.next();
