@@ -1,0 +1,42 @@
+#wrapper {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  height: 90%;
+}
+
+#left {
+  margin: 1rem;
+  flex-basis: 30rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#right {
+  margin: 1rem;
+  flex-basis: 100%;
+}
+
+mat-icon {
+  margin-right: 0.5rem;;
+}
+
+mat-card-title{
+  display: flex;
+  align-items: center;
+}
+
+.wrapper-card{
+  background-color: rgb(245, 245, 245);
+}
+
+@media (max-width: 60rem) {
+  #wrapper {
+    flex-direction: column;
+  }
+
+  #left {
+    flex-basis: 100%;
+  }
+}

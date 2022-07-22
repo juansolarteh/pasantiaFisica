@@ -15,7 +15,7 @@ export class PracticeResolver implements Resolve<ObjectDB<Practice>> {
   constructor(private practiceSvc: PracticeService){}
 
   resolve(route: ActivatedRouteSnapshot): Promise<ObjectDB<Practice>> {
-    const idPrac: string = route.paramMap.get('practiceid')!;
+    const idPrac: string = route.parent?.paramMap.get('practiceid')!;
     return this.practiceSvc.getPracticeById(idPrac);
   }
 }

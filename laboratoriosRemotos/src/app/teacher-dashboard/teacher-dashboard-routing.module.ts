@@ -2,12 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GroupsResolverServiceResolver } from '../resolvers/groups-resolver-service.';
 import { InfoSubjectResolver } from '../resolvers/info-subject.resolver';
+import { PracticeGroupsResolver } from '../resolvers/practice-groups.resolver';
 import { PracticeResolver } from '../resolvers/practice.resolver';
 import { PracticesResolverServiceResolver } from '../resolvers/practices-resolver-service.resolver';
 import { SubjectsTeacherResolverServiceResolver } from '../resolvers/subjects-teacher-resolver-service.resolver';
 import { WithoutGroupResolverServiceResolver } from '../resolvers/without-group-resolver-service.resolver';
 import { GroupsComponent } from './groups/groups.component';
+import { IntructionsComponent } from './practice/intructions/intructions.component';
 import { PracticeComponent } from './practice/practice.component';
+import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
 import { PracticesComponent } from './practices/practices.component';
 import { SubjectComponent } from './subject/subject.component';
 import { SubjectsComponent } from './subjects/subjects.component';
@@ -33,7 +36,7 @@ const routes: Routes = [
           withoutGroup: WithoutGroupResolverServiceResolver
         },
       },
-      { path: '', redirectTo: 'p', pathMatch: 'full' },
+      { path: '**', redirectTo: 'p'},
     ]
   },
   {
@@ -44,9 +47,22 @@ const routes: Routes = [
   },
   {
     path: 'practice/:practiceid',
-    pathMatch: 'full',
     component: PracticeComponent,
-    resolve: { practice: PracticeResolver }
+    children: [
+      {
+        path: 'i',
+        pathMatch: 'full',
+        component: IntructionsComponent,
+        resolve: { practice: PracticeResolver }
+      },
+      {
+        path: 'p',
+        pathMatch: 'full',
+        component: StudentPracticesComponent,
+        resolve: { groups: PracticeGroupsResolver }
+      },
+      { path: '**', redirectTo: 'p', pathMatch: 'full' },
+    ]
   },
   { path: '**', redirectTo: 'subjects', pathMatch: 'full' },
 ];

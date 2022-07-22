@@ -19,6 +19,8 @@ import { DeleteSubjectComponent } from './subjects/delete-subject/delete-subject
 import { DeleteGroupDialogComponent } from './groups/delete-group-dialog/delete-group-dialog.component';
 import { ConfirmDatesComponent } from './practices/modify-practice/confirm-dates/confirm-dates.component';
 import { PracticeComponent } from './practice/practice.component';
+import { IntructionsComponent } from './practice/intructions/intructions.component';
+import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { PracticeComponent } from './practice/practice.component';
     DeleteGroupDialogComponent,
     ConfirmDatesComponent,
     PracticeComponent,
+    IntructionsComponent,
+    StudentPracticesComponent,
   ],
   imports: [
     CommonModule,

@@ -93,6 +93,11 @@ export class PracticeService {
     });
   }
 
+  async getRefSubjectById(idPractice: string): Promise<DocumentReference>{
+    let data = await this.col.doc(idPractice).get()
+    return data.get('materia')
+  }
+
   addPractice(practice: Practice) {
     return this.col.add({
       nombre: practice.getNombre(),
