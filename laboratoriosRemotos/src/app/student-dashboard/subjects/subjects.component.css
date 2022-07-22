@@ -35,6 +35,6 @@
 }
 
 .materia-avatar {
-    background-image: url('https://cdn-icons-png.flaticon.com/512/1903/1903162.png');
+    background-image: url('../../../assets/imagenes/subject.png');
     background-size: cover;
 }
