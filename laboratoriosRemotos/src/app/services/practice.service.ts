@@ -68,7 +68,7 @@ export class PracticeService {
     return practices
   }
 
-  async getPracticeById(idPractice: string){
+  async getPracticeById(idPractice: string): Promise<ObjectDB<Practice>>{
     let data = await this.col.doc(idPractice).get()
     let practice = new ObjectDB(convertTo(Practice, data.data()!),idPractice)
     practice.getObjectDB().setPlanta(data.get('planta'))

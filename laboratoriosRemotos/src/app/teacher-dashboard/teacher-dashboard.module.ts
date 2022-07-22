@@ -18,6 +18,7 @@ import { AddUpdateSubjectComponent } from './subjects/add-update-subject/add-upd
 import { DeleteSubjectComponent } from './subjects/delete-subject/delete-subject.component';
 import { DeleteGroupDialogComponent } from './groups/delete-group-dialog/delete-group-dialog.component';
 import { ConfirmDatesComponent } from './practices/modify-practice/confirm-dates/confirm-dates.component';
+import { PracticeComponent } from './practice/practice.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ConfirmDatesComponent } from './practices/modify-practice/confirm-dates
     DeleteSubjectComponent,
     DeleteGroupDialogComponent,
     ConfirmDatesComponent,
+    PracticeComponent,
   ],
   imports: [
     CommonModule,

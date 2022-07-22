@@ -1,0 +1,18 @@
+<app-navbar></app-navbar>
+
+<div id="centered-wrapper">
+    <div id="wrapper">
+        <div id="left">
+            <div>
+                <mat-icon mat-list-icon color="primary">task</mat-icon>
+                <div class="mat-display-1">{{practiceDB.getObjectDB().getNombre() | titlecase}}</div>
+            </div>
+        </div>
+        <div id="right">
+            <mat-card id="docs">
+                <div class="mat-title">Tus documentos</div>
+                <p *ngFor="let doc of practiceDB.getObjectDB().getDocumentos()">{{doc.split(' ')[1]}}</p>
+            </mat-card>
+        </div>
+    </div>
+</div>

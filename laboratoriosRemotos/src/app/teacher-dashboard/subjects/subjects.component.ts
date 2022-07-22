@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentReference } from '@firebase/firestore';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { GroupsService } from 'src/app/services/groups.service';
 import { PracticeService } from 'src/app/services/practice.service';

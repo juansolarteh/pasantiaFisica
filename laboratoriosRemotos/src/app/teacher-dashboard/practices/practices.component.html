@@ -7,15 +7,17 @@
 <ng-template #addPractice>
     <app-add-practice-form (addPractice)="onAddPractice($event)"></app-add-practice-form>
 </ng-template>
-<mat-card *ngFor="let practice of practices" (click)="showPractice(practice.getObjectDB())">
-    <mat-icon mat-list-icon color="primary">task</mat-icon>
-    <div class="text">
-        <div class="title">
-            Practica: {{practice.getObjectDB().getNombre()}}
+<mat-card *ngFor="let practice of practices">
+    <div (click)="goPractice(practice.getId())" class="practice">
+        <mat-icon mat-list-icon color="primary">task</mat-icon>
+        <div class="text">
+            <div class="title">
+                Practica: {{practice.getObjectDB().getNombre()}}
+            </div>
+            Creado: {{practice.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}
         </div>
-        Creado: {{practice.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}
     </div>
-    <div class="optionsDocs">
+    <div class="optionsPractice">
         <button mat-icon-button color="primary" [matMenuTriggerFor]="menu">
             <mat-icon>more_vert</mat-icon>
         </button>
@@ -31,5 +33,6 @@
 </ng-template>
 
 <ng-template #modifyDialog>
-    <app-modify-practice [practiceId]="practiceUpdatedId" (updatePractice)="updatePractice($event)"></app-modify-practice>
+    <app-modify-practice [practiceId]="practiceUpdatedId" (updatePractice)="updatePractice($event)">
+    </app-modify-practice>
 </ng-template>
