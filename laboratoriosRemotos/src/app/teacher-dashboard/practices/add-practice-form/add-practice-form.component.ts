@@ -101,10 +101,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
       sd = Timestamp.fromDate(new Date())
     }
     let creationDate = Timestamp.fromDate(new Date())
-    let fnPractice = moment(this.practiceForm.get('end')?.value)
-    fnPractice.add(23, 'h')
-    fnPractice.add(59, 'm')
-    fnPractice.add(59, 's')
+    let fnPractice = moment(this.practiceForm.get('end')?.value).hour(20)
     const practice = new Practice(
       this.practiceForm.get('name')?.value,
       creationDate,

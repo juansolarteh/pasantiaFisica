@@ -8,9 +8,9 @@ export class FormValidators{
     static noPrevDatesFromNow = (
         control: AbstractControl
     ): ValidationErrors | null => {
-        const end = control.value
-        if (end || end != '') {       
-            return moment(end).isSameOrAfter(this.today)
+        const date = control.value
+        if (date || date != '') {       
+            return moment(date).isSameOrAfter(this.today)
                 ? null
                 : { noPrevDatesFromNow: true }
         }

@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Timestamp } from '@firebase/firestore';
 import * as moment from 'moment';
@@ -11,6 +12,7 @@ import { Plant } from 'src/app/models/Plant';
 import { Practice, PracticeNameDate } from 'src/app/models/Practice';
 import { PlantService } from 'src/app/services/plant.service';
 import { PracticeService } from 'src/app/services/practice.service';
+import { ScheduleService } from 'src/app/services/schedule.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { imageFile, TypeFiles } from 'src/environments/typeFiles';
@@ -52,6 +54,10 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
   //aux for compare changes
   filesComparator: FileLink[] = [];
 
+  //Date Comparation
+  start!: Date
+  end!: Date
+
   constructor(
     private readonly practiceSvc: PracticeService,
     private readonly fb: FormBuilder,
@@ -59,6 +65,8 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
     private readonly plantSvc: PlantService,
     private readonly storageSvc: StorageService,
     private subjectSvc: SubjectService,
+    private dialog: MatDialog,
+    private scheduleSvc: ScheduleService
   ) { }
 
   ngOnDestroy(): void {
@@ -83,15 +91,11 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
     this.practiceForm.get('name')?.setValue(this.practice.getObjectDB().getNombre());
     this.practiceForm.get('description')?.setValue(this.practice.getObjectDB().getDescripcion())
     let date = new Date(this.practice.getObjectDB().getInicio().seconds * 1000);
-    let dateFormated = moment(date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate());
-    dateFormated.add(1, 'months')
-    dateFormated.add(1, 'd')
-    this.practiceForm.get('start')?.setValue(dateFormated.format('YYYY-MM-DD'));
+    this.start = date
+    this.practiceForm.get('start')?.setValue(date);
     date = new Date(this.practice.getObjectDB().getFin().seconds * 1000);
-    dateFormated = moment(date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate());
-    dateFormated.add(1, 'months');
-    dateFormated.add(1, 'd')
-    this.practiceForm.get('end')?.setValue(dateFormated.format('YYYY-MM-DD'));
+    this.end = date
+    this.practiceForm.get('end')?.setValue(date);
     this.plantSvc.getPlant(this.practice.getObjectDB().getPlanta()).then(plant => {
       this.plant = plant
       this.practiceForm.get('plant')?.setValue(this.plant.getNombre());
@@ -221,14 +225,34 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
     }
   }
 
-  onUpload() {
+  onUpload(contentDialog: any) {
     this.flag = false;
     this.startSubmit = true;
+    const end: Date = this.practiceForm.get('end')?.value
+    const start: Date = this.practiceForm.get('start')?.value
+    const momentEnd = moment(end).hour(20)
+    if (
+      momentEnd.isBefore(this.end) ||
+      moment(start).isAfter(this.start)
+    ) {
+      const dialogRef = this.dialog.open(contentDialog);
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.practiceSvc.getRefByPracticeId(this.practice.getId()).then(refPractice => {
+            this.scheduleSvc.deleteFromPracticeReferenceChangeStart(refPractice, start);
+            this.scheduleSvc.deleteFromPracticeReferenceChangeEnd(refPractice, new Date(momentEnd.format('YYYY-MM-DD HH:mm:ss')))
+          })
+          this.replacePractice(momentEnd);
+          this.upload();
+        }
+      });
+    } else {
+      this.replacePractice(momentEnd);
+      this.upload();
+    }
+  }
 
-    ///agendas borrar
-
-    this.replacePractice();
-
+  private upload() {
     this.practiceSvc.updatePractice(this.practice.getObjectDB(), this.practice.getId()).then(() => {
       this.subsComplete = this.complete.asObservable().subscribe(com => {
         if (com && this.stepComplete === 2) {
@@ -263,7 +287,6 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
       this.deleteOtherfiles();
       this.uploadDocuments(newFiles, oldFileNames);
     } else {
-      console.log('iguales')
       this.stepComplete = 2;
       this.complete.next(true)
     }
@@ -279,13 +302,9 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
     this.complete.next(true)
   }
 
-  replacePractice() {
+  replacePractice(momentEnd: moment.Moment) {
     this.practice.getObjectDB().setDescripcion(this.practiceForm.get('description')?.value);
-    let date = moment(this.practiceForm.get('end')?.value)
-    date.add(23, 'h')
-    date.add(59, 'm')
-    date.add(59, 's')
-    this.practice.getObjectDB().setFin(Timestamp.fromDate(new Date(date.format('YYYY-MM-DD HH:mm:ss'))));
+    this.practice.getObjectDB().setFin(Timestamp.fromDate(new Date(momentEnd.format('YYYY-MM-DD HH:mm:ss'))));
     this.practice.getObjectDB().setInicio(Timestamp.fromDate(new Date(this.practiceForm.get('start')?.value)));
     this.practice.getObjectDB().setNombre(this.practiceForm.get('name')?.value);
   }
@@ -303,7 +322,6 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
               let pathOldFiles = oldFileNames.map(ofn => {
                 return pathFile + ofn
               })
-              console.log(pathFile)
               this.practiceSvc.addPathDocs(pathOldFiles.concat(
                 files.map(fl => {
                   return fl.getLink()!
