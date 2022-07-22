@@ -1,4 +1,7 @@
-
+#centered-wrapper {
+  display: grid;
+  justify-items: center;
+}
 
 #wrapper {
   background-color: antiquewhite;
@@ -17,8 +20,8 @@
   width: 25rem;
 }
 
-@media (max-width: 300px) {
-    .wrapper {
+@media (max-width: 75rem) {
+    #wrapper {
       flex-direction: column;
     }
   }
