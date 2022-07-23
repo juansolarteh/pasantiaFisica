@@ -5,8 +5,6 @@ import { SubjectService } from '../services/subject.service';
 import { GroupsService } from '../services/groups.service';
 import { ObjectDB } from '../models/ObjectDB';
 import { UserService } from '../services/user.service';
-import { MemberGroup } from '../models/MemberGroup';
-import { DocumentReference } from '@angular/fire/compat/firestore';
 import { GroupWithNames } from '../models/Group';
 
 @Injectable({

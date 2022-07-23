@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { PracticeNameDate } from 'src/app/models/Practice';
 import { PracticeService } from 'src/app/services/practice.service';
@@ -22,7 +22,8 @@ export class PracticesComponent implements OnInit {
   dialogRefUpdate!: MatDialogRef<unknown, any>
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private route: ActivatedRoute,
     private dialog: MatDialog,
     private storageSvc: StorageService,
     private practiceSvc: PracticeService,
@@ -31,13 +32,13 @@ export class PracticesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(data => {
+    this.route.data.subscribe(data => {
       this.practices = data['practices']
     })
   }
 
-  showPractice(practice: PracticeNameDate) {
-    console.log(practice)
+  goPractice(practiceId: string) {
+    this.router.navigate(['practice', practiceId], { relativeTo: this.route.parent?.parent });
   }
 
   onAddPractice(practice: any | ObjectDB<PracticeNameDate>) {
