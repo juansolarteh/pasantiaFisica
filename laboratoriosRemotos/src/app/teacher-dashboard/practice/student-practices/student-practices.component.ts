@@ -40,12 +40,15 @@ export class StudentPracticesComponent implements OnInit {
         resultsLink: false
       })
     })
-    this.validatorLinks.subscribe(() => {
-      console.log(this.resultsFileLinks)
-      if(!(this.resultsFileLinks.some(rfl => !rfl.eventsLink) || this.resultsFileLinks.some(rfl => !rfl.resultsLink))){
-        this.load = false
-      }
-    })
+    if (this.results.length > 0) {
+      this.validatorLinks.subscribe(() => {
+        if (!(this.resultsFileLinks.some(rfl => !rfl.eventsLink) || this.resultsFileLinks.some(rfl => !rfl.resultsLink))) {
+          this.load = false
+        }
+      })
+    }else{
+      this.load = false
+    }
     let index = 0;
     this.groups.forEach(g => {
       let res = this.withResults.some(n => n === index)
