@@ -217,8 +217,6 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
   }
 
   onUpload(contentDialog: any) {
-    this.flag = false;
-    this.startSubmit = true;
     const end: Date = this.practiceForm.get('end')?.value
     const start: Date = this.practiceForm.get('start')?.value
     const momentEnd = moment(end).hour(20)
@@ -229,6 +227,8 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(contentDialog);
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
+          this.flag = false;
+          this.startSubmit = true;
           this.practiceSvc.getRefByPracticeId(this.practice.getId()).then(refPractice => {
             this.scheduleSvc.deleteFromPracticeReferenceChangeStart(refPractice, start);
             this.scheduleSvc.deleteFromPracticeReferenceChangeEnd(refPractice, new Date(momentEnd.format('YYYY-MM-DD HH:mm:ss')))
@@ -238,6 +238,8 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
         }
       });
     } else {
+      this.flag = false;
+      this.startSubmit = true;
       this.replacePractice(momentEnd);
       this.upload();
     }
