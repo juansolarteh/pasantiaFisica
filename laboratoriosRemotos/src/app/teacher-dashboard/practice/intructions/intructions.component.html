@@ -30,7 +30,7 @@
             <div class="mat-body-1">Sin archivos adjuntos</div>
         </ng-template>
         <br>
-        <div class="mat-body-strong">Planta: {{plant?.getNombre()}}</div>
+        <div class="mat-body-strong" *ngIf="plant">Planta: {{plant.getNombre()}}</div>
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
             <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
                 {{node.name}}
