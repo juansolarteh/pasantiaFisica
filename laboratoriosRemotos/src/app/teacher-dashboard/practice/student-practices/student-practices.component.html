@@ -1,4 +1,4 @@
-<div id="wrapper">
+<div id="wrapper" *ngIf="!load; else loading">
     <div id="left">
         <mat-card *ngFor="let groupDB of groups; let i = index">
             <mat-card-header>
@@ -55,3 +55,8 @@
         </div>
     </div>
 </div>
+<ng-template #loading>
+    <div id="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

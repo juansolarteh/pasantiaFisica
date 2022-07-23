@@ -75,34 +75,42 @@ mat-card-content {
   gap: 1rem;
 }
 
-mat-chip{
+mat-chip {
   cursor: default;
   user-select: none;
 }
 
-.mat-title{
+.mat-title {
   user-select: none;
 }
 
-.mat-body-strong{
+.mat-body-strong {
   user-select: none;
 }
 
-mat-card-footer{
+mat-card-footer {
   user-select: none;
 }
 
-.done{
+.done {
   color: rgb(71, 176, 71);
 }
 
-.unrealized-content{
+.unrealized-content {
   user-select: none;
   height: 5.2rem;
 }
 
-.unrealized{
+.unrealized {
   color: rgb(230, 18, 18);
+}
+
+#loading {
+  background-color: rgba(172, 167, 167, 0.311);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 60rem) {

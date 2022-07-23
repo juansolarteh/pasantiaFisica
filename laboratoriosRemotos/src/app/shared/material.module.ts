@@ -21,8 +21,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -53,8 +53,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatStepperModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatCheckboxModule,
     MatChipsModule,
+    MatProgressSpinnerModule
   ]
 })
 export class MaterialModule { }

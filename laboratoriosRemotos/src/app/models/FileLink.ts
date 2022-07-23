@@ -57,7 +57,9 @@ export class FileLink {
 
 export class ResultFileLinks {
     events!: FileLink
+    eventsLink!: boolean
     results!: FileLink
+    resultsLink!: boolean
 }
 
 export function getFileLinksPath(pathList: string[]): FileLink[] {
