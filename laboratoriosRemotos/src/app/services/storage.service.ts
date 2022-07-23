@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Subject } from 'rxjs';
-import { imageFile } from 'src/environments/typeFiles';
-import { FileLink } from '../models/FileLink';
 
 @Injectable({
   providedIn: 'root'
