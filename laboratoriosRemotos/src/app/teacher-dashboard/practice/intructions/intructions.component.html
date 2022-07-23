@@ -18,7 +18,7 @@
         <br>
         <div id="grid-file" *ngIf="fileLinks.length !== 0; else files">
             <div class="file" *ngFor="let fileLink of fileLinks" (click)="openFile(fileLink)">
-                <img src="./assets/imagenes/{{fileLink.getImage()}}.png">
+                <img *ngIf="fileLink.getImage()" src="./assets/imagenes/{{fileLink.getImage()}}.png">
                 <div>
                     {{fileLink.getName().split('.')[0]}}
                     <br>

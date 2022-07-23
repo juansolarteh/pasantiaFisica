@@ -52,7 +52,7 @@
             <div class="oneField">
                 <mat-list>
                     <mat-list-item *ngFor="let fileLink of fileLinks">
-                        <img src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="openFile(fileLink)">
+                        <img *ngIf="fileLink.getImage()" src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="openFile(fileLink)">
                         <div (click)="openFile(fileLink)" class="docs">
                             {{fileLink.getName().split('.')[0]}}
                             <br>
