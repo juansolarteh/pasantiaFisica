@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { FileLink, getFileLinkPath, ResultFileLinks } from 'src/app/models/FileLink';
 import { GroupWithNames } from 'src/app/models/Group';
