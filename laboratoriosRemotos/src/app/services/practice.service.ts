@@ -49,7 +49,7 @@ export class PracticeService {
   }
 
   async getPracticesRefFromSubjectRef(refSubject: DocumentReference) {
-    var practicesRef: DocumentReference[] = []
+    let practicesRef: DocumentReference[] = []
     const querySnapShot = this.col.where('materia', '==', refSubject).get();
     (await querySnapShot).forEach((doc) => {
       practicesRef.push(doc.ref)
@@ -59,7 +59,7 @@ export class PracticeService {
 
   //Metodos Jorge Solano - Modulo de estudiante
   async getPracticesBySubject(refSubject: DocumentReference) {
-    var practices: ObjectDB<Practice>[] = []
+    let practices: ObjectDB<Practice>[] = []
     const querySnapShot = this.col.where("materia", "==", refSubject).get();
     (await querySnapShot).forEach(doc => {
       let newPractice = new ObjectDB(convertTo(Practice, doc.data()), doc.id)

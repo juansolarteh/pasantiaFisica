@@ -5,6 +5,7 @@ import { InfoSubjectResolver } from '../resolvers/info-subject.resolver';
 import { PracticeGroupsResolver } from '../resolvers/practice-groups.resolver';
 import { PracticeResolver } from '../resolvers/practice.resolver';
 import { PracticesResolverServiceResolver } from '../resolvers/practices-resolver-service.resolver';
+import { ResultsPracticeTeacherResolver } from '../resolvers/results-practice-teacher.resolver';
 import { SubjectsTeacherResolverServiceResolver } from '../resolvers/subjects-teacher-resolver-service.resolver';
 import { WithoutGroupResolverServiceResolver } from '../resolvers/without-group-resolver-service.resolver';
 import { GroupsComponent } from './groups/groups.component';
@@ -59,7 +60,10 @@ const routes: Routes = [
         path: 'p',
         pathMatch: 'full',
         component: StudentPracticesComponent,
-        resolve: { groups: PracticeGroupsResolver }
+        resolve: { 
+          groups: PracticeGroupsResolver,
+          results: ResultsPracticeTeacherResolver
+        }
       },
       { path: '**', redirectTo: 'p', pathMatch: 'full' },
     ]

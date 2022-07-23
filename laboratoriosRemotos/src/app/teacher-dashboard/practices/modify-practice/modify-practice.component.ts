@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Timestamp } from '@firebase/firestore';
 import * as moment from 'moment';
 import { Subject, finalize, Subscription } from 'rxjs';
-import { FileLink } from 'src/app/models/FileLink';
+import { FileLink, getFileLinksPath } from 'src/app/models/FileLink';
 import { FormValidators } from 'src/app/models/FormValidators';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { Plant } from 'src/app/models/Plant';
@@ -109,16 +109,7 @@ export class ModifyPracticeComponent implements OnInit, OnDestroy {
 
   setFiles() {
     if (this.practice.getObjectDB().getDocumentos()) {
-      this.practice.getObjectDB().getDocumentos().forEach(path => {
-        let splt = path.split('.')
-        let ext = splt[1]
-        splt = path.split('/')
-        let name = ''
-        for (let i = 2; i < splt.length; i++) {
-          name += splt[i]
-        }
-        this.fileLinks.push(new FileLink(name, ext, '', undefined, path))
-      })
+      this.fileLinks = this.fileLinks.concat(getFileLinksPath(this.practice.getObjectDB().getDocumentos()))
       this.fileLinks.forEach(fl => {
         this.storageSvc.getTypeFile(fl.getLink()!).subscribe(type => {
           fl.setImage(imageFile(type))
