@@ -3,6 +3,7 @@ import { Timestamp } from '@firebase/firestore';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference, DocumentData } from '@angular/fire/compat/firestore';
 import * as moment from 'moment';
+import { DynamicBooking, SubjectSchedule } from '../models/subjectSchedule';
 
 @Injectable({
   providedIn: 'root'
@@ -50,12 +51,26 @@ export class ScheduleService {
   }
 
   async getBookingsByPracticeRef(practiceRef: DocumentReference) {
-    var arrBookings: Timestamp[] = [];
+    let arrBookings: Timestamp[] = [];
     const querySnapShot = this.col.where('practica', '==', practiceRef).get();
     (await querySnapShot).forEach((booking) => {
       arrBookings.push(booking.data()['fecha'])
     })
     return arrBookings
+  }
+
+  async getBookingsAndPracticeBySubjectRef(subjectRef: DocumentReference) {
+    let booking: DynamicBooking[] = [];
+    const querySnapShot = this.col.where('materia', '==', subjectRef).get();
+    (await querySnapShot).forEach((doc) => {
+      let sched: DynamicBooking = {
+        date: doc.get('fecha'),
+        practice: doc.get('practica'),
+        groupId: doc.get('grupo').id
+      }
+      booking.push(sched)
+    })
+    return booking
   }
 
   createBooking(newBooking : Booking){
