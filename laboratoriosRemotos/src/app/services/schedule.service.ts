@@ -1,9 +1,9 @@
 import { Booking } from './../models/Booking';
 import { Timestamp } from '@firebase/firestore';
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference, DocumentData } from '@angular/fire/compat/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 import * as moment from 'moment';
-import { DynamicBooking, SubjectSchedule } from '../models/subjectSchedule';
+import { DynamicBooking } from '../models/subjectSchedule';
 
 @Injectable({
   providedIn: 'root'

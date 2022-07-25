@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import localeEsCo from '@angular/common/locales/es-CO'
 import { registerLocaleData } from '@angular/common';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 
 registerLocaleData(localeEsCo, 'es-Co');
 
@@ -28,6 +29,7 @@ registerLocaleData(localeEsCo, 'es-Co');
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireStorageModule,
+    AngularFireDatabaseModule,
     BrowserAnimationsModule,
     LayoutModule,
     MatToolbarModule,

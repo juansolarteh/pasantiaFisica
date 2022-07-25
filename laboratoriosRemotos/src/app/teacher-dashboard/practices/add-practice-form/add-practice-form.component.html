@@ -41,7 +41,8 @@
             <h2 *ngIf="constants.length > 0">Constantes:</h2>
             <div id="flexFields">
                 <div *ngFor="let const of constants">
-                    <mat-form-field appearance="fill">
+                    <mat-form-field *ngIf="range === undefined || !range[const.getId()]; else inputRange"
+                        appearance="fill">
                         <mat-label>{{const.getId()}} ({{units[const.getId()]}})</mat-label>
                         <mat-select multiple formControlName={{const.getId()}}>
                             <mat-option *ngFor="let val of const.getObjectDB(); let i = index " [value]="i+1">{{val}}
@@ -50,6 +51,21 @@
                         <mat-error *ngIf="practiceForm.get(const.getId())?.touched">{{getErrorMessage(const.getId())}}
                         </mat-error>
                     </mat-form-field>
+                    <ng-template #inputRange>
+                        <div class="slider">
+                            <mat-form-field appearance="fill">
+                                <mat-label>{{const.getId()}} máximo ({{units[const.getId()]}})</mat-label>
+                                <input matInput type="number" placeholder="" formControlName={{const.getId()}} required>
+                                <mat-error *ngIf="practiceForm.get(const.getId())?.touched">
+                                    {{getErrorMessage(const.getId())}}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-slider class="example-margin" [max]="const.getObjectDB()[1]"
+                                [min]="const.getObjectDB()[0]" [thumbLabel]="true" value="{{practiceForm.get(const.getId())?.value}}"
+                                (change)="sliderChange($event.value!, const.getId())">
+                            </mat-slider>
+                        </div>
+                    </ng-template>
                 </div>
             </div>
             <div class="oneField">
