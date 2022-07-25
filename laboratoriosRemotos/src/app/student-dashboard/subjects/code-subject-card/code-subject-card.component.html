@@ -8,7 +8,7 @@
         <form class="codigo-form" (submit)="handleRegister()">
             <mat-form-field appearance="fill">
               <mat-label>Código de clase</mat-label>
-              <input [(ngModel)]="codeSubject" matInput name="code" placeholder="Ej. AJ12SL">
+              <input [(ngModel)]="codeSubject" matInput required name="code" placeholder="Ej. AJ12SL">
             </mat-form-field>
         </form>
         <button (click)="handleRegister()" mat-button color="primary">Unirme</button>
