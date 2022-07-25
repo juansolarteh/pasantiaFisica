@@ -6,14 +6,21 @@
 
 <div class="container">
     <div class="grid">
-        <mat-card *ngFor="let subject of subjects">
+        <mat-card *ngFor="let subject of subjects; let i = index">
             <div class="header" (click)="goToSubject(subject.getId())">
                 <mat-card-header>
-                    <mat-card-title>{{subject.getObjectDB()}}</mat-card-title>
+                    <mat-card-title>{{subject.getObjectDB().nameSubject}}</mat-card-title>
                 </mat-card-header>
             </div>
             <mat-divider></mat-divider>
             <mat-card-content>
+                <div *ngFor="let booking of subject.getObjectDB().booking">
+                    <div class="mat-body-strong" *ngIf="booking.shown">Practica agendada:
+                        {{booking.date!.seconds * 1000 | date: 'EEEE d'}}</div>
+                    <div class="mat-body-1" (click)="navigateExecution(booking.groupId!)">{{booking.date!.seconds * 1000 | date:
+                        'shortTime'}} {{booking.practice}}
+                    </div>
+                </div>
             </mat-card-content>
             <mat-divider></mat-divider>
             <mat-card-actions align="end">
@@ -30,13 +37,14 @@
 </div>
 
 <ng-template #addSubjectModal>
-    <app-add-update-subject (successOperation)="addSubject($event)" ></app-add-update-subject>
+    <app-add-update-subject (successOperation)="addSubject($event)"></app-add-update-subject>
 </ng-template>
 
 <ng-template #updateSubjectModal>
-    <app-add-update-subject [subjectId]="subjectSelected.getId()" (successOperation)="updateSubject($event)"></app-add-update-subject>
+    <app-add-update-subject [subjectId]="subjectSelected.getId()" (successOperation)="updateSubject($event)">
+    </app-add-update-subject>
 </ng-template>
 
 <ng-template #deleteSubjectModal>
-    <app-delete-subject [subjectName]="subjectSelected.getObjectDB()"></app-delete-subject>
+    <app-delete-subject [subjectName]="subjectSelected.getObjectDB().nameSubject!"></app-delete-subject>
 </ng-template>

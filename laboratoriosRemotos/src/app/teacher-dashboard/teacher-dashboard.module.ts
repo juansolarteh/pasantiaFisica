@@ -21,6 +21,7 @@ import { ConfirmDatesComponent } from './practices/modify-practice/confirm-dates
 import { PracticeComponent } from './practice/practice.component';
 import { IntructionsComponent } from './practice/intructions/intructions.component';
 import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
+import { PracticeExecutionComponent } from './practice-execution/practice-execution.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { StudentPracticesComponent } from './practice/student-practices/student-
     PracticeComponent,
     IntructionsComponent,
     StudentPracticesComponent,
+    PracticeExecutionComponent,
   ],
   imports: [
     CommonModule,

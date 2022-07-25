@@ -7,8 +7,10 @@ import { PracticeResolver } from '../resolvers/practice.resolver';
 import { PracticesResolverServiceResolver } from '../resolvers/practices-resolver-service.resolver';
 import { ResultsPracticeTeacherResolver } from '../resolvers/results-practice-teacher.resolver';
 import { SubjectsTeacherResolverServiceResolver } from '../resolvers/subjects-teacher-resolver-service.resolver';
+import { UniqueGroupResolver } from '../resolvers/unique-group.resolver';
 import { WithoutGroupResolverServiceResolver } from '../resolvers/without-group-resolver-service.resolver';
 import { GroupsComponent } from './groups/groups.component';
+import { PracticeExecutionComponent } from './practice-execution/practice-execution.component';
 import { IntructionsComponent } from './practice/intructions/intructions.component';
 import { PracticeComponent } from './practice/practice.component';
 import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
@@ -67,6 +69,13 @@ const routes: Routes = [
       },
       { path: '**', redirectTo: 'p', pathMatch: 'full' },
     ]
+  },
+  {
+    path: 'pracExec/:groupid',
+    component: PracticeExecutionComponent,
+    resolve: {
+      group: UniqueGroupResolver
+    }
   },
   { path: '**', redirectTo: 'subjects', pathMatch: 'full' },
 ];

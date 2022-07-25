@@ -1,35 +1,46 @@
-mat-card{
-    border: grey solid 0.1rem;
+mat-card {
+  border: grey solid 0.1rem;
 }
 
-.container{
-    margin-top: 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
+.container {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
-.grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    gap: 1rem;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+  gap: 1rem;
 }
 
-mat-divider{
-    background-color: grey;
+mat-divider {
+  background-color: grey;
 }
 
-mat-card-content{
-    min-height: 7rem;
+mat-card-content {
+  min-height: 9rem;
 }
 
-mat-card-header{
-    height: 3rem;
+mat-card-header {
+  height: 3rem;
 }
 
-.header{
-    cursor: pointer;
+.header {
+  cursor: pointer;
 }
 
-mat-card-title:hover{
-    text-decoration: underline;
+mat-card-title:hover {
+  text-decoration: underline;
+}
+
+.mat-body-1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.mat-body-1:hover {
+  text-decoration: underline;
 }

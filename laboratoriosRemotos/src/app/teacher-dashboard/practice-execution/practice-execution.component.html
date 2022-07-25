@@ -1,0 +1,14 @@
+<app-navbar></app-navbar>
+<div id="wrapper">
+    <iframe id="view" src="https://vdo.ninja/?view=DtsWJ6N" frameborder="0"></iframe>
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon mat-icon>group</mat-icon>Grupo
+            </mat-card-title>
+        </mat-card-header>
+        <mat-chip-list>
+            <mat-chip color="primary" *ngFor="let member of group" selected>{{member}}</mat-chip>
+        </mat-chip-list>
+    </mat-card>
+</div>

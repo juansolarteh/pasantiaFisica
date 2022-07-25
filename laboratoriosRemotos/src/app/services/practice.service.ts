@@ -134,4 +134,9 @@ export class PracticeService {
       this.col.doc(practiceId).collection(this.subcollection).doc(cons.getId()).set(cons.getObjectDB())
     })
   }
+
+  async getPracticeName(refPractice: DocumentReference): Promise<string>{
+    let doc = await refPractice.get();
+    return doc.get('nombre')
+  }
 }
