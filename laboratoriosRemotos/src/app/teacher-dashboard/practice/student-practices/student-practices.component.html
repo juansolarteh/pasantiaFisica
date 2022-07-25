@@ -1,0 +1,62 @@
+<div id="wrapper" *ngIf="!load; else loading">
+    <div id="left">
+        <mat-card *ngFor="let groupDB of groups; let i = index">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon mat-icon>group</mat-icon>
+                    Grupo {{i + 1}}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-chip-list>
+                <mat-chip color="primary" *ngFor="let member of groupDB.getObjectDB().getGrupo()" selected>
+                    {{member.getName()}}</mat-chip>
+            </mat-chip-list>
+        </mat-card>
+    </div>
+    <mat-divider [vertical]="true"></mat-divider>
+    <div id="right">
+        <div class="mat-title">Documentos de practicas</div>
+        <div id="docs">
+            <mat-card class="wrapper-card" *ngFor="let numGroup of withResults; let i = index">
+                <div class="card-header">
+                    <mat-card-title>
+                        <mat-icon mat-icon>group</mat-icon>
+                        <div class="mat-body-strong">Grupo {{numGroup + 1}}</div>
+                    </mat-card-title>
+                </div>
+                <mat-card-content>
+                    <div class="imgPractice">
+                        <div class="img" (click)="openFile(resultsFileLinks[i].results)">
+                            <img src="../assets/imagenes/pdf.png">
+                            {{resultsFileLinks[i].results.getName()}}
+                        </div>
+                        <div class="img" (click)="openFile(resultsFileLinks[i].events)">
+                            <img src="../assets/imagenes/pdf.png">
+                            {{resultsFileLinks[i].events.getName()}}
+                        </div>
+                    </div>
+                </mat-card-content>
+                <mat-card-footer>
+                    <div class="mat-body-strong done">Realizada</div>
+                </mat-card-footer>
+            </mat-card>
+            <mat-card class="wrapper-card" *ngFor="let numGroup of withoutResults">
+                <div class="card-header">
+                    <mat-card-title>
+                        <mat-icon mat-icon>group</mat-icon>
+                        <div class="mat-body-strong">Grupo {{numGroup + 1}}</div>
+                    </mat-card-title>
+                </div>
+                <mat-card-content class="unrealized-content"></mat-card-content>
+                <mat-card-footer class="unrealized">
+                    <div class="mat-body-strong">Sin realizar</div>
+                </mat-card-footer>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<ng-template #loading>
+    <div id="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

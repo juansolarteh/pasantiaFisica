@@ -6,7 +6,7 @@ export class FileLink {
     private image: string;
     private file: any
 
-    constructor(name: string, ext: string, image:string, file?: any, link?: string) {
+    constructor(name: string, ext: string, image: string, file?: any, link?: string) {
         this.name = name
         this.link = link
         this.ext = ext
@@ -20,7 +20,7 @@ export class FileLink {
 
     public setFile(file: any): void {
         this.file = file;
-    } 
+    }
 
     public getImage(): string {
         return this.image;
@@ -28,7 +28,7 @@ export class FileLink {
 
     public setImage(image: string): void {
         this.image = image;
-    } 
+    }
 
     public getName(): string {
         return this.name;
@@ -38,7 +38,7 @@ export class FileLink {
         this.name = name;
     }
 
-    public getLink(): string | undefined{
+    public getLink(): string | undefined {
         return this.link;
     }
 
@@ -53,4 +53,37 @@ export class FileLink {
     public setExt(ext: string): void {
         this.ext = ext;
     }
+}
+
+export class ResultFileLinks {
+    events!: FileLink
+    eventsLink!: boolean
+    results!: FileLink
+    resultsLink!: boolean
+}
+
+export function getFileLinksPath(pathList: string[]): FileLink[] {
+    let linkList: FileLink[] = []
+    pathList.forEach(path => {
+        let splt = path.split('.')
+        let ext = splt[1]
+        splt = path.split('/')
+        let name = ''
+        for (let i = 2; i < splt.length; i++) {
+            name += splt[i]
+        }
+        linkList.push(new FileLink(name, ext, '', undefined, path))
+    })
+    return linkList;
+}
+
+export function getFileLinkPath(path: string): FileLink {
+    let splt = path.split('.')
+    let ext = splt[1]
+    splt = path.split('/')
+    let name = ''
+    for (let i = 2; i < splt.length; i++) {
+        name += splt[i]
+    }
+    return new FileLink(name, ext, '', undefined, path)
 }

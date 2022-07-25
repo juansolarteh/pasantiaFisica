@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Eliminar grupo</h2>
+<mat-dialog-content>
+    <p>¿Esta seguro de cambiar las fechas de esta manera?</p>
+    <p>Al hacerlo se podrian borrar agendamientos que esten antes de la actual fecha de inicio o
+        despues de la actaul fecha final</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <span class="spacer"></span>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Aceptar</button>
+</mat-dialog-actions>

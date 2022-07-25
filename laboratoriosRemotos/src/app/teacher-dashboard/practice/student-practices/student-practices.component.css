@@ -1,0 +1,124 @@
+#wrapper {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  height: 90%;
+}
+
+#left {
+  margin: 1rem;
+  flex-basis: 30rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#right {
+  margin: 1rem;
+  flex-basis: 100%;
+}
+
+mat-icon {
+  margin-right: 0.5rem;
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+}
+
+.wrapper-card {
+  background-color: rgba(245, 245, 245, 0.987);
+}
+
+img {
+  width: 3rem;
+  height: 3rem;
+}
+
+.img {
+  display: grid;
+  justify-items: center;
+  background-color: rgba(172, 167, 167, 0.311);
+  padding: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.imgPractice {
+  display: grid;
+  grid-template-columns: 8.5rem 8.5rem;
+  column-gap: 1rem;
+}
+
+mat-card-footer {
+  display: grid;
+  justify-items: center;
+  padding-bottom: 0.5rem;
+}
+
+.card-header {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+}
+
+mat-card-content {
+  display: grid;
+  justify-items: center;
+}
+
+#docs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 20rem));
+  gap: 1rem;
+}
+
+mat-chip {
+  cursor: default;
+  user-select: none;
+}
+
+.mat-title {
+  user-select: none;
+}
+
+.mat-body-strong {
+  user-select: none;
+}
+
+mat-card-footer {
+  user-select: none;
+}
+
+.done {
+  color: rgb(71, 176, 71);
+}
+
+.unrealized-content {
+  user-select: none;
+  height: 5.2rem;
+}
+
+.unrealized {
+  color: rgb(230, 18, 18);
+}
+
+#loading {
+  background-color: rgba(172, 167, 167, 0.311);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 60rem) {
+  #wrapper {
+    flex-direction: column;
+  }
+
+  #left {
+    flex-basis: 100%;
+  }
+}

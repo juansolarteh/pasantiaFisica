@@ -15,6 +15,9 @@ export class GroupsService {
   constructor(private firestr: AngularFirestore) { }
 
   //Mehtods from teacher
+  getGroupRef(idGroup: string){
+    return this.col.doc(idGroup)
+  }
   deleteGroup(refGroup: DocumentReference) {
     if (this.groupsDB) {
       this.groupsDB = this.groupsDB.filter(g => g.getId() !== refGroup.id);
@@ -107,6 +110,7 @@ export class GroupsService {
     let querySnapShot = await this.col.doc(groupId).get()
     return querySnapShot.ref
   }
+
   async studentBelongAnyGroup(refStudent: DocumentReference, refGroups: DocumentReference[]) {
     let flag = false
     const validate = refGroups.forEach(async ref=>{
@@ -124,5 +128,10 @@ export class GroupsService {
     })
     console.log("Validate",validate);
     return validate
+}
+
+async getGroupById(groupId: string): Promise<DocumentReference[]>{
+    let querySnapShot = await this.col.doc(groupId).get()
+    return querySnapShot.get('grupo')
   }
 }

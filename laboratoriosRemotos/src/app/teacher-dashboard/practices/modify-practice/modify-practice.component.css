@@ -7,16 +7,11 @@
   display: grid;
   justify-items: center;
   grid-row-gap: 0.5em;
+  grid-template-columns: 30rem;
 }
 
 .oneField mat-form-field{
   width: 100%;
-}
-
-.twoFields {
-  display: grid;
-  gap: 0.5rem;
-  grid-template-columns: 15rem 15rem;
 }
 
 .middleWrapper {

@@ -16,16 +16,16 @@
                     <mat-error *ngIf="practiceForm.get('description')?.touched">{{getErrorMessage('description')}}
                     </mat-error>
                 </mat-form-field>
-            </div>
-            <div class="twoFields">
                 <mat-form-field appearance="fill">
-                    <mat-label>Inicio de la practica</mat-label>
-                    <input type="date" matInput placeholder="nombre de practica" required formControlName="start">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Start date" (dateChange)="verifyDate('start', $event)">
+                        <input matEndDate formControlName="end" placeholder="End date" (dateChange)="verifyDate('end', $event)">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+
                     <mat-error *ngIf="practiceForm.get('start')?.touched">{{getErrorMessage('start')}}</mat-error>
-                </mat-form-field>
-                <mat-form-field appearance="fill">
-                    <mat-label>Fin de la practica</mat-label>
-                    <input type="date" matInput placeholder="nombre de practica" required formControlName="end">
                     <mat-error *ngIf="practiceForm.get('end')?.touched">{{getErrorMessage('end')}}</mat-error>
                 </mat-form-field>
             </div>
@@ -52,7 +52,7 @@
             <div class="oneField">
                 <mat-list>
                     <mat-list-item *ngFor="let fileLink of fileLinks">
-                        <img src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="openFile(fileLink)">
+                        <img *ngIf="fileLink.getImage()" src="./assets/imagenes/{{fileLink.getImage()}}.png" (click)="openFile(fileLink)">
                         <div (click)="openFile(fileLink)" class="docs">
                             {{fileLink.getName().split('.')[0]}}
                             <br>
@@ -76,8 +76,7 @@
     <div>
         <button mat-button mat-dialog-close [disabled]="startSubmit">Cancelar</button>
         <span class="spacer"></span>
-        <button mat-button (click)="onUpload()"
-            [disabled]="practiceForm.invalid || !flag">Actualizar</button>
+        <button mat-button (click)="onUpload(confirmDates)" [disabled]="practiceForm.invalid || !flag">Actualizar</button>
     </div>
     <div id="endWrapper">
         <button mat-mini-fab color="primary" (click)="fileInput.click()" [disabled]="startSubmit">
@@ -86,3 +85,7 @@
         <input hidden (change)="onFileSelected($event)" #fileInput accept='{{accept}}' type="file">
     </div>
 </mat-dialog-actions>
+
+<ng-template #confirmDates>
+    <app-confirm-dates></app-confirm-dates>
+</ng-template>

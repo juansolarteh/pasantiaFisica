@@ -2,11 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GroupsResolverServiceResolver } from '../resolvers/groups-resolver-service.';
 import { InfoSubjectResolver } from '../resolvers/info-subject.resolver';
+import { PracticeGroupsResolver } from '../resolvers/practice-groups.resolver';
+import { PracticeResolver } from '../resolvers/practice.resolver';
 import { PracticesResolverServiceResolver } from '../resolvers/practices-resolver-service.resolver';
+import { ResultsPracticeTeacherResolver } from '../resolvers/results-practice-teacher.resolver';
 import { SubjectsTeacherResolverServiceResolver } from '../resolvers/subjects-teacher-resolver-service.resolver';
+import { UniqueGroupResolver } from '../resolvers/unique-group.resolver';
 import { WithoutGroupResolverServiceResolver } from '../resolvers/without-group-resolver-service.resolver';
 import { GroupsComponent } from './groups/groups.component';
+import { PracticeExecutionComponent } from './practice-execution/practice-execution.component';
+import { IntructionsComponent } from './practice/intructions/intructions.component';
+import { PracticeComponent } from './practice/practice.component';
+import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
 import { PracticesComponent } from './practices/practices.component';
+import { PruebafirestoreComponent } from './pruebafirestore/pruebafirestore.component';
 import { SubjectComponent } from './subject/subject.component';
 import { SubjectsComponent } from './subjects/subjects.component';
 
@@ -31,7 +40,7 @@ const routes: Routes = [
           withoutGroup: WithoutGroupResolverServiceResolver
         },
       },
-      { path: '', redirectTo: 'p', pathMatch: 'full' },
+      { path: '**', redirectTo: 'p'},
     ]
   },
   {
@@ -40,7 +49,40 @@ const routes: Routes = [
     pathMatch: 'full',
     resolve: { subjects: SubjectsTeacherResolverServiceResolver }
   },
-  { path: '', redirectTo: 'subjects', pathMatch: 'full' },
+  {
+    path: 'practice/:practiceid',
+    component: PracticeComponent,
+    children: [
+      {
+        path: 'i',
+        pathMatch: 'full',
+        component: IntructionsComponent,
+        resolve: { practice: PracticeResolver }
+      },
+      {
+        path: 'p',
+        pathMatch: 'full',
+        component: StudentPracticesComponent,
+        resolve: { 
+          groups: PracticeGroupsResolver,
+          results: ResultsPracticeTeacherResolver
+        }
+      },
+      { path: '**', redirectTo: 'p', pathMatch: 'full' },
+    ]
+  },
+  {
+    path: 'pracExec/:groupid',
+    component: PracticeExecutionComponent,
+    resolve: {
+      group: UniqueGroupResolver
+    }
+  },
+  {
+    path:'prueba',
+    component: PruebafirestoreComponent
+  },
+  { path: '**', redirectTo: 'subjects', pathMatch: 'full' },
 ];
 
 @NgModule({

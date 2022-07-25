@@ -45,6 +45,10 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
   subsComplete!: Subscription
   uploadFiles = 0
 
+  a = 50
+
+  range: any;
+
   constructor(private readonly fb: FormBuilder,
     private _snackBar: MatSnackBar, private plantSvc: PlantService, private changeDetector: ChangeDetectorRef,
     private dialog: MatDialog, private subjectSvc: SubjectService, private storageSvc: StorageService,
@@ -86,7 +90,18 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     }
     let keys = Object.keys(this.units);
     keys.forEach(k => {
-      this.practiceForm.addControl(k, new FormControl('', Validators.required))
+      if (this.range) {
+        if (this.range[k]) {
+          let cons = this.constants.find(c => c.getId() === k)
+          let min = cons?.getObjectDB()[0]!
+          let max = cons?.getObjectDB()[1]!
+          this.practiceForm.addControl(k, new FormControl('', [Validators.required, Validators.min(min), Validators.max(max)]))
+        } else {
+          this.practiceForm.addControl(k, new FormControl('', Validators.required))
+        }
+      } else {
+        this.practiceForm.addControl(k, new FormControl('', Validators.required))
+      }
     })
   }
 
@@ -95,16 +110,18 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
     this.startSubmit = true;
     let sd: Timestamp;
     if (startDate) {
-      sd = Timestamp.fromDate(new Date(moment(startDate + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss')))
+      let aux = moment(startDate)
+      sd = Timestamp.fromDate(new Date(aux.format('YYYY-MM-DD HH:mm:ss')))
     } else {
       sd = Timestamp.fromDate(new Date())
     }
     let creationDate = Timestamp.fromDate(new Date())
+    let fnPractice = moment(this.practiceForm.get('end')?.value).hour(20)
     const practice = new Practice(
       this.practiceForm.get('name')?.value,
       creationDate,
       sd,
-      Timestamp.fromDate(new Date(moment(this.practiceForm.get('end')?.value + ' 00:00:00').format('YYYY-MM-DD HH:mm:ss'))),
+      Timestamp.fromDate(new Date(fnPractice.format('YYYY-MM-DD HH:mm:ss'))),
       this.plantSvc.getPlantRefFromId(this.practiceForm.get('plant')?.value),
       this.subjectSvc.getRefSubjectSelected(),
       this.practiceForm.get('description')?.value,
@@ -123,11 +140,19 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
       })
       if (this.constants.length > 0) {
         let constDB = this.constants.map(cons => {
-          let valueCons: number[] = this.practiceForm.get(cons.getId())?.value
           let map = new Map()
-          valueCons.forEach(vc => {
-            map.set(vc.toString(), cons.getObjectDB()[vc - 1])
-          })
+          console.log(cons)
+          if(this.range[cons.getId()]){
+            let valueCons: number = this.practiceForm.get(cons.getId())?.value
+            map.set('0', cons.getObjectDB()[0])
+            map.set('1', valueCons)
+          }else{
+            let valueCons: number[] = this.practiceForm.get(cons.getId())?.value
+            valueCons.forEach(vc => {
+              console.log(vc)
+              map.set(vc.toString(), cons.getObjectDB()[vc - 1])
+            })
+          }
           return new ObjectDB<any>(Object.fromEntries(map), cons.getId())
         })
         this.practiceSvc.addConstants(constDB, refPractice);
@@ -152,6 +177,14 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
         + this.fieldFeatures[field][1] + ' caracteres';
     } else if (this.practiceForm.get(field)?.errors?.['noPrevDatesFromNow']) {
       return 'La fecha final no puede ser antes de la fecha actual';
+    } else if (this.practiceForm.get(field)?.errors?.['min']) {
+      let cons = this.constants.find(c => c.getId() === field)
+      let min = cons?.getObjectDB()[0]!
+      return 'El campo no puede ser menor a ' + min;
+    } else if (this.practiceForm.get(field)?.errors?.['max']) {
+      let cons = this.constants.find(c => c.getId() === field)
+      let max = cons?.getObjectDB()[1]!
+      return 'El campo no puede ser mayor a ' + max;
     }
     return this.practiceForm.get(field)?.errors?.['minlength'] ?
       'El campo ' + this.fieldFeatures[field][0] + ' debe tener mas de '
@@ -165,6 +198,7 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
       this.plantSvc.getConstantsDB(idPlant).then(cons => {
         this.constants = cons;
         this.units = this.plants.find((p) => p.getId() === idPlant)?.getObjectDB().getUnidades();
+        this.range = this.plants.find((p) => p.getId() === idPlant)?.getObjectDB().getRango();
         this.addControlsForm();
         this.changeDetector.markForCheck();
         this.flag = true;
@@ -252,5 +286,9 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
         this.onSubmit(result)
       }
     });
+  }
+
+  sliderChange(value: number, nameControl: string) {
+    this.practiceForm.get(nameControl)?.setValue(value)
   }
 }
