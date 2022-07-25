@@ -19,13 +19,17 @@ export class SubjectsStudentResolverService implements Resolve<ObjectDB<Subject>
     resolve(): ObjectDB<Subject>[] | Observable<ObjectDB<Subject>[]> | Promise<ObjectDB<Subject>[]> {
         const studentRef = this.userSvc.getUserLoggedRef();
 
-        return this.groupSvc.getGroupsByRefStudent(studentRef).then(async res => {
+        return this.subjectSvc.getSubjectsByStudentRef(studentRef).then(res=>{
+            let listSubjects = this.getAllInfo(res)
+            return listSubjects
+        })
+        /* return this.groupSvc.getGroupsByRefStudent(studentRef).then(async res => {
             let listWithGroup = await this.subjectSvc.getSubjectsByGroup(res)
             let listWithoutGroup = await this.subjectSvc.getSubjectsWithoutGroup(studentRef)
             let listSubjects = listWithGroup.concat(listWithoutGroup)
             let subjectsWithAllInfo = this.getAllInfo(listSubjects)
             return subjectsWithAllInfo
-        })
+        }) */
     }
 
     private getAllInfo(listSubjects : ObjectDB<SubjectTeacher>[]){

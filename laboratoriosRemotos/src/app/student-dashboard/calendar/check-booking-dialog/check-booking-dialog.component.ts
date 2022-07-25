@@ -1,3 +1,4 @@
+import { SubjectService } from 'src/app/services/subject.service';
 import { Timestamp } from '@firebase/firestore';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { GroupsService } from 'src/app/services/groups.service';
@@ -21,7 +22,7 @@ export class CheckBookingDialogComponent implements OnInit {
   public data: {studentGroup:ObjectDB<GroupWithNames>,practiceSelected:ObjectDB<Practice>,
     selectedDate : string, subjectSelected : ObjectDB<Subject>},
     private practiceSvc : PracticeService, private groupSvc : GroupsService,
-    private bookingSvc : ScheduleService) { }
+    private bookingSvc : ScheduleService, private subjectSvc : SubjectService) { }
 
   studentGroup!: ObjectDB<GroupWithNames>
   practiceSelected!:ObjectDB<Practice>
@@ -40,12 +41,14 @@ export class CheckBookingDialogComponent implements OnInit {
   onCreateBooking(){
     this.groupSvc.getGroupRefById(this.studentGroup.getId()).then(group =>{
       this.practiceSvc.getRefByPracticeId(this.practiceSelected.getId()).then(practice=>{
+        let refSubject = this.subjectSvc.getRefSubjectFromId(this.subjectSelected.getId())
         let date = new Date(this.selectedDate)
         let dateBooking = Timestamp.fromDate(date)
         let newBooking : Booking = {
           fecha: dateBooking,
           grupo: group,
-          practica: practice
+          practica: practice,
+          materia: refSubject
         }
         this.bookingSvc.createBooking(newBooking)
         this.onBookingCreated.emit(dateBooking)

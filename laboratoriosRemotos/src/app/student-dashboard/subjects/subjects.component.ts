@@ -1,3 +1,4 @@
+import { UserService } from 'src/app/services/user.service';
 import { SubjectService } from 'src/app/services/subject.service';
 import { Subject } from '../../models/Subject';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,18 +14,24 @@ export class SubjectsComponent implements OnInit {
 
   subjects: ObjectDB<Subject>[] = [];
   
-  constructor( private activatedRoute: ActivatedRoute, private readonly router: Router, private subjectSvc : SubjectService) { }
+  constructor( private activatedRoute: ActivatedRoute, private readonly router: Router,
+    private subjectSvc : SubjectService, private userSvc : UserService) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void{
 
     this.subjects = this.activatedRoute.snapshot.data['subjects'];
+
   }
 
   goToPractices(subject:ObjectDB<Subject>){
     localStorage.setItem("subjectSelected",subject.getId())
     this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
   }
-  goToDeleteSubject(){
-    alert("Yendo a elimitar asignatura")
+  goToDeleteSubject(subject:ObjectDB<Subject>){
+   
+  }
+  setNewSubject(newSubject : ObjectDB<Subject>){
+    console.log(newSubject);
+    this.subjects.push(newSubject)
   }
 }

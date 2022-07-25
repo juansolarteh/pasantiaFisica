@@ -77,7 +77,8 @@ export class ScheduleService {
     this.col.add({
       fecha: newBooking.fecha,
       practica: newBooking.practica,
-      grupo: newBooking.grupo
+      grupo: newBooking.grupo,
+      materia: newBooking.materia
     })
   }
   async isGroupBooked(refGroup : DocumentReference, refPractice : DocumentReference){
@@ -88,7 +89,6 @@ export class ScheduleService {
         flag = true
       }
     })
-    console.log("Desde servicio",flag);
     return flag
   }
 }

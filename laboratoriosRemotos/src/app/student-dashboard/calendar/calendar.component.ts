@@ -97,7 +97,7 @@ export class CalendarComponent implements OnInit {
   }
   onGoToGroups() {
     console.log(this.activatedRoute.url);
-    this.router.navigate(['groups'])
+    this.router.navigate(['../groups'], {relativeTo: this.activatedRoute})
   }
   handleDateClick(arg: any) {
     if (this.practiceSelected) {

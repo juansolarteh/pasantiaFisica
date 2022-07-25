@@ -37,8 +37,12 @@ export class PracticeComponent implements OnInit {
           });
         }
       });
+      setTimeout(this.navigateToPracticeExecution.bind(this),2000)
     //TO-DO: Colocar delay para redireccionar a la vista de practica en ejecucion
-    //this.router.navigate(['../practice-execution'], {relativeTo: this.activatedRoute})
+    
+  }
+  private navigateToPracticeExecution(){
+    this.router.navigate(['../../practice-execution'], {relativeTo: this.activatedRoute})
   }
 
 }

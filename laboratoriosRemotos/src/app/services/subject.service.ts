@@ -101,38 +101,6 @@ export class SubjectService {
   //----------------------------------------------
   //Métodos Jorge - Módulo estudiantes
 
-  //Obtiene las materias donde el estudiante está sin grupo
-  async getSubjectsWithoutGroup(studentRef: DocumentReference) {
-    var listWithoutGroup: ObjectDB<SubjectTeacher>[] = [];
-    const querySnapShot = this.col.where('sinGrupo', 'array-contains', studentRef).get();
-    (await querySnapShot).forEach(doc => {
-      let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
-      subject.getObjectDB().setDocente(doc.get('docente'))
-      listWithoutGroup.push(subject)
-    })
-    return listWithoutGroup
-  }
-
-  //Obtiene las materias donde el estudiante pertenece a un grupo
-  async getSubjectsByGroup(data: string[]) {
-    var listWithGroup: ObjectDB<SubjectTeacher>[] = [];
-    if (data != null) {
-      let querySnapShot = this.col.get();
-      (await querySnapShot).forEach(doc => {
-        if (doc.id != 'Claves') {
-          let groupsSubject = doc.get('grupos') as Array<DocumentReference>
-          groupsSubject.forEach(group => {
-            if ((data.includes(group.id))) {
-              let subject = new ObjectDB(convertTo(SubjectTeacher, doc.data()), doc.id)
-              subject.getObjectDB().setDocente(doc.get('docente'))
-              listWithGroup.push(subject)
-            }
-          })
-        }
-      })
-    }
-    return listWithGroup
-  }
   //Obtiene la referencia de la materia mediante su ID
   async getSubjectRefById(idSubject: string) {
     let querySnapShot = await this.col.doc(idSubject).get()
@@ -148,7 +116,6 @@ export class SubjectService {
   }
   //Verifica si estudiante está sin grupo
   async studentBelongToWithoutGroup(refStudent: DocumentReference, idSubject: string) {
-    console.log("Desde servicio: ", refStudent, idSubject)
     let querySnapShot = await this.col.doc(idSubject).get()
     let students: DocumentReference[] = querySnapShot.get('sinGrupo')
     let flag = false
@@ -167,9 +134,7 @@ export class SubjectService {
     let newStudentsWithOutGroup = students.filter(student => {
       return !studentsRefIds.includes(student.id)
     })
-    console.log("Sin grupo Materia", newStudentsWithOutGroup)
     this.col.doc(idSubject).update('sinGrupo', newStudentsWithOutGroup)
-    //this.refSubjectSelected.update('sinGrupo', this.withoutGroup)
   }
 
   async verifyCode(code: string) {
@@ -201,5 +166,44 @@ export class SubjectService {
       nombre: subject.getNombre(),
       numGrupos: subject.getNumGrupos(),
     })
+  }
+
+  async getSubjectByKey(key : string){
+    let querySnapShot = this.col.where('clave','==',key).get();
+    let subject = (await querySnapShot).docs[0]
+    if(subject){
+      let data = subject.data()
+      return new ObjectDB(convertTo(SubjectTeacher,data),subject.id)
+    }
+   return
+  }
+
+  async getSubjectsByStudentRef(studentRef : DocumentReference){
+    var subjectsList: ObjectDB<SubjectTeacher>[] = [];
+    let subjects = this.col.where('estudiantes','array-contains',studentRef).get();
+    (await subjects).forEach(doc=>{
+      let subject = new ObjectDB(convertTo(SubjectTeacher,doc.data()),doc.id)
+      subject.getObjectDB().setDocente(doc.get('docente'))
+      subjectsList.push(subject)
+    })
+    return subjectsList
+  }
+  
+  async studentBelongToSubject(studentRef : DocumentReference , idSubject : string){
+    let subject = (await this.col.doc(idSubject).get()).data()!
+    let students = subject['estudiantes'] as Array<DocumentReference>
+    let response = students.some(student => student.id == studentRef.id)
+    return response
+  }
+
+  async registerStudent(studentRef : DocumentReference, idSubject: string){
+    let subject = (await this.col.doc(idSubject).get()).data()!
+    let students = subject['estudiantes'] as Array<DocumentReference>
+    let withoutGroup = subject['sinGrupo'] as Array<DocumentReference>
+    students.push(studentRef)
+    withoutGroup.push(studentRef)
+    this.col.doc(idSubject).update('estudiantes',students)
+    this.col.doc(idSubject).update('sinGrupo',withoutGroup)
+    return new ObjectDB(convertTo(SubjectTeacher,subject),idSubject)
   }
 }

@@ -4,5 +4,6 @@ import { DocumentReference } from '@angular/fire/compat/firestore';
 export interface Booking{
     fecha?: Timestamp,
     grupo?: DocumentReference,
-    practica?: DocumentReference
+    practica?: DocumentReference,
+    materia?: DocumentReference
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentChecked} from '@angular/core';
 import { getDatabase, get, ref, set, child } from 'firebase/database';
 
 @Component({
@@ -6,10 +6,11 @@ import { getDatabase, get, ref, set, child } from 'firebase/database';
   templateUrl: './practice-execution.component.html',
   styleUrls: ['./practice-execution.component.css']
 })
-export class PracticeExecutionComponent implements OnInit {
+export class PracticeExecutionComponent implements OnInit, AfterContentChecked {
 
 
   constructor() { }
+  
   
   src = ''
 
@@ -21,11 +22,14 @@ export class PracticeExecutionComponent implements OnInit {
         this.iniciarStreaming(this.src);
       });
   }
+  ngAfterContentChecked(): void {
+    
+  }
 
   iniciarStreaming(url: string) {
     var x = document.createElement("IFRAME");
     x.style.width = "720px";
-    x.style.height = "576px";
+    x.style.height = "480px";
     x.setAttribute("src", url);
     let iframe = document.getElementById("iframe")!
     iframe.innerHTML = ''
