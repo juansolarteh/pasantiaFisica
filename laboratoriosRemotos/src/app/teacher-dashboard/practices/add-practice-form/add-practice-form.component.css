@@ -106,3 +106,14 @@ img {
 mat-progress-bar{
   margin-top: 1rem;
 }
+
+.slider{
+  display: flex;
+  width: auto;
+  flex-direction: column;
+}
+
+.example-label-container.example-label-horizontal {
+  display: flex;
+  justify-content: space-between;
+}

@@ -139,4 +139,14 @@ export class PracticeService {
     let doc = await refPractice.get();
     return doc.get('nombre')
   }
+
+  async getConstantsPractice(idPractice: string){
+    const snap = await this.col.doc(idPractice).collection(this.subcollection).get();
+    let docs = snap.docs;
+    return docs.map(doc => {
+      let data = doc.data();
+      let values: number[] = Object.values(data)
+      return new ObjectDB<number[]>(values, doc.id);
+    });
+  }
 }

@@ -24,6 +24,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { MatTreeModule } from '@angular/material/tree';
     MatNativeDateModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    MatTreeModule
+    MatTreeModule,
+    MatSliderModule
   ]
 })
 export class MaterialModule { }

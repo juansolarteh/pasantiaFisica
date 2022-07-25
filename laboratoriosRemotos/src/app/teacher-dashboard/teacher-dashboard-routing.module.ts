@@ -15,6 +15,7 @@ import { IntructionsComponent } from './practice/intructions/intructions.compone
 import { PracticeComponent } from './practice/practice.component';
 import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
 import { PracticesComponent } from './practices/practices.component';
+import { PruebafirestoreComponent } from './pruebafirestore/pruebafirestore.component';
 import { SubjectComponent } from './subject/subject.component';
 import { SubjectsComponent } from './subjects/subjects.component';
 
@@ -76,6 +77,10 @@ const routes: Routes = [
     resolve: {
       group: UniqueGroupResolver
     }
+  },
+  {
+    path:'prueba',
+    component: PruebafirestoreComponent
   },
   { path: '**', redirectTo: 'subjects', pathMatch: 'full' },
 ];

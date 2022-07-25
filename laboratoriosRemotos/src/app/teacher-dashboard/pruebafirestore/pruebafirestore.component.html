@@ -1,0 +1,32 @@
+<p>pruebafirestore works!</p>
+
+<button (click)="getPlant('Planta1', 'Tnl5qGZl1saXSRGcEjrW')">Planta 1</button>
+<button (click)="getPlant('Planta2', 'NSLrTw8ltDVvCJNCXjkn')">Planta 2</button>
+<button (click)="getPlant('Planta3', 'P8fEJvHpxrOQHtUTXUfG')">Planta 3</button>
+
+<div  [formGroup]="practiceForm">
+    <div *ngFor="let const of constants">
+        <mat-form-field *ngIf="range === undefined || !range[const.getId()]; else inputRange" appearance="fill">
+            <mat-label>{{const.getId()}} ({{units[const.getId()]}})</mat-label>
+            <mat-select formControlName={{const.getId()}}>
+                <mat-option *ngFor="let val of const.getObjectDB(); let i = index " [value]="i+1">{{val}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <ng-template #inputRange>
+            <div class="slider">
+                <mat-form-field appearance="fill">
+                    <mat-label>{{const.getId()}} máximo ({{units[const.getId()]}})</mat-label>
+                    <input matInput type="number" placeholder="" formControlName={{const.getId()}} required>
+                </mat-form-field>
+                <mat-slider class="example-margin" [max]="const.getObjectDB()[1]" [min]="const.getObjectDB()[0]"
+                    [thumbLabel]="true" value="{{practiceForm.get(const.getId())?.value}}"
+                    (change)="sliderChange($event.value!, const.getId())">
+                </mat-slider>
+            </div>
+        </ng-template>
+    </div>
+</div>
+<button (click)="startPlant()" [disabled]="practiceForm.invalid">Activar maquina</button>
+
+<button (click)="termimaMaquina()">Esto representa cuando la maquina ya termina de procesar</button>
