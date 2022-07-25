@@ -96,6 +96,6 @@ export class SubjectsComponent implements OnInit {
   }
 
   navigateExecution(groupId: string){
-    console.log('idGroup => ', groupId)
+    this.router.navigate(['../pracExec', groupId], { relativeTo: this.route })
   }
 }

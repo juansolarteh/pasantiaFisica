@@ -11,7 +11,7 @@ export class TimestampService {
 
   todayOrBeforeOf(ts: Timestamp, beforeOf: number){
     let date = moment(ts.toDate())
-    let today = moment();
+    let today = moment().subtract(1, 'h');
     if(date.isBefore(today)){
       return false;
     }else if(date.diff(today, 'days') > beforeOf){

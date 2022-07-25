@@ -123,7 +123,7 @@ export class UserService {
     }
   }
   //Metodos Jorge Iván Solano - Modulo de estudiantes
-  async getUserName(refUser: DocumentReference) {
+  async getUserName(refUser: DocumentReference): Promise<string> {
     const doc = await this.col.doc(refUser.id).get();
     let name = doc.get('nombre');
     return name

@@ -110,4 +110,9 @@ export class GroupsService {
     let querySnapShot = await this.col.doc(groupId).get()
     return querySnapShot.ref
   }
+
+  async getGroupById(groupId: string): Promise<DocumentReference[]>{
+    let querySnapShot = await this.col.doc(groupId).get()
+    return querySnapShot.get('grupo')
+  }
 }

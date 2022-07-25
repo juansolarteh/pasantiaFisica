@@ -36,7 +36,7 @@ export class SubjectsTeacherResolverServiceResolver implements Resolve<ObjectDB<
       })
       let promSubjSched = nameRefDB.map(async nrDB => {
         return await this.scheduleSvc.getBookingsAndPracticeBySubjectRef(nrDB.getObjectDB().refSub).then(async bookingRefs => {
-          bookingRefs = bookingRefs.filter(br => this.timestampSvc.todayOrBeforeOf(br.date!, 5))
+          bookingRefs = bookingRefs.filter(br => this.timestampSvc.todayOrBeforeOf(br.date!, 4))
           bookingRefs.sort((a, b) => moment(a.date?.toDate()).diff(b.date?.toDate()))
           let promises = bookingRefs.map(async br => {
             let namePractice = await this.practiceSvc.getPracticeName(br.practice as DocumentReference)
