@@ -1,4 +1,4 @@
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material.module';
@@ -10,7 +10,6 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   declarations: [
     NavbarComponent,
     CardSubjectComponent,
-
   ],
   imports: [
     CommonModule,
@@ -19,7 +18,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   ],
   exports: [
     NavbarComponent,
-    CardSubjectComponent
+    CardSubjectComponent,
   ]
 })
 export class ComponentsModule { }

@@ -21,7 +21,7 @@ import { ConfirmDatesComponent } from './practices/modify-practice/confirm-dates
 import { PracticeComponent } from './practice/practice.component';
 import { IntructionsComponent } from './practice/intructions/intructions.component';
 import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
-import { PracticeExecutionComponent } from './practice-execution/practice-execution.component';
+import { PracticeTeacherExecutionComponent } from './practice-teacher-execution/practice-execution.component';
 import { PruebafirestoreComponent } from './pruebafirestore/pruebafirestore.component';
 
 @NgModule({
@@ -42,7 +42,7 @@ import { PruebafirestoreComponent } from './pruebafirestore/pruebafirestore.comp
     PracticeComponent,
     IntructionsComponent,
     StudentPracticesComponent,
-    PracticeExecutionComponent,
+    PracticeTeacherExecutionComponent,
     PruebafirestoreComponent,
   ],
   imports: [

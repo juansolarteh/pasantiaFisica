@@ -1,4 +1,4 @@
-<app-navbar>
+<!-- <app-navbar>
   <div leftOptions>{{this.subjectSelected.getObjectDB().getNombre()}}</div>
   <mat-tab-group midOptions animationDuration="0ms"  selectedIndex="0" (selectedTabChange)="changeTab($event)">
     <mat-tab label="Prácticas"></mat-tab>
@@ -8,17 +8,21 @@
 </app-navbar>
 <div>
   <router-outlet></router-outlet>
-</div>
-<!-- <nav mat-tab-nav-bar [backgroundColor]="background" [tabPanel]="tabPanel">
-  <button mat-icon-button>
-    <mat-icon>menu</mat-icon>
-  </button> 
-  <h3>hola</h3>
+</div> -->
+<nav mat-tab-nav-bar [backgroundColor]="background" [tabPanel]="tabPanel">
+
+  <div class="left-options">
+    <button mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <h2 id="subjectTitle">{{this.subjectSelected.getObjectDB().getNombre()}}</h2>
+  </div>
   <span class="spacer"></span>
-  <a mat-tab-link *ngFor="let link of links" (click)="activeLink = link" [active]="activeLink == link"> {{link}} </a>
-  <a mat-tab-link disabled>Disabled Link</a>
+  <a mat-tab-link *ngFor="let link of links; let i = index" (click)="changeLink(i)" [active]="activeLink == link"> {{link}} </a>
   <span class="spacer"></span>
-  <h3>salir</h3>
+  <h2 (click)="salir()">Salir</h2>
 </nav>
 <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
- -->
+<div>
+  <router-outlet></router-outlet>
+</div>

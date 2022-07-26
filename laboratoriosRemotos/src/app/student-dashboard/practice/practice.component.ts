@@ -42,7 +42,6 @@ export class PracticeComponent implements OnInit {
     
   }
   private navigateToPracticeExecution(){
-    this.router.navigate(['../../practice-execution'], {relativeTo: this.activatedRoute})
+    this.router.navigate(['./practice-execution',this.practiceSelected.getId()], {relativeTo: this.activatedRoute.parent})
   }
-
 }

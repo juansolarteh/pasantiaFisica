@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-practice-execution',
-  templateUrl: './practice-execution.component.html',
-  styleUrls: ['./practice-execution.component.css']
+  selector: 'app-practice-teacher-execution',
+  templateUrl: './practice-teacher-execution.component.html',
+  styleUrls: ['./practice-teacher-execution.component.css']
 })
-export class PracticeExecutionComponent implements OnInit {
+export class PracticeTeacherExecutionComponent implements OnInit {
 
   group!: string[]
 
