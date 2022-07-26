@@ -13,7 +13,8 @@ import { SubjectComponent } from './subject/subject.component';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { PracticesComponent } from './practices/practices.component';
 import { CalendarComponent } from './calendar/calendar.component';
-import { PracticeExecutionComponent } from './practice-execution/practice-execution.component';
+import { PracticeExecutionComponent } from '../practice-execution/practice-execution/practice-execution.component';
+import { PracticeExecutionStudentResolver } from '../resolvers/student/practice-execution-student.resolver';
 
 const routes: Routes = [
 
@@ -28,7 +29,11 @@ const routes: Routes = [
         }
       },
       {
-        path: 'practice-execution', component: PracticeExecutionComponent
+        path: 'practice-execution/:practiceId',
+        loadChildren: () => import('../practice-execution/practice-execution.module').then(m => m.PracticeExecutionModule),
+        resolve: {
+          practiceExecution : PracticeExecutionStudentResolver
+        },
       },
       {
         path: 'practices', component: PracticesComponent,

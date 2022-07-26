@@ -11,12 +11,11 @@ import { PracticesComponent } from './practices/practices.component';
 import { PracticeComponent } from './practice/practice.component';
 import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subject-card.component';
 import { CalendarComponent } from './calendar/calendar.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogComponent } from './groups/dialog/dialog.component';
 import { StudentsWithoutGroupComponent } from './groups/students-without-group/students-without-group.component';
 import { PracticeFilterComponent } from './calendar/practice-filter/practice-filter.component';
 import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/check-booking-dialog.component';
-import { PracticeExecutionComponent } from './practice-execution/practice-execution.component';
 
 
 @NgModule({
@@ -31,8 +30,7 @@ import { PracticeExecutionComponent } from './practice-execution/practice-execut
     DialogComponent,
     StudentsWithoutGroupComponent,
     PracticeFilterComponent,
-    CheckBookingDialogComponent,
-    PracticeExecutionComponent,
+    CheckBookingDialogComponent
   ],
   entryComponents: [DialogComponent,CheckBookingDialogComponent],
   imports: [
@@ -41,7 +39,8 @@ import { PracticeExecutionComponent } from './practice-execution/practice-execut
     MaterialModule,
     ComponentsModule,
     FormsModule,
-    FullcalendarModule
+    FullcalendarModule,
+    ReactiveFormsModule
   ],
   providers:[
     DatePipe
