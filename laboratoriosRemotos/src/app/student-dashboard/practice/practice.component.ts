@@ -21,10 +21,9 @@ export class PracticeComponent implements OnInit {
   ngOnInit(): void {
     this.practiceSelected = this.activatedRoute.snapshot.data['practiceSelected']
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
-
   }
 
-  iniciarStreaming(){
+  startPractice(){
     const dbref = ref(getDatabase());
     get(child(dbref, "StreamCaidaLibre"))
       .then((snapshot) => {
@@ -40,6 +39,9 @@ export class PracticeComponent implements OnInit {
       setTimeout(this.navigateToPracticeExecution.bind(this),2000)
     //TO-DO: Colocar delay para redireccionar a la vista de practica en ejecucion
     
+  }
+  goToBookings(){
+    this.router.navigate(['./calendar',this.practiceSelected.getId()], {relativeTo: this.activatedRoute.parent})
   }
   private navigateToPracticeExecution(){
     this.router.navigate(['./practice-execution',this.practiceSelected.getId()], {relativeTo: this.activatedRoute.parent})

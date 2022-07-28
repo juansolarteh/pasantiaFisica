@@ -1,8 +1,39 @@
 <ng-container *ngIf="studentGroup; else noGroup">
     <div class="grid">
-        <div class="practice-filter">
+        <!-- <div class="practice-filter">
             <app-practice-filter [practices]="practices" (onPracticeSelected)="onPracticeSelected($event)">
             </app-practice-filter>
+        </div> -->
+        <div class="info">
+            <div class="mat-h2">
+                Información para agendamientos
+                <mat-divider></mat-divider>
+            </div>
+            <div class="mat-body-2">
+                Planta: <span class="mat-body-1">{{this.practiceSelected.getObjectDB().getPlanta()}}</span>
+                <br>
+                Práctica: <span class="mat-body-1">{{this.practiceSelected.getObjectDB().getNombre()}}</span>
+                <br>
+                Reservas desde: <span class="mat-body-1">{{this.practiceSelected.getObjectDB().getInicio().seconds *
+                    1000 | date: 'longDate'}}</span>
+                <br>
+                Reservas hasta: <span class="mat-body-1">{{this.practiceSelected.getObjectDB().getFin().seconds * 1000 |
+                    date: 'longDate'}}</span>
+            </div>
+            <div class="mat-h2" id="encabezado">
+                Grupo de trabajo
+                <mat-divider></mat-divider>
+            </div>
+            <div class="mat-body-2" *ngFor="let member of studentGroup.getObjectDB().getGrupo()">
+                Estudiante: <span class="mat-body-1">{{member.getName()}}</span>
+            </div>
+            <div class="mat-h2" id="encabezado">
+                Recomendaciones
+                <mat-divider></mat-divider>
+            </div>
+            <div class="mat-body-2">
+                Nota: <span class="mat-body-1">El agendamiento solo puede realizarse máximo hasta cinco minutos antes de la fecha seleccionada</span>
+            </div>
         </div>
         <div class="calendar">
             <full-calendar #calendar [options]="calendarOptions"></full-calendar>

@@ -16,7 +16,7 @@ export class SubjectComponent implements OnInit {
 
   constructor(private readonly router: Router, private activatedRoute: ActivatedRoute, private authService : AuthService) { }
   subjectSelected!: ObjectDB<Subject>
-  links = ['Prácticas', 'Calendario', 'Grupo'];
+  links = ['Prácticas', 'Grupo'];
   activeLink = ""
   background: ThemePalette = undefined;
 
@@ -24,7 +24,7 @@ export class SubjectComponent implements OnInit {
     this.activeLink = this.links[0];
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
   }
-  changeTab(event:any){
+  /* changeTab(event:any){
     switch(event.index){
       case 0: this.router.navigate(['./practices'], {relativeTo: this.activatedRoute});
       break;
@@ -34,16 +34,13 @@ export class SubjectComponent implements OnInit {
       break;
       default: this.router.navigate(['/'], {relativeTo: this.activatedRoute})
     }
-  }
+  } */
   changeLink(link:number){
     switch(link){
       case 0: this.activeLink = this.links[0]; 
       this.router.navigate(['./practices'], {relativeTo: this.activatedRoute});
       break;
       case 1: this.activeLink = this.links[1]; 
-      this.router.navigate(['./calendar'], {relativeTo: this.activatedRoute})
-      break;
-      case 2: this.activeLink = this.links[2];  
       this.router.navigate(['./groups'], {relativeTo: this.activatedRoute})
       break;
       default: this.router.navigate(['/'], {relativeTo: this.activatedRoute})

@@ -35,7 +35,7 @@ export class CheckBookingDialogComponent implements OnInit {
     this.practiceSelected = this.data.practiceSelected
     this.selectedDate = this.data.selectedDate
     this.subjectSelected = this.data.subjectSelected
-    console.log(this.selectedDate)
+    console.log(this.practiceSelected);
   }
 
   onCreateBooking(){
