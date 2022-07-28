@@ -1,11 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/compat/database';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Timestamp } from '@firebase/firestore';
 import { FullCalendarComponent, CalendarOptions } from '@fullcalendar/angular';
+import { child, get, getDatabase, ref } from 'firebase/database';
 import * as moment from 'moment';
-import { Observable, Subject, Subscription, timer } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-calendar',
@@ -28,9 +30,6 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   subscriptionChangeValue!: Subscription
   nextBlock!: string
 
-  source: Observable<number> = timer(0, 1000);
-  seconds!: number
-  secondsPrevBlock!: number
   inFit!: boolean;
 
   idPlant!: string;
@@ -40,7 +39,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private db: AngularFireDatabase,
     private changeDetector: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar
   ) { }
 
   ngOnDestroy(): void {
@@ -68,24 +68,24 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.inFit = false
     let nextBlock = moment().add(1, 'h')
     nextBlock = moment(nextBlock.format('YYYY-MM-DD HH:00:00'))
-    this.seconds = nextBlock.diff(moment(), 'seconds')
-    this.secondsPrevBlock = nextBlock.subtract(6, 'minutes').diff(moment(), 'seconds')
-    let subs = this.source.subscribe(t => {
-      if (t === this.seconds) {
-        window.location.reload()
-      }
-      if (t === this.secondsPrevBlock) {
-        let nb = moment().add(1, 'h')
-        this.nextBlock = moment(nb.format('YYYY-MM-DD HH:00:00')).format('HH:00:00')
-        this.state = 3
-        this.inFit = true;
-        this.changeDetector.markForCheck();
-      }
-    });
-    this.otherSubscriptions.push(subs)
-    this.state = 0;
+    let seconds = nextBlock.diff(moment(), 'seconds')
+    let secondsPrevBlock = nextBlock.subtract(3, 'minutes').diff(moment(), 'seconds')
+
+    setTimeout(() => {
+      window.location.reload()
+    }, seconds * 1000)
+
+    setTimeout(() => {
+      let nb = moment().add(1, 'h')
+      this.nextBlock = moment(nb.format('YYYY-MM-DD HH:00:00')).format('HH:00:00')
+      this.state = 3
+      this.inFit = true;
+      this.changeDetector.markForCheck();
+    }, secondsPrevBlock * 1000)
+
+    this.state = 1;
     this.calendarOptions = this.initCalendar();
-    subs = this.subjectIdPlant.subscribe(idPlant => {
+    let subs = this.subjectIdPlant.subscribe(idPlant => {
       this.plantRef = this.db.object('Stream' + idPlant);
       if (this.subscriptionChangeValue) {
         this.subscriptionChangeValue.unsubscribe()
@@ -94,7 +94,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
         if (event.estado == 1) {
           this.state = 1;
         } else {
-          if(!this.updateState() && !this.inFit){
+          if (!this.updateState() && !this.inFit) {
             this.state = 0;
           }
         }
@@ -166,7 +166,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   updateState() {
     let now = moment()
-    let inPractice = this.bookingsTimeStamp.some(bts => moment(new Date(this.bookingsTimeStamp[0].seconds * 1000)).isSameOrBefore(now));
+    let inPractice = this.bookingsTimeStamp.some(bts => moment(new Date(bts.seconds * 1000)).isSameOrBefore(now));
     if (inPractice) {
       this.state = 2;
       return true
@@ -185,7 +185,26 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     return 'En ajuste de Planta, Si no esta agendado, puedes intentar a las ' + this.nextBlock
   }
 
-  navigateExecution(){
-    this.router.navigate(['./plant', this.idPlant], {relativeTo: this.route.parent})
+  navigateExecution() {
+    const dbref = ref(getDatabase());
+    get(child(dbref, "Stream" + this.idPlant)).then((snapshot) => {
+      let estado: number = snapshot.val().estado;
+      if (estado === 1) {
+        this.openSnackBar('No se puede ingresar, intentelo mas tarde')
+      } else {
+        this.plantRef.update({ estado: 1 }).then(() => {
+          setTimeout(this.navigateTo.bind(this), 2000)
+        })
+      }
+    });
+  }
+
+  private navigateTo() {
+    localStorage.setItem('approved_navigation', 'true')
+    this.router.navigate(['./plant', this.idPlant], { relativeTo: this.route.parent })
+  }
+
+  async openSnackBar(message: string) {
+    this._snackBar.open(message)._dismissAfter(5000)
   }
 }

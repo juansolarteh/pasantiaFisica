@@ -26,7 +26,8 @@
                                 <mat-label>{{const.getId()}} máximo ({{units[const.getId()]}})</mat-label>
                                 <input matInput type="number" placeholder="" formControlName={{const.getId()}} required>
                             </mat-form-field>
-                            <mat-error *ngIf="practiceForm.get(const.getId())?.touched">{{getErrorMessage(const.getId())}}
+                            <mat-error *ngIf="practiceForm.get(const.getId())?.touched">
+                                {{getErrorMessage(const.getId())}}
                             </mat-error>
                             <mat-slider class="example-margin" [max]="const.getObjectDB()[1]"
                                 [min]="const.getObjectDB()[0]" [thumbLabel]="true"
@@ -38,14 +39,13 @@
                 </div>
             </div>
             <div class="buttons">
-                <button mat-button color="link" (click)="startPlant()" [disabled]="practiceForm.invalid">Iniciar
+                <button mat-button color="link" (click)="startPlant()" [disabled]="practiceForm.invalid || processing || close">Iniciar
                     repetición</button>
                 <button mat-button color="link" (click)="stopPlant()">Finalizar repetición</button>
-    
-                <button mat-flat-button color="primary" (click)="finalizarPractica()">Terminar practica</button>
+
+                <button mat-flat-button color="primary" (click)="finalizarPractica()" [disabled]="processing">Terminar practica</button>
                 <button mat-flat-button color="warn">Reportar anomalía</button>
             </div>
-            
         </div>
-
     </div>
+</div>

@@ -75,7 +75,8 @@ export class ScheduleService {
       let sched: DynamicBooking = {
         date: doc.get('fecha'),
         practice: doc.get('practica'),
-        groupId: doc.get('grupo').id
+        groupId: doc.get('grupo').id,
+        plantId: doc.get('planta').id
       }
       booking.push(sched)
     })

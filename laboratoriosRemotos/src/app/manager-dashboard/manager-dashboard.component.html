@@ -1,4 +1,8 @@
-<app-navbar></app-navbar>
+<app-navbar>
+    <button mat-icon-button rightOptions matTooltip="Cambiar jefe de departamento" *ngIf="special" (click)="onChangeHead(changeHead)">
+        <mat-icon>change_circle</mat-icon>
+    </button>
+</app-navbar>
 <div></div>
 <div id="middle_wrap_list">
     <div id="wrap_list">
@@ -24,4 +28,8 @@
 
 <ng-template #addMessage>
     <app-add-dialog [rol]="addUserRol" (addUser)="closeAddDialog($event)"></app-add-dialog>
+</ng-template>
+
+<ng-template #changeHead>
+    <app-change-department-head></app-change-department-head>
 </ng-template>

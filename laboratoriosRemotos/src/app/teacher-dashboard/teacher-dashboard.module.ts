@@ -48,7 +48,7 @@ import { FullcalendarModule } from '../shared/fullcalendar.module';
     PracticeTeacherExecutionComponent,
     PruebafirestoreComponent,
     TeacherDashboardComponent,
-    CalendarComponent,
+    CalendarComponent
   ],
   imports: [
     CommonModule,

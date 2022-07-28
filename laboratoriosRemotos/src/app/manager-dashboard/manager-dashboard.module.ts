@@ -9,6 +9,7 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { ComponentsModule } from '../shared/components/components.module';
 import { AddDialogComponent } from './add-dialog/add-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ChangeDepartmentHeadComponent } from './change-department-head/change-department-head.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     UserListComponent,
     DeleteDialogComponent,
     AddDialogComponent,
+    ChangeDepartmentHeadComponent,
   ],
   imports: [
     CommonModule,

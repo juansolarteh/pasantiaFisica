@@ -16,12 +16,16 @@ export class ManagerDashboardComponent implements OnInit {
   addUserRol = '';
   dialogRef: MatDialogRef<unknown, any> | undefined;
 
+  special!: boolean
+
   constructor(private dialog: MatDialog, private readonly route: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     const users: ObjectDB<User>[] = this.route.snapshot.data['users'];
     this.teachers = users.filter((user) => user.getObjectDB().getRol() !== 'Laboratorista');
     this.laboratorians = users.filter((user) => user.getObjectDB().getRol() !== 'Docente');
+    const rol = localStorage.getItem('rol');
+    this.special = rol === 'Jefe departamento'? true: false;
   }
 
   deleteUser(user: ObjectDB<User>) {
@@ -45,5 +49,9 @@ export class ManagerDashboardComponent implements OnInit {
       this.laboratorians.push(user);
     }
     this.changeDetector.markForCheck();
+  }
+
+  onChangeHead(contentDialog: any){
+    this.dialogRef = this.dialog.open(contentDialog);
   }
 }

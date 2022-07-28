@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Timestamp } from '@firebase/firestore';
+import { child, get, getDatabase, ref } from 'firebase/database';
+import * as moment from 'moment';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { DynamicBooking, SubjectSchedule } from 'src/app/models/subjectSchedule';
 import { GroupsService } from 'src/app/services/groups.service';
@@ -29,7 +32,8 @@ export class SubjectsComponent implements OnInit {
     private subjectSvc: SubjectService,
     private practiceSvc: PracticeService,
     private scheduleSvc: ScheduleService,
-    private groupSvc: GroupsService
+    private groupSvc: GroupsService,
+    private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -38,8 +42,8 @@ export class SubjectsComponent implements OnInit {
       let uniques: Date[] = []
       sub.getObjectDB().booking?.forEach(bo => {
         let timestamp = bo.date
-        let date = new Date(timestamp?.seconds! * 1000) 
-        if(!uniques.some(uniqueDate => uniqueDate.toLocaleDateString() === date.toLocaleDateString())){
+        let date = new Date(timestamp?.seconds! * 1000)
+        if (!uniques.some(uniqueDate => uniqueDate.toLocaleDateString() === date.toLocaleDateString())) {
           uniques.push(date)
           bo.shown = true;
         }
@@ -73,7 +77,7 @@ export class SubjectsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onDeleteSubject(contentDialog: any, subject?: ObjectDB<SubjectSchedule>){
+  onDeleteSubject(contentDialog: any, subject?: ObjectDB<SubjectSchedule>) {
     this.subjectSelected = subject!;
     this.dialogRef = this.dialog.open(contentDialog)
     this.dialogRef.afterClosed().subscribe(async result => {
@@ -95,7 +99,27 @@ export class SubjectsComponent implements OnInit {
     });
   }
 
-  navigateExecution(groupId: string){
-    this.router.navigate(['../pracExec', groupId], { relativeTo: this.route })
+  navigateExecution(groupId: string, plantId: string, timestamp: Timestamp) {
+    let now = moment()
+    let date = moment(timestamp.toDate())
+    if (moment().isBefore(date)) {
+      this.openSnackBar('Aun no empieza la practica')
+    } else if(moment().isBefore(date.add(1, 'h').subtract(6, 'minutes'))){
+      const dbref = ref(getDatabase());
+      get(child(dbref, "Stream" + plantId)).then((snapshot) => {
+        let estado: number = snapshot.val().estado;
+        if (estado === 1) {
+          this.router.navigate(['../pracExec', groupId, plantId], { relativeTo: this.route })
+        } else {
+          this.openSnackBar('No hay ningun estudiante en la practica')
+        }
+      });
+    }else{
+      this.openSnackBar('La practica esta a punto de terminar, ya no es posible ingresar')
+    }
+  }
+
+  async openSnackBar(message: string) {
+    this._snackBar.open(message)._dismissAfter(5000)
   }
 }
