@@ -27,7 +27,8 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
   practiceForm!: FormGroup;
   src = ''
   suscription! : Subscription
-  id! : string
+  stream!: string
+
   constructor(private plantSvc: PlantService,
     private practiceSvc: PracticeService,
     private fb: FormBuilder,
@@ -39,7 +40,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     let data: PracticeExecution = this.activatedRoute.snapshot.data['practiceExecution']
-    this.id = data.id
+    this.stream = 'Stream' + data.id
     this.range = data.range
     this.units = data.units
     this.constants = data.constants!
@@ -59,7 +60,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     console.log(this.id);
     
     const dbref = ref(getDatabase());
-    get(child(dbref, "Stream"+this.id))
+    get(child(dbref, this.stream))
       .then((snapshot) => {
         this.src = snapshot.val().url;
         this.iniciarStreaming(this.src);
@@ -78,7 +79,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
 
   finalizarPractica() {
     const dbref = ref(getDatabase());
-    set(ref(getDatabase(), 'Stream'+this.id), {
+    set(ref(getDatabase(), this.stream), {
       estado: 0,
       cerrar: 1,
       url: this.src

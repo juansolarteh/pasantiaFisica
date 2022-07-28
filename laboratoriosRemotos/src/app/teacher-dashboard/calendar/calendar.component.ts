@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
-import { ActivatedRoute } from '@angular/router';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/compat/database';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Timestamp } from '@firebase/firestore';
 import { FullCalendarComponent, CalendarOptions } from '@fullcalendar/angular';
 import * as moment from 'moment';
@@ -22,8 +22,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   state!: number
 
   //Button activation
-  plantRef!: AngularFireList<any>
-  idPlant: Subject<string> = new Subject
+  plantRef!: AngularFireObject<any>
+  subjectIdPlant: Subject<string> = new Subject
   otherSubscriptions: Subscription[] = []
   subscriptionChangeValue!: Subscription
   nextBlock!: string
@@ -31,13 +31,16 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   source: Observable<number> = timer(0, 1000);
   seconds!: number
   secondsPrevBlock!: number
-  inFit!: boolean
+  inFit!: boolean;
+
+  idPlant!: string;
 
   constructor(
     private datePipe: DatePipe,
     private route: ActivatedRoute,
     private db: AngularFireDatabase,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   ngOnDestroy(): void {
@@ -82,13 +85,13 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.otherSubscriptions.push(subs)
     this.state = 0;
     this.calendarOptions = this.initCalendar();
-    subs = this.idPlant.subscribe(idPlant => {
-      this.plantRef = this.db.list('Stream' + idPlant);
+    subs = this.subjectIdPlant.subscribe(idPlant => {
+      this.plantRef = this.db.object('Stream' + idPlant);
       if (this.subscriptionChangeValue) {
         this.subscriptionChangeValue.unsubscribe()
       }
-      this.subscriptionChangeValue = this.plantRef.valueChanges(['child_changed']).subscribe(event => {
-        if (event[0] == 1) {
+      this.subscriptionChangeValue = this.plantRef.valueChanges().subscribe(event => {
+        if (event.estado == 1) {
           this.state = 1;
         } else {
           if(!this.updateState() && !this.inFit){
@@ -100,7 +103,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     })
     this.otherSubscriptions.push(subs)
     subs = this.route.params.subscribe(param => {
-      this.idPlant.next(param['idPlant'])
+      this.idPlant = param['idPlant']
+      this.subjectIdPlant.next(this.idPlant)
     })
     this.otherSubscriptions.push(subs)
   }
@@ -179,5 +183,9 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
       return 'Planta en practica'
     }
     return 'En ajuste de Planta, Si no esta agendado, puedes intentar a las ' + this.nextBlock
+  }
+
+  navigateExecution(){
+    this.router.navigate(['./plant', this.idPlant], {relativeTo: this.route.parent})
   }
 }
