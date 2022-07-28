@@ -26,6 +26,8 @@
                                 <mat-label>{{const.getId()}} máximo ({{units[const.getId()]}})</mat-label>
                                 <input matInput type="number" placeholder="" formControlName={{const.getId()}} required>
                             </mat-form-field>
+                            <mat-error *ngIf="practiceForm.get(const.getId())?.touched">{{getErrorMessage(const.getId())}}
+                            </mat-error>
                             <mat-slider class="example-margin" [max]="const.getObjectDB()[1]"
                                 [min]="const.getObjectDB()[0]" [thumbLabel]="true"
                                 value="{{practiceForm.get(const.getId())?.value}}"

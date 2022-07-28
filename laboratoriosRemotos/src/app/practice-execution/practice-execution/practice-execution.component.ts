@@ -128,4 +128,18 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       terminado: true,
     })
   }
+  getErrorMessage(field: string) {
+    if (this.practiceForm.get(field)?.errors?.['required']) {
+      return 'Debes llenar el campo';
+    } else if (this.practiceForm.get(field)?.errors?.['min']) {
+      let cons = this.constants.find(c => c.getId() === field)
+      let min = cons?.getObjectDB()[0]!
+      return 'El campo no puede ser menor a ' + min;
+    } else if (this.practiceForm.get(field)?.errors?.['max']) {
+      let cons = this.constants.find(c => c.getId() === field)
+      let max = cons?.getObjectDB()[1]!
+      return 'El campo no puede ser mayor a ' + max;
+    }
+    return ""
+  }
 }
