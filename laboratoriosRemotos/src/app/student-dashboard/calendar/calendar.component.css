@@ -23,11 +23,14 @@
 
 .grid{
     display: grid;
-    grid-template-columns: 25% auto;
+    grid-template-columns: 30% auto;
     grid-template-rows: auto;
 }
 .grid > div{
     padding: 2rem;
+}
+#encabezado{
+  margin-top: 2rem;
 }
 .no-group{
   display: flex;
@@ -41,4 +44,8 @@
   width: 35%;
   height: auto;
   /* filter: grayscale(100%); */
+}
+.mat-divider{
+  border-top-width: 2px;
+  background-color: #283593;
 }
