@@ -24,7 +24,7 @@
             <mat-card>
                 <div class="agendamiento">
                     <div class="mat-title">
-                        {{this.practiceSelected.getObjectDB().getNombre() | titlecase}}
+                        Estado
                     </div>
                     <div class="mat-subheading-1">
                         Sin Agendar
@@ -32,8 +32,8 @@
 
                 </div>
                 <div class="botones">
-                    <button (click)="iniciarStreaming()" mat-stroked-button color="primary">Iniciar Práctica</button>
-                    <button mat-stroked-button color="accent">Ir A Agenda</button>
+                    <button (click)="startPractice()" mat-flat-button color="primary">Iniciar Práctica</button>
+                    <button (click)="goToBookings()" mat-button color="primary">Ir A Agenda</button>
                 </div>
             </mat-card>
         </div>

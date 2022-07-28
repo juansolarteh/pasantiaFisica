@@ -1,3 +1,4 @@
+import { CalendarStudentResolver } from './../resolvers/student/calendar-student.resolver';
 import { CurrentUserResolverService } from './../resolvers/student/current-user.resolver';
 import { GroupStudentResolverService } from './../resolvers/student/group-student.resolver';
 import { PracticeSelectedResolverService } from './../resolvers/student/practice-selected.resolver';
@@ -27,12 +28,21 @@ const routes: Routes = [
           practiceSelected: PracticeSelectedResolverService,
           subjectSelected: SubjectSelectedResolverService
         }
+          
+      },
+      {
+        path: 'calendar/:practiceId', component: CalendarComponent,
+        resolve: {
+          subjectSelected: SubjectSelectedResolverService,
+          practiceSelected: PracticeSelectedResolverService,
+          studentGroup: GroupStudentResolverService
+        }
       },
       {
         path: 'practice-execution/:practiceId',
         loadChildren: () => import('../practice-execution/practice-execution.module').then(m => m.PracticeExecutionModule),
         resolve: {
-          practiceExecution : PracticeExecutionStudentResolver
+          practiceExecution: PracticeExecutionStudentResolver
         },
       },
       {
@@ -42,14 +52,7 @@ const routes: Routes = [
           practices: PracticesStudentResolverService
         }
       },
-      {
-        path: 'calendar', component: CalendarComponent,
-        resolve: {
-          practices: PracticesStudentResolverService,
-          studentGroup: GroupStudentResolverService,
-          subjectSelected: SubjectSelectedResolverService,
-        }
-      },
+
       {
         path: 'groups', component: GroupsComponent,
         resolve: {

@@ -59,6 +59,15 @@ export class ScheduleService {
     return arrBookings
   }
 
+  async getBookingsByPlantRef(plantRef: DocumentReference) {
+    let arrBookings: Timestamp[] = [];
+    const querySnapShot = this.col.where('planta', '==', plantRef).where('realizada', '==', false).get();
+    (await querySnapShot).forEach((booking) => {
+      arrBookings.push(booking.data()['fecha'])
+    })
+    return arrBookings
+  }
+  
   async getBookingsAndPracticeBySubjectRef(subjectRef: DocumentReference) {
     let booking: DynamicBooking[] = [];
     const querySnapShot = this.col.where('materia', '==', subjectRef).get();

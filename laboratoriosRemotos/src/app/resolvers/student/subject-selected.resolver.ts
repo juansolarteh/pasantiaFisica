@@ -18,7 +18,6 @@ export class SubjectSelectedResolverService implements Resolve<ObjectDB<Subject>
         let idSubjectSelected = localStorage.getItem("subjectSelected")!
         return this.subjectSvc.getSubjectById2(idSubjectSelected).then(async res => {
             let subjectSelected = this.getAllInfo(res)
-
             return subjectSelected
         })
     }
