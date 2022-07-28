@@ -1,0 +1,6 @@
+<app-navbar>
+</app-navbar>
+<div>
+    <button mat-raised-button [disabled]="state !== 0" color="primary">{{labelButton()}}</button>
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+</div>

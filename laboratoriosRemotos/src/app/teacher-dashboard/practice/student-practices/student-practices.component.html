@@ -28,11 +28,11 @@
                     <div class="imgPractice">
                         <div class="img" (click)="openFile(resultsFileLinks[i].results)">
                             <img src="../assets/imagenes/pdf.png">
-                            {{resultsFileLinks[i].results.getName()}}
+                            {{resultsFileLinks[i].results.getName().split('-')[1]}}
                         </div>
                         <div class="img" (click)="openFile(resultsFileLinks[i].events)">
                             <img src="../assets/imagenes/pdf.png">
-                            {{resultsFileLinks[i].events.getName()}}
+                            {{resultsFileLinks[i].events.getName().split('-')[1]}}
                         </div>
                     </div>
                 </mat-card-content>
