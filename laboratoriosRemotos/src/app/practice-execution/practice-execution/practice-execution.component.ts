@@ -56,7 +56,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       }
     })
     const dbref = ref(getDatabase());
-    get(child(dbref, "StreamCaidaLibre"))
+    get(child(dbref, "Stream" + data.id))
       .then((snapshot) => {
         this.src = snapshot.val().url;
         this.iniciarStreaming(this.src);
