@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AngularFireDatabase, AngularFireObject } from '@angular/fire/compat/database';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Timestamp } from '@firebase/firestore';
 import { FullCalendarComponent, CalendarOptions } from '@fullcalendar/angular';
@@ -22,7 +22,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
   state!: number
 
   //Button activation
-  plantRef!: AngularFireList<any>
+  plantRef!: AngularFireObject<any>
   subjectIdPlant: Subject<string> = new Subject
   otherSubscriptions: Subscription[] = []
   subscriptionChangeValue!: Subscription
@@ -86,12 +86,12 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.state = 0;
     this.calendarOptions = this.initCalendar();
     subs = this.subjectIdPlant.subscribe(idPlant => {
-      this.plantRef = this.db.list('Stream' + idPlant);
+      this.plantRef = this.db.object('Stream' + idPlant);
       if (this.subscriptionChangeValue) {
         this.subscriptionChangeValue.unsubscribe()
       }
-      this.subscriptionChangeValue = this.plantRef.valueChanges(['child_changed']).subscribe(event => {
-        if (event[0] == 1) {
+      this.subscriptionChangeValue = this.plantRef.valueChanges().subscribe(event => {
+        if (event.estado == 1) {
           this.state = 1;
         } else {
           if(!this.updateState() && !this.inFit){
