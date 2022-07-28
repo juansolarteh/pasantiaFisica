@@ -34,6 +34,7 @@ export class PracticesComponent implements OnInit {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.practices = data['practices']
+      this.changeDetector.markForCheck();
     })
   }
 

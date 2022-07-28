@@ -1,0 +1,34 @@
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.sidenav-content {
+  height: 100%;
+}
+
+.sidenav {
+  width: 20rem;
+  padding: 20px;
+}
+
+button{
+  position: absolute;
+  padding-left: 1.5rem;
+  padding-top: 0.8rem;
+}
+
+mat-icon{
+  padding-right: 0.5rem;
+}
+
+.mat-body-strong{
+  padding-left: 3rem;
+  user-select: none;
+}
+
+.links{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

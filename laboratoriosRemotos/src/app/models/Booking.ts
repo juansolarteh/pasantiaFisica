@@ -5,5 +5,7 @@ export interface Booking{
     fecha?: Timestamp,
     grupo?: DocumentReference,
     practica?: DocumentReference,
-    materia?: DocumentReference
+    materia?: DocumentReference,
+    planta?: DocumentReference,
+    realizada?: boolean,
 }

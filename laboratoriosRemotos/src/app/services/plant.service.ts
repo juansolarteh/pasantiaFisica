@@ -40,4 +40,12 @@ export class PlantService {
   getPlantRefFromId(idPlant: string){
     return this.col.doc(idPlant)
   }
+
+  async getNamePlants() {
+    const snap = await this.col.get();
+    let docs = snap.docs;
+    return docs.map(doc => {
+      return new ObjectDB<string>(doc.get('nombre'), doc.id);
+    });
+  }
 }

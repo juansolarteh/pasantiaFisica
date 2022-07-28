@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { TeacherDashboardRoutingModule } from './teacher-dashboard-routing.module';
 import { SubjectsComponent } from './subjects/subjects.component';
@@ -23,6 +23,9 @@ import { IntructionsComponent } from './practice/intructions/intructions.compone
 import { StudentPracticesComponent } from './practice/student-practices/student-practices.component';
 import { PracticeTeacherExecutionComponent } from './practice-teacher-execution/practice-execution.component';
 import { PruebafirestoreComponent } from './pruebafirestore/pruebafirestore.component';
+import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
+import { CalendarComponent } from './calendar/calendar.component';
+import { FullcalendarModule } from '../shared/fullcalendar.module';
 
 @NgModule({
   declarations: [
@@ -44,6 +47,8 @@ import { PruebafirestoreComponent } from './pruebafirestore/pruebafirestore.comp
     StudentPracticesComponent,
     PracticeTeacherExecutionComponent,
     PruebafirestoreComponent,
+    TeacherDashboardComponent,
+    CalendarComponent,
   ],
   imports: [
     CommonModule,
@@ -51,7 +56,11 @@ import { PruebafirestoreComponent } from './pruebafirestore/pruebafirestore.comp
     MaterialModule,
     ComponentsModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    FullcalendarModule
+  ],
+  providers:[
+    DatePipe
   ]
 })
 export class TeacherDashboardModule { }

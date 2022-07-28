@@ -67,7 +67,7 @@ export class ScheduleService {
     })
     return arrBookings
   }
-  
+
   async getBookingsAndPracticeBySubjectRef(subjectRef: DocumentReference) {
     let booking: DynamicBooking[] = [];
     const querySnapShot = this.col.where('materia', '==', subjectRef).get();
