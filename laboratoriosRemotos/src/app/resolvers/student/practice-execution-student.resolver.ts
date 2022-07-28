@@ -20,6 +20,7 @@ export class PracticeExecutionStudentResolver implements Resolve<PracticeExecuti
       return this.plantSvc.getPlant(practice.getObjectDB().getPlanta()).then(plant=>{
         return this.practiceSvc.getConstantsPractice(idPrac).then(constants=>{
           let practiceExecution : PracticeExecution = {
+            id: practice.getObjectDB().getPlanta().id,
             plantName : plant.getNombre(),
             range: plant.getRango(),
             units : plant.getUnidades(),
