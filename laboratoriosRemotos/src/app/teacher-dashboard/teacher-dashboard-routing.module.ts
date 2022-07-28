@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UsedPlantGuard } from '../guards/used-plant.guard';
 import { GroupsResolverServiceResolver } from '../resolvers/groups-resolver-service.';
 import { InfoSubjectResolver } from '../resolvers/info-subject.resolver';
 import { NameSubjectsResolver } from '../resolvers/sideBar/name-subjects.resolver';
@@ -23,8 +22,8 @@ import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard
 import { NamePlantsResolver } from '../resolvers/sideBar/name-plants.resolver';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CalendarResolver } from '../resolvers/calendar.resolver';
-import { PracticeExecutionStudentResolver } from '../resolvers/student/practice-execution-student.resolver';
 import { PlantExecutionResolver } from '../resolvers/plant-execution.resolver';
+import { ValidPlantGuard } from '../guards/valid-plant.guard';
 
 const routes: Routes = [
   {
@@ -87,7 +86,7 @@ const routes: Routes = [
         ]
       },
       {
-        path: 'pracExec/:groupid',
+        path: 'pracExec/:groupid/:plantid',
         component: PracticeTeacherExecutionComponent,
         resolve: {
           group: UniqueGroupResolver
@@ -96,10 +95,10 @@ const routes: Routes = [
       {
         path: 'plant/:idPlant',
         loadChildren: () => import('../practice-execution/practice-execution.module').then(m => m.PracticeExecutionModule),
-        canActivate: [UsedPlantGuard],
         resolve: {
-          practiceExecution : PlantExecutionResolver
-        }
+          practiceExecution: PlantExecutionResolver
+        },
+        canActivate: [ValidPlantGuard]
       },
       {
         path: 'calendarPlant/:idPlant',

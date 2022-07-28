@@ -17,7 +17,8 @@
                 <div *ngFor="let booking of subject.getObjectDB().booking">
                     <div class="mat-body-strong" *ngIf="booking.shown">Practica agendada:
                         {{booking.date!.seconds * 1000 | date: 'EEEE d'}}</div>
-                    <div class="mat-body-1" (click)="navigateExecution(booking.groupId!)">{{booking.date!.seconds * 1000 | date:
+                    <div class="mat-body-1" (click)="navigateExecution(booking.groupId!, booking.plantId!, booking.date!)">
+                        {{booking.date!.seconds * 1000 | date:
                         'shortTime'}} {{booking.practice}}
                     </div>
                 </div>

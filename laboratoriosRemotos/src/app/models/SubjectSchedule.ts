@@ -10,5 +10,6 @@ export class DynamicBooking {
     date?: Timestamp;
     practice?: string | DocumentReference;
     groupId?: string;
+    plantId?: string;
     shown?: boolean;
 }

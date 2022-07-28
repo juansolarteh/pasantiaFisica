@@ -16,6 +16,7 @@ export class PlantExecutionResolver implements Resolve<PracticeExecution> {
   constructor(private plantSvc: PlantService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<PracticeExecution> {
+    localStorage.removeItem('approved_navigation')
     const idPlant: string = route.paramMap.get('idPlant')!;
     let refPlant = this.plantSvc.getPlantRefFromId(idPlant)
     return this.plantSvc.getPlant(refPlant).then(plant => {
@@ -27,9 +28,12 @@ export class PlantExecutionResolver implements Resolve<PracticeExecution> {
           units : plant.getUnidades(),
           constants : constants
         }
-        console.log(practiceExecution)
         return practiceExecution
       })
     })
+  }
+
+  aa(){
+    return 2
   }
 }
