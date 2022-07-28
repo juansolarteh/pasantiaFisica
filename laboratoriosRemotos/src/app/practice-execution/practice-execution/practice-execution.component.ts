@@ -57,7 +57,6 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
         })
       }
     })
-    console.log(this.id);
     
     const dbref = ref(getDatabase());
     get(child(dbref, this.stream))
