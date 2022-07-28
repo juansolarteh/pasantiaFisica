@@ -26,7 +26,7 @@ export class SubjectComponent implements OnInit, OnDestroy {
   ];
   activeLink = this.links[0].link;
 
-  constructor(private readonly router: Router, private route: ActivatedRoute) { }
+  constructor(private readonly router: Router, private route: ActivatedRoute, private changeDetector: ChangeDetectorRef) { }
 
   ngOnDestroy(): void {
     this.subscriber?.unsubscribe();
@@ -35,7 +35,7 @@ export class SubjectComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.data.subscribe(data => {
       this.subject = data['subject']
-      localStorage.setItem('numGroup', this.subject.getNumGrupos().toString())
+      localStorage.setItem('numGroup', this.subject.getNumGrupos().toString());
     });
     this.activeLink = this.router.url.split('/').pop()!
     this.subscriber = this.router.events.pipe(
