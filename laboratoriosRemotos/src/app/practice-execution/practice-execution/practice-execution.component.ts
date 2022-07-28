@@ -27,7 +27,6 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
   practiceForm!: FormGroup;
   src = ''
   suscription! : Subscription
-
   stream!: string
 
   constructor(private plantSvc: PlantService,
@@ -58,6 +57,8 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
         })
       }
     })
+    console.log(this.id);
+    
     const dbref = ref(getDatabase());
     get(child(dbref, this.stream))
       .then((snapshot) => {

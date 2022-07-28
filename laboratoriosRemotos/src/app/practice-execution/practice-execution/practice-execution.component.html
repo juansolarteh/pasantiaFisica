@@ -4,16 +4,14 @@
             <div id="iframe" class="dos" width="720px" height="480px"
                 allow="autoplay;camera;microphone;fullscreen;picture-in-picture;display-capture;midi;geolocation;">
             </div>
-            <button mat-flat-button color="accent" (click)="finalizarPractica()">
-                Terminar practica
-            </button>
         </div>
         <div class="column">
-            <!-- <button (click)="getPlant('Planta1', 'Tnl5qGZl1saXSRGcEjrW')">Planta 1</button>
-            <button (click)="getPlant('Planta2', 'NSLrTw8ltDVvCJNCXjkn')">Planta 2</button>
-            <button (click)="getPlant('Planta3', 'P8fEJvHpxrOQHtUTXUfG')">Planta 3</button> -->
+            <div class="mat-h2">
+                Panel de control
+                <mat-divider></mat-divider>
+            </div>
             <div [formGroup]="practiceForm">
-                <div *ngFor="let const of constants">
+                <div *ngFor="let const of constants" class="input">
                     <mat-form-field *ngIf="range === undefined || !range[const.getId()]; else inputRange"
                         appearance="fill">
                         <mat-label>{{const.getId()}} ({{units[const.getId()]}})</mat-label>
@@ -31,14 +29,21 @@
                             <mat-slider class="example-margin" [max]="const.getObjectDB()[1]"
                                 [min]="const.getObjectDB()[0]" [thumbLabel]="true"
                                 value="{{practiceForm.get(const.getId())?.value}}"
-                                (change)="sliderChange($event.value!, const.getId())">
+                                (change)="sliderChange($event.value!, const.getId())" color="primary">
                             </mat-slider>
                         </div>
                     </ng-template>
                 </div>
             </div>
-            <button (click)="startPlant()" [disabled]="practiceForm.invalid">Activar maquina</button>
-            <button (click)="stopPlant()">Esto representa cuando la maquina ya termina de procesar</button>
+            <div class="buttons">
+                <button mat-button color="link" (click)="startPlant()" [disabled]="practiceForm.invalid">Iniciar
+                    repetición</button>
+                <button mat-button color="link" (click)="stopPlant()">Finalizar repetición</button>
+    
+                <button mat-flat-button color="primary" (click)="finalizarPractica()">Terminar practica</button>
+                <button mat-flat-button color="warn">Reportar anomalía</button>
+            </div>
+            
         </div>
 
     </div>
