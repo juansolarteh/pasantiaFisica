@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Cambiar agendamiento</h2>
+<mat-dialog-content>
+    <mat-list>
+        <div mat-subheader>Información de agendamiento</div>
+        <mat-list-item dense>
+            <mat-icon mat-list-icon>collections_bookmark</mat-icon>
+            <div mat-line>Práctica</div>
+            <div mat-line>{{this.practiceSelected.getObjectDB().getNombre()}} •
+                {{this.subjectSelected.getObjectDB().getNombre()}}</div>
+        </mat-list-item>
+        <mat-list-item dense>
+            <mat-icon mat-list-icon>event_busy</mat-icon>
+            <div mat-line>Fecha anterior</div>
+            <div mat-line>{{this.previousDate.seconds * 1000 | date: "MMMM d - y - h:mm:ss a"}}</div>
+        </mat-list-item>
+        <mat-list-item dense>
+            <mat-icon mat-list-icon>free_cancellation</mat-icon>
+            <div mat-line>Fecha nueva</div>
+            <div mat-line>{{this.newDate | date: "MMMM d - y - h:mm:ss a"}}</div>
+        </mat-list-item>
+        <div mat-subheader>Grupo de trabajo</div>
+            <mat-list-item dense *ngFor="let student of studentGroup.getObjectDB().getGrupo()">
+                <mat-icon mat-list-icon>person</mat-icon>
+                <div mat-line>{{student.getName()}}</div>
+                <div mat-line>Asistente</div>
+            </mat-list-item>
+    </mat-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close>Cerrar</button>
+    <button mat-raised-button mat-dialog-close (click)="onChangeBooking()" color="primary">Confirmar</button>
+</mat-dialog-actions>

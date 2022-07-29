@@ -50,15 +50,6 @@ export class ScheduleService {
     })
   }
 
-  async getBookingsByPracticeRef(practiceRef: DocumentReference) {
-    let arrBookings: Timestamp[] = [];
-    const querySnapShot = this.col.where('practica', '==', practiceRef).get();
-    (await querySnapShot).forEach((booking) => {
-      arrBookings.push(booking.data()['fecha'])
-    })
-    return arrBookings
-  }
-
   async getBookingsByPlantRef(plantRef: DocumentReference) {
     let arrBookings: Timestamp[] = [];
     const querySnapShot = this.col.where('planta', '==', plantRef).where('realizada', '==', false).get();
@@ -83,22 +74,38 @@ export class ScheduleService {
     return booking
   }
 
-  createBooking(newBooking : Booking){
-    this.col.add({
+  async createBooking(newBooking : Booking){
+    let aux = await this.col.add({
       fecha: newBooking.fecha,
       practica: newBooking.practica,
       grupo: newBooking.grupo,
-      materia: newBooking.materia
+      materia: newBooking.materia,
+      planta: newBooking.planta,
+      realizada: newBooking.realizada
     })
+    let newB : Booking = (await aux.get()).data()!
+    newB.id = aux.id
+    return newB
   }
-  async isGroupBooked(refGroup : DocumentReference, refPractice : DocumentReference){
-    let flag = false
-    const querySnapShot = this.col.where('practica','==', refPractice).get();
-    (await querySnapShot).forEach(doc=>{
-      if(doc.get('grupo').id == refGroup.id){
-        flag = true
-      }
+  async getBookingsStudentByPlantRef(plantRef: DocumentReference) {
+    let arrBookings: Booking[] = [];
+    const querySnapShot = this.col.where('planta', '==', plantRef).where('realizada', '==', false).get();
+    (await querySnapShot).forEach((booking) => {
+      let aux = booking.data()
+      aux['id']=booking.id
+      arrBookings.push(aux)
     })
-    return flag
+    return arrBookings
+  }
+
+  async isGroupBooked(refGroup : DocumentReference, refPractice : DocumentReference){
+    let querySnapshot = await this.col.where('practica','==', refPractice).where('grupo','==',refGroup).get();
+    if(querySnapshot.size > 0){
+      return true
+    }
+    return false
+  }
+  updateBooking(idBooking : string, newDate: Timestamp){
+    this.col.doc(idBooking).update('fecha',newDate)
   }
 }

@@ -25,11 +25,11 @@ export class PracticeComponent implements OnInit {
 
   startPractice(){
     const dbref = ref(getDatabase());
-    get(child(dbref, "StreamCaidaLibre"))
+    get(child(dbref, "StreamPlanta1"))
       .then((snapshot) => {
         console.log(snapshot.val().estado);
         if (snapshot.val().estado == 0) {
-          set(ref(getDatabase(), 'StreamCaidaLibre'), {
+          set(ref(getDatabase(), 'StreamPlanta1'), {
             estado: 1,
             url: snapshot.val().url,
             cerrar: 0

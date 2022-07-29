@@ -28,7 +28,7 @@ export class CheckBookingDialogComponent implements OnInit {
   practiceSelected!:ObjectDB<Practice>
   selectedDate : string = ""
   subjectSelected!: ObjectDB<Subject>
-  onBookingCreated : EventEmitter<Timestamp> = new EventEmitter<Timestamp>()
+  onBookingCreated : EventEmitter<Booking> = new EventEmitter<Booking>()
   
   ngOnInit(): void {
     this.studentGroup = this.data.studentGroup
@@ -48,10 +48,13 @@ export class CheckBookingDialogComponent implements OnInit {
           fecha: dateBooking,
           grupo: group,
           practica: practice,
-          materia: refSubject
+          materia: refSubject,
+          planta: this.practiceSelected.getObjectDB().getPlanta(),
+          realizada: false
         }
-        this.bookingSvc.createBooking(newBooking)
-        this.onBookingCreated.emit(dateBooking)
+        this.bookingSvc.createBooking(newBooking).then(res=>{
+          this.onBookingCreated.emit(res)
+        })
       })
     })
   }
