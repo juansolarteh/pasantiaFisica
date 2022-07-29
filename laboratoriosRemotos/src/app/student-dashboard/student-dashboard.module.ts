@@ -14,8 +14,8 @@ import { CalendarComponent } from './calendar/calendar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DialogComponent } from './groups/dialog/dialog.component';
 import { StudentsWithoutGroupComponent } from './groups/students-without-group/students-without-group.component';
-import { PracticeFilterComponent } from './calendar/practice-filter/practice-filter.component';
 import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/check-booking-dialog.component';
+import { ChangeBookingDialogComponent } from './calendar/change-booking-dialog/change-booking-dialog.component';
 
 
 @NgModule({
@@ -29,8 +29,8 @@ import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/che
     CalendarComponent,
     DialogComponent,
     StudentsWithoutGroupComponent,
-    PracticeFilterComponent,
-    CheckBookingDialogComponent
+    CheckBookingDialogComponent,
+    ChangeBookingDialogComponent,
   ],
   entryComponents: [DialogComponent,CheckBookingDialogComponent],
   imports: [

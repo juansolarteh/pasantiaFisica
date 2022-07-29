@@ -14,7 +14,6 @@ import { SubjectComponent } from './subject/subject.component';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { PracticesComponent } from './practices/practices.component';
 import { CalendarComponent } from './calendar/calendar.component';
-import { PracticeExecutionComponent } from '../practice-execution/practice-execution/practice-execution.component';
 import { PracticeExecutionStudentResolver } from '../resolvers/student/practice-execution-student.resolver';
 
 const routes: Routes = [
