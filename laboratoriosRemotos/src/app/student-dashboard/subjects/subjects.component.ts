@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { DocumentData } from '@angular/fire/compat/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-subjects',
@@ -18,7 +19,8 @@ export class SubjectsComponent implements OnInit {
   subjects: ObjectDB<Subject>[] = [];
   
   constructor( private activatedRoute: ActivatedRoute, private readonly router: Router,
-    private subjectSvc : SubjectService, private userSvc : UserService, private groupSvc : GroupsService) { }
+    private subjectSvc : SubjectService, private userSvc : UserService, private groupSvc : GroupsService,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void{
 
@@ -32,13 +34,37 @@ export class SubjectsComponent implements OnInit {
   }
   async goToDeleteSubject(subject:ObjectDB<Subject>){
     const studentRef = this.userSvc.getUserLoggedRef()
-    //await this.subjectSvc.unregisterStudent(studentRef,subject.getId())
-    let refGroups = await this.subjectSvc.getRefGroupsFromSubjectId(subject.getId())
+    //1. Verificar si el estudiante tiene grupo
+    const validation = await this.subjectSvc.studentBelongToWithoutGroup(studentRef,subject.getId())
+    //2. Eliminar estudiante de la colección Materias en Arreglo estudiantes y el arreglo sinGrupo en caso de que exista ahí.
+    if(validation){
+      await this.subjectSvc.unregisterStudent(studentRef,subject.getId())
+      this.deleteSubjectOnArray(subject)
+      this._snackBar.open("Te has desmatriculado exitosamente")
+      return
+    }
+    //4. Si está con grupo se debe buscar el grupo y eliminarlo del grupo.
+    const refGroups = await this.subjectSvc.getRefGroupsFromSubjectId(subject.getId())
+    const validate = await this.groupSvc.deleteStudentFromGroup(refGroups,studentRef)
+    
+    //4.1 Si el grupo queda vacío se elimina el grupo.
+
+    //4.2 Si hay agendamientos para ese grupo, se debe eliminar de los agendamientos.
+    //
+    
     //let validate = await this.groupSvc.studentBelongAnyGroup(studentRef,refGroups)
     //console.log(validate);
     
   }
   setNewSubject(newSubject : ObjectDB<Subject>){
     this.subjects.push(newSubject)
+  }
+  private deleteSubjectOnArray(subject : ObjectDB<Subject>){
+    this.subjects = this.subjects.filter(element => element.getId() != subject.getId())
+  }
+  private openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 3000,
+    });
   }
 }

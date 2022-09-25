@@ -111,12 +111,20 @@ export class GroupsService {
     return querySnapShot.ref
   }
 
-  async studentBelongAnyGroup(refStudent: DocumentReference, refGroups: DocumentReference[]) {
-    let groups: any[] = []
-    refGroups.forEach(async refGroup=>{
-      groups.push((await refGroup.get()).data()!['grupo'])
+  async deleteStudentFromGroup(refGroups: DocumentReference[], refStudent: DocumentReference) {
+    const groups = await this.getFromRefs(refGroups)
+    console.log("Groups",groups)
+    const response = groups.filter(group=>{
+      return group.getObjectDB().getGrupo().filter(student => student.id == refStudent.id)
     })
-    console.log(groups);
+    
+    console.log(response)
+
+    //Filtrar group array - OK
+    //Verificar si el grupo está vacio o si el estudiante es el lider
+    ////Si está vacio eliminar grupo de lo contrario asignar otro lider.
+    //actualizar el grupo con el array actualizado
+    
   }
 
   async getGroupById(groupId: string): Promise<DocumentReference[]> {
