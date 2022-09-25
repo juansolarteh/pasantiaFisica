@@ -30,6 +30,13 @@
     align-items: center;
     gap: 0.5rem;
   }
+  .right-options{
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
   #subjectTitle{
     margin: 0;
     

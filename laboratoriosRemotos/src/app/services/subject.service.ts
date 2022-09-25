@@ -206,4 +206,14 @@ export class SubjectService {
     this.col.doc(idSubject).update('sinGrupo',withoutGroup)
     return new ObjectDB(convertTo(SubjectTeacher,subject),idSubject)
   }
+
+  async unregisterStudent(studentRef: DocumentReference, idSubject : string){
+    let subject = (await this.col.doc(idSubject).get()).data()!
+    let students = subject['estudiantes'] as Array<DocumentReference>
+    let withoutGroup = subject['sinGrupo'] as Array<DocumentReference>
+    let newStudents = students.filter(student=> student.id != studentRef.id)
+    let newWithoutGroup = withoutGroup.filter(student=> student.id != studentRef.id)
+    this.col.doc(idSubject).update('estudiantes',newStudents)
+    this.col.doc(idSubject).update('sinGrupo',newWithoutGroup)
+  }
 }
