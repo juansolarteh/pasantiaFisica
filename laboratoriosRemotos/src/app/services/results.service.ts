@@ -24,4 +24,7 @@ export class ResultsService {
     return results
   }
 
+  async createResults(){
+    
+  }
 }

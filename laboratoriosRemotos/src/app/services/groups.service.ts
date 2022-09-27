@@ -117,7 +117,6 @@ export class GroupsService {
     const response = groups.filter(group=>{
       return group.getObjectDB().getGrupo().filter(student => student.id == refStudent.id)
     })
-    
     console.log(response)
 
     //Filtrar group array - OK

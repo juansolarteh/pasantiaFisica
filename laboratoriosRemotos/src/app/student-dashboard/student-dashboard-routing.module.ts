@@ -41,6 +41,9 @@ const routes: Routes = [
         path: 'practice-execution/:practiceId',
         loadChildren: () => import('../practice-execution/practice-execution.module').then(m => m.PracticeExecutionModule),
         resolve: {
+          subjectSelected: SubjectSelectedResolverService,
+          practiceSelected: PracticeSelectedResolverService,
+          studentGroup: GroupStudentResolverService,
           practiceExecution: PracticeExecutionStudentResolver
         },
       },
