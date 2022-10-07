@@ -87,10 +87,21 @@ export class PracticeService {
   async getPracticesNameDate(subjectRef: DocumentReference): Promise<ObjectDB<PracticeNameDate>[]> {
     let query = this.col.where('materia', '==', subjectRef)
     const qSnapShot = await query.get();
-    return qSnapShot.docs.map(res => {
+    let practices = qSnapShot.docs.map(res => {
       let practice: PracticeNameDate = new PracticeNameDate(res.get('nombre'), res.get('fecha_creacion'));
       return new ObjectDB(practice, res.id);
     });
+    return this.orderPracticesByDate(practices);
+  }
+
+  private orderPracticesByDate(practices: ObjectDB<PracticeNameDate>[]){
+    practices.sort((a, b) => {
+      if(a.getObjectDB().getFecha_creacion() < b.getObjectDB().getFecha_creacion()){
+        return 1
+      }
+      return (a.getObjectDB().getFecha_creacion() > b.getObjectDB().getFecha_creacion())? -1: 0;
+    })
+    return practices
   }
 
   async getRefSubjectById(idPractice: string): Promise<DocumentReference>{
