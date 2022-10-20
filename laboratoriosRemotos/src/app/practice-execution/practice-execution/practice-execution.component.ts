@@ -53,6 +53,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute, private db: AngularFireDatabase,
     private _snackBar: MatSnackBar,
     public dialogReportAnomaly: MatDialog,
+    private readonly router: Router,
     private userSvc : UserService
   ) { }
 
@@ -250,17 +251,22 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       }
     }
     const pdf = pdfMake.createPdf(pdfDefinition)
-    pdf.open()
-    //this.router.navigate(['/'], { relativeTo: this.route }) });
+    pdf.download()
+    this.router.navigate(['/'], { relativeTo: this.activatedRoute });
   }
   async onReportAnomaly() {
     const infoCurrentUser = await this.userSvc.getCurrentUserFullInfo()
+    let currentDate = new Date()
     let dialogRef = this.dialogReportAnomaly.open(ReportAnomalyComponent,
       {
-        data: { student: infoCurrentUser, studentGroup: this.studentGroup, practiceSelected: this.practiceSelected, dateReport: new Date().toDateString(), subjectSelected: this.subjectSelected},
+        data: { student: infoCurrentUser, studentGroup: this.studentGroup, practiceSelected: this.practiceSelected, dateReport: currentDate, subjectSelected: this.subjectSelected},
         height: 'auto', width: '600px'
       })
+    const dialogSuscription = dialogRef.afterClosed().subscribe(()=>{
+      this.openSnackBar("Reporte enviado exitosamente")
+    })
   }
+  
 }
 function table(data, columns) {
   return {

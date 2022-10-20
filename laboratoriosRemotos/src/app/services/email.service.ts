@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
-import { ObjectDB } from '../models/ObjectDB';
-import { Results } from '../models/Results';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmailService {
 
-  API = ""
+  private url = 'http://localhost:3000/'
 
-  constructor(private firestr: AngularFirestore) { }
+  constructor(private httpClient : HttpClient) { }
 
-  sendEmail(){
-    
+  sendEmail(data:{}){
+    return this.httpClient.post(this.url + 'anomaly', data, {responseType: 'text'}).subscribe(res=> console.log(res))
   }
 }
