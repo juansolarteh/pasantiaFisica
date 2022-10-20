@@ -175,7 +175,7 @@ export class SubjectService {
       let data = subject.data()
       return new ObjectDB(convertTo(SubjectTeacher,data),subject.id)
     }
-   return
+   return undefined
   }
 
   async getSubjectsByStudentRef(studentRef : DocumentReference){

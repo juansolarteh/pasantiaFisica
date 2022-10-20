@@ -205,7 +205,7 @@ export class GroupsComponent implements OnInit {
       if (g.getObjectDB().getGrupo().length > 0 || g.getId() === 'SG') {
         return g;
       }
-      return;
+      return undefined;
     })
     this.changeDetector.markForCheck();
   }

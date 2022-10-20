@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Reportar Anomalía • {{this.dateReport | date: "MMMM d - y - h:mm:ss a" | titlecase}}</h2>
+<mat-dialog-content>
+    <mat-list>
+        <div mat-subheader>Información de práctica</div>
+        <mat-list-item dense>
+            <mat-icon mat-list-icon>event</mat-icon>
+            <div mat-line>Práctica</div>
+            <div mat-line>{{this.practiceSelected.getObjectDB().getNombre() | titlecase}} •
+                {{this.subjectSelected.getObjectDB().getNombre() | titlecase}}</div>
+        </mat-list-item>
+        <div mat-subheader>Grupo de trabajo</div>
+        <mat-list-item dense *ngFor="let student of studentGroup.getObjectDB().getGrupo()">
+            <mat-icon mat-list-icon>person</mat-icon>
+            <div mat-line>{{student.getName()}}</div>
+        </mat-list-item>
+    </mat-list>
+    <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>Detalles del reporte</mat-label>
+            <textarea matInput [(ngModel)]="this.anomalyDetails" name="this.anomalyDetails" placeholder="Detalles"></textarea>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close>Cerrar</button>
+    <button (click)="onSendReport()" mat-raised-button close mat-dialog-close color="primary">Enviar reporte</button>
+</mat-dialog-actions>

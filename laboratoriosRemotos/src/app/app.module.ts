@@ -17,6 +17,7 @@ import { MatListModule } from '@angular/material/list';
 import localeEsCo from '@angular/common/locales/es-CO'
 import { registerLocaleData } from '@angular/common';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { HttpClientModule } from '@angular/common/http';
 
 registerLocaleData(localeEsCo, 'es-Co');
 
@@ -37,6 +38,7 @@ registerLocaleData(localeEsCo, 'es-Co');
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    HttpClientModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es-Co' }],
   bootstrap: [AppComponent]

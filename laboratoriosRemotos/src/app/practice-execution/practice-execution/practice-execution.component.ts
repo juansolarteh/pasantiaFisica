@@ -1,3 +1,6 @@
+import { UserService } from './../../services/user.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ReportAnomalyComponent } from './../report-anomaly/report-anomaly.component';
 import { Subscription } from 'rxjs';
 import { PracticeExecution } from './../../models/PracticeExecution';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -10,7 +13,13 @@ import { PlantService } from 'src/app/services/plant.service';
 import { PracticeService } from 'src/app/services/practice.service';
 import * as moment from 'moment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { GroupWithNames } from 'src/app/models/Group';
+import { Subject } from 'src/app/models/Subject';
+import { Practice } from 'src/app/models/Practice';
 
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-practice-execution',
@@ -30,16 +39,22 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
   src = ''
   suscription!: Subscription
   stream!: string
-
+  pdfData: {}[] = []
   close!: boolean
   processing!: boolean
+  finished!: boolean
+  repResult: string = ''
+  studentGroup!: ObjectDB<GroupWithNames>
+  subjectSelected!: ObjectDB<Subject>
+  practiceSelected!: ObjectDB<Practice>
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute, private db: AngularFireDatabase,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    public dialogReportAnomaly: MatDialog,
+    private readonly router: Router,
+    private userSvc : UserService
   ) { }
 
   ngOnDestroy(): void {
@@ -48,6 +63,10 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     let data: PracticeExecution = this.activatedRoute.snapshot.data['practiceExecution']
+    this.practiceSelected = this.activatedRoute.snapshot.data['practiceSelected'];
+    this.studentGroup = this.activatedRoute.snapshot.data['studentGroup']
+    this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
+    this.finished = false
     this.close = false;
     this.processing = false;
     this.stream = 'Stream' + data.id
@@ -59,12 +78,20 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     this.plantRef = this.db.object('/plantas/' + this.plantName)
     this.suscription = this.plantRef.valueChanges().subscribe(event => {
       if (event.terminado) {
-        console.log('Acabo la maquina')
+        console.log('---- SIMULACIÓN -----')
         console.log('Automaticamente en este proceso se cambia terminado a false')
-        console.log('Este es el resultado => ', event.resultado)
+        console.log('Ha finalizado la repetición... El resultado es: ' + event.Resultado)
+        this.repResult = event.Resultado
+        let objAux = {}
+        Object.entries(event).forEach(([key, value]) => {
+          if (key != 'iniciar' && key != 'terminado') {
+            objAux[key] = value
+          }
+        })
+        this.pdfData.push(objAux)
         this.plantRef.update({
           terminado: false,
-        }).then(() => {this.processing = false})
+        }).then(() => { this.processing = false })
       }
     })
 
@@ -104,7 +131,10 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       estado: 0,
       cerrar: 1,
       url: this.src
-    }).then(() => { this.router.navigate(['/'], { relativeTo: this.route }) });
+    }).then(() => {
+      this.finished = true
+      //this.router.navigate(['/'], { relativeTo: this.route }) });
+    })
   }
   initForm(): FormGroup {
     let form = this.fb.group({})
@@ -147,7 +177,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
   stopPlant() {
     this.plantRef.update({
       iniciar: false,
-      resultado: 25,
+      Resultado: 25,
       terminado: true,
     })
   }
@@ -169,4 +199,97 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
   async openSnackBar(message: string) {
     this._snackBar.open(message)._dismissAfter(5000)
   }
+
+  createPdf() {
+    let entries = Object.keys(this.pdfData[0])
+    const pdfDefinition: any = {
+      content: [
+        {
+          text: 'Laboratorios remotos - Universidad del Cauca\n\n',
+          style: 'header'
+        },
+        {
+          text: 'Información de la práctica\n\n',
+          style: 'subheader'
+        },
+        'Materia: ' + this.subjectSelected.getObjectDB().getNombre() + '\n',
+        'Práctica: ' + this.practiceSelected.getObjectDB().getNombre() + '\n',
+        'Planta: ' + this.plantName + '\n',
+        'Docente: ' + this.subjectSelected.getObjectDB().getDocente() + '\n\n',
+        {
+          text: 'Grupo de trabajo\n\n',
+          style: 'subheader'
+        },
+        {
+          text: this.studentGroup.getObjectDB().getGrupo().map(student => { return student.getName() + '\n' }),
+        },
+        {
+          text: '\nResultados de la práctica\n\n',
+          style: 'subheader'
+        },
+        table(this.pdfData, entries)
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          alignment: 'center'
+        },
+        subheader: {
+          fontSize: 15,
+          bold: true
+        },
+        quote: {
+          italics: true
+        },
+        small: {
+          fontSize: 8
+        },
+        table: {
+          alignment: 'center'
+        }
+      }
+    }
+    const pdf = pdfMake.createPdf(pdfDefinition)
+    pdf.download()
+    this.router.navigate(['/'], { relativeTo: this.activatedRoute });
+  }
+  async onReportAnomaly() {
+    const infoCurrentUser = await this.userSvc.getCurrentUserFullInfo()
+    let currentDate = new Date()
+    let dialogRef = this.dialogReportAnomaly.open(ReportAnomalyComponent,
+      {
+        data: { student: infoCurrentUser, studentGroup: this.studentGroup, practiceSelected: this.practiceSelected, dateReport: currentDate, subjectSelected: this.subjectSelected},
+        height: 'auto', width: '600px'
+      })
+    const dialogSuscription = dialogRef.afterClosed().subscribe(()=>{
+      this.openSnackBar("Reporte enviado exitosamente")
+    })
+  }
+  
+}
+function table(data, columns) {
+  return {
+    table: {
+      widths: setWidth(columns),
+      headerRows: 1,
+      body: buildTableBody(data, columns),
+    }
+  }
+}
+function setWidth(columns) {
+  let arrayWidth = new Array(columns.length)
+  return arrayWidth.fill(100)
+}
+function buildTableBody(data, columns) {
+  var body = [];
+  body.push(columns);
+  data.forEach(function (row) {
+    var dataRow = [];
+    columns.forEach(function (column) {
+      dataRow.push(row[column].toString());
+    })
+    body.push(dataRow);
+  });
+  return body;
 }
