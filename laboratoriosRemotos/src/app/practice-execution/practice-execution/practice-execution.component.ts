@@ -61,6 +61,10 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     this.suscription.unsubscribe()
   }
 
+  /**
+   * En este método es donde se inicializa la vista de práctica en ejecución, es en este punto donde se conoce
+   * que planta es la que está en ejecución y por ende tambien se conocen sus constantes, unidades, campos de entrada y de salida.
+   */
   ngOnInit(): void {
     let data: PracticeExecution = this.activatedRoute.snapshot.data['practiceExecution']
     this.practiceSelected = this.activatedRoute.snapshot.data['practiceSelected'];
@@ -95,6 +99,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       }
     })
 
+    //Se obtiene la referencia de la Realtime para establecer la URL del streaming
     const dbref = ref(getDatabase());
     get(child(dbref, this.stream)).then((snapshot) => {
       this.src = snapshot.val().url;
@@ -105,6 +110,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     nextBlock = moment(nextBlock.format('YYYY-MM-DD HH:00:00'))
     let alertEnd = nextBlock.subtract(3, 'minutes').diff(moment(), 'seconds')
 
+    //Se establece un temporizador para controlar el tiempo de ejecución de la planta
     setTimeout(() => {
       this.openSnackBar('La practica pronto terminara, no es posible realizar mas ejecuciones')
       this.close = true
@@ -115,6 +121,10 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     }, alertEnd * 1000)
   }
 
+  /**
+   * Método donde inicia el streaming de la planta
+   * @param url : URL correspondiente a la cámara de la planta
+   */
   iniciarStreaming(url: string) {
     var x = document.createElement("IFRAME");
     x.style.width = "720px";
@@ -125,6 +135,9 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     iframe.appendChild(x);
   }
 
+  /**
+   * Método donde se finaliza la práctica, es en este punto donde el streaming finaliza
+   */
   finalizarPractica() {
     const dbref = ref(getDatabase());
     set(ref(getDatabase(), this.stream), {
@@ -133,9 +146,14 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       url: this.src
     }).then(() => {
       this.finished = true
+      //Se debe habilitar la linea de abajo para que cambie de ruta y salga de la vista de práctica en ejecución
       //this.router.navigate(['/'], { relativeTo: this.route }) });
     })
   }
+
+  /**
+   * Método que implementa la inicialización del formulario correspondiente a los campos de entrada de la planta seleccionada.
+   */
   initForm(): FormGroup {
     let form = this.fb.group({})
     let keys = Object.keys(this.units);
@@ -156,11 +174,17 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     return form
   }
 
+  /**
+   * Método que controla el valor del slider, esto se usa en campos de entrada que sean númericos,
+   * como lo es por ejemplo el desplazamiento del resorte en Ley de Hooke. 
+   */
   sliderChange(value: number, nameControl: string) {
     this.practiceForm.get(nameControl)?.setValue(value)
   }
 
-
+  /**
+   * Método que implementa la lógica para iniciar la repetición de la planta
+   */
   startPlant() {
     let obj: Object = new Object();
     this.constants.forEach(cons => {
@@ -174,6 +198,12 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * Método que implementa la lógica para detener la repetición de la planta
+   * NOTA: Este método está creado de forma auxiliar para realizar la simulación del lanzamiento del resultado por parte de la planta,
+   * en el método ngOnInit se captura el evento cuando la planta arroja "terminado = true", y es ahí donde se captura el resultado.
+   * Por el momento el resultado está quemado y es "25".
+   */
   stopPlant() {
     this.plantRef.update({
       iniciar: false,
@@ -181,6 +211,10 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       terminado: true,
     })
   }
+
+  /**
+   * Método para validar y obtener mensajes de error de los campos de entrada.
+   */
   getErrorMessage(field: string) {
     if (this.practiceForm.get(field)?.errors?.['required']) {
       return 'Debes llenar el campo';
@@ -196,10 +230,29 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     return ""
   }
 
+  /**
+   * Método que captura el reporte de anomalía por parte del usuario
+   */
+  async onReportAnomaly() {
+    const infoCurrentUser = await this.userSvc.getCurrentUserFullInfo()
+    let currentDate = new Date()
+    let dialogRef = this.dialogReportAnomaly.open(ReportAnomalyComponent,
+      {
+        data: { student: infoCurrentUser, studentGroup: this.studentGroup, practiceSelected: this.practiceSelected, dateReport: currentDate, subjectSelected: this.subjectSelected},
+        height: 'auto', width: '600px'
+      })
+    const dialogSuscription = dialogRef.afterClosed().subscribe(()=>{
+      this.openSnackBar("Reporte enviado exitosamente")
+    })
+  }
+
   async openSnackBar(message: string) {
     this._snackBar.open(message)._dismissAfter(5000)
   }
 
+  /**
+   * Lógica utilizada para la creación del PDF de resultados
+   */
   createPdf() {
     let entries = Object.keys(this.pdfData[0])
     const pdfDefinition: any = {
@@ -254,18 +307,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     pdf.download()
     this.router.navigate(['/'], { relativeTo: this.activatedRoute });
   }
-  async onReportAnomaly() {
-    const infoCurrentUser = await this.userSvc.getCurrentUserFullInfo()
-    let currentDate = new Date()
-    let dialogRef = this.dialogReportAnomaly.open(ReportAnomalyComponent,
-      {
-        data: { student: infoCurrentUser, studentGroup: this.studentGroup, practiceSelected: this.practiceSelected, dateReport: currentDate, subjectSelected: this.subjectSelected},
-        height: 'auto', width: '600px'
-      })
-    const dialogSuscription = dialogRef.afterClosed().subscribe(()=>{
-      this.openSnackBar("Reporte enviado exitosamente")
-    })
-  }
+  
   
 }
 function table(data, columns) {
