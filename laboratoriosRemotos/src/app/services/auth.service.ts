@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   async logout() {
-    var result: ResponseService<void> = new ResponseService(false, 'Error al realizar la opercaión, intente de nuevo');
+    var result: ResponseService<void> = new ResponseService(false, 'Error al realizar la operción, intente de nuevo');
     try {
       const a = this.afauth.signOut();
       this.removeLocal();

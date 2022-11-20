@@ -16,14 +16,14 @@ export class UserService {
 
   constructor(private firestr: AngularFirestore) { }
 
-  getUserLoggedRef(){
+  getUserLoggedRef() {
     return this.userLoggedRef;
   }
 
   async defineRol(email: string) {
-    const querySnapShot = this.col.where('correo', '==', email).get();
-    if ((await querySnapShot).size > 0) {
-      (await querySnapShot).forEach((doc) => {
+    const querySnapShot = await this.col.where('correo', '==', email).get();
+    if (querySnapShot.size > 0) {
+      querySnapShot.forEach((doc) => {
         this.userLoggedRef = doc.ref;
         localStorage.setItem('rol', doc.data()['rol']);
         if (doc.data()['nombre'] == undefined || doc.data()['nombre'] == '') {
@@ -38,14 +38,14 @@ export class UserService {
       if (name && email) {
         const student: User = new User(name, email, 'Estudiante');
         let userRef = await this.onAddUser(student);
-        if (userRef){
+        if (userRef) {
           this.userLoggedRef = userRef;
         }
       }
     }
   }
 
-  getRefUser(idUser: string){
+  getRefUser(idUser: string) {
     return this.col.doc(idUser)
   }
 
@@ -115,9 +115,14 @@ export class UserService {
     }
   }
 
-  private onAddUser(user: User){
+  private onAddUser(user: User) {
+    console.log(user)
     try {
-      return this.col.add(user);
+      return this.col.add({
+        correo: user.getCorreo(),
+        nombre: user.getNombre(),
+        rol: user.getRol()
+      });
     } catch (error) {
       return null
     }
@@ -128,13 +133,13 @@ export class UserService {
     let name = doc.get('nombre');
     return name
   }
-  async getCurrentUser(){
+  async getCurrentUser() {
     let refUser = this.getUserLoggedRef()
     const doc = await this.col.doc(refUser.id).get()
     let name = doc.get('nombre')
-    return new MemberGroup(refUser.id,name)
+    return new MemberGroup(refUser.id, name)
   }
-  async getCurrentUserFullInfo(){
+  async getCurrentUserFullInfo() {
     let refUser = this.getUserLoggedRef()
     const doc = await this.col.doc(refUser.id).get()
     return doc.data()
