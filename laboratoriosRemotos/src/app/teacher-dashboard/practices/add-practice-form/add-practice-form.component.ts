@@ -141,15 +141,13 @@ export class AddPracticeFormComponent implements OnInit, OnDestroy {
       if (this.constants.length > 0) {
         let constDB = this.constants.map(cons => {
           let map = new Map()
-          console.log(cons)
-          if(this.range[cons.getId()]){
+          if(this.range && this.range[cons.getId()]){
             let valueCons: number = this.practiceForm.get(cons.getId())?.value
             map.set('0', cons.getObjectDB()[0])
             map.set('1', valueCons)
           }else{
             let valueCons: number[] = this.practiceForm.get(cons.getId())?.value
             valueCons.forEach(vc => {
-              console.log(vc)
               map.set(vc.toString(), cons.getObjectDB()[vc - 1])
             })
           }
