@@ -156,7 +156,8 @@ export class SubjectService {
       nombre: subject.getNombre(),
       numGrupos: subject.getNumGrupos(),
       sinGrupo: [],
-      grupos: []
+      grupos: [],
+      estudiantes: []
     })
   }
 
