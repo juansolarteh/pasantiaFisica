@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { DynamicBooking, SubjectSchedule } from 'src/app/models/subjectSchedule';
 import { GroupsService } from 'src/app/services/groups.service';
+import { NavbarService } from 'src/app/services/navbar.service';
 import { PracticeService } from 'src/app/services/practice.service';
 import { ScheduleService } from 'src/app/services/schedule.service';
 import { SubjectService } from 'src/app/services/subject.service';
@@ -33,7 +34,8 @@ export class SubjectsComponent implements OnInit {
     private practiceSvc: PracticeService,
     private scheduleSvc: ScheduleService,
     private groupSvc: GroupsService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private navbarSvc: NavbarService
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +68,7 @@ export class SubjectsComponent implements OnInit {
       nameSubject: subject.getObjectDB()
     }
     this.subjects.push(new ObjectDB(sub, subject.getId()));
+    this.navbarSvc.addSubject(subject)
     this.changeDetector.markForCheck();
     this.dialogRef.close();
   }
@@ -93,6 +96,7 @@ export class SubjectsComponent implements OnInit {
           this.scheduleSvc.deleteFromPracticeReference(prtRef);
           this.practiceSvc.delete(prtRef);
         });
+        this.navbarSvc.deleteSubject(this.subjectSelected.getId())
         this.subjects = this.subjects.filter((sub) => sub.getId() !== this.subjectSelected.getId());
         this.changeDetector.markForCheck();
       }
