@@ -96,13 +96,13 @@ export class UserService {
   }
 
   async addUser(user: User) {
-    var result: ResponseService<string> = new ResponseService(false, 'Fallo de conexion, intente de nuevo');
+    var result: ResponseService<string> = new ResponseService(false, 'Error en el servidor, intente mas tarde');
     const dominio = user.getCorreo().split('@')[1].toString();
     try {
       if (dominio === "unicauca.edu.co") {
         const querySnapShot = this.col.where('correo', '==', user.getCorreo()).get();
         if ((await querySnapShot).size == 0) {
-          let idUser = (await this.col.add(user)).id;
+          let idUser = (await this.onAddUser(user)).id;
           result = new ResponseService(true, 'Usuario registardo exitosamente', idUser);
         } else {
           result = new ResponseService(false, 'El usuario con correo ' + user.getCorreo() + ' ya se encuentra registrado');
