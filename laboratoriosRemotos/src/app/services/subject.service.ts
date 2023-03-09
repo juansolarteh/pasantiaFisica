@@ -170,24 +170,22 @@ export class SubjectService {
   }
 
   async getSubjectByKey(key : string){
-    let querySnapShot = this.col.where('clave','==',key).get();
-    let subject = (await querySnapShot).docs[0]
-    if(subject){
-      let data = subject.data()
-      return new ObjectDB(convertTo(SubjectTeacher,data),subject.id)
-    }
-   return undefined
+
+    let subjectsArray = await this.col.where('clave','==',key).limit(1).get();
+    if(subjectsArray.size == 0) return undefined
+    let subjectFound = subjectsArray.docs[0]    
+    return new ObjectDB(convertTo(SubjectTeacher,subjectFound.data()),subjectFound.id)
+
   }
 
   async getSubjectsByStudentRef(studentRef : DocumentReference){
-    var subjectsList: ObjectDB<SubjectTeacher>[] = [];
-    let subjects = this.col.where('estudiantes','array-contains',studentRef).get();
-    (await subjects).forEach(doc=>{
-      let subject = new ObjectDB(convertTo(SubjectTeacher,doc.data()),doc.id)
-      subject.getObjectDB().setDocente(doc.get('docente'))
-      subjectsList.push(subject)
+    const subjectsArray = await this.col.where('estudiantes','array-contains',studentRef).get();
+    const studentSubjects = subjectsArray.docs.map(subject => {
+      let aux = new ObjectDB(convertTo(SubjectTeacher,subject.data()),subject.id)
+      aux.getObjectDB().setDocente(subject.get('docente'))
+      return aux
     })
-    return subjectsList
+    return studentSubjects
   }
   
   async studentBelongToSubject(studentRef : DocumentReference , idSubject : string){
