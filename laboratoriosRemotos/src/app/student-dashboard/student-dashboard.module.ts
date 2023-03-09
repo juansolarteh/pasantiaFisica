@@ -12,7 +12,6 @@ import { PracticeComponent } from './practice/practice.component';
 import { CodeSubjectCardComponent } from './subjects/code-subject-card/code-subject-card.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DialogComponent } from './groups/dialog/dialog.component';
 import { StudentsWithoutGroupComponent } from './groups/students-without-group/students-without-group.component';
 import { CheckBookingDialogComponent } from './calendar/check-booking-dialog/check-booking-dialog.component';
 import { ChangeBookingDialogComponent } from './calendar/change-booking-dialog/change-booking-dialog.component';
@@ -27,12 +26,11 @@ import { ChangeBookingDialogComponent } from './calendar/change-booking-dialog/c
     GroupsComponent,
     CodeSubjectCardComponent,
     CalendarComponent,
-    DialogComponent,
     StudentsWithoutGroupComponent,
     CheckBookingDialogComponent,
     ChangeBookingDialogComponent,
   ],
-  entryComponents: [DialogComponent,CheckBookingDialogComponent],
+  entryComponents: [CheckBookingDialogComponent],
   imports: [
     CommonModule,
     StudentDashboardRoutingModule,
