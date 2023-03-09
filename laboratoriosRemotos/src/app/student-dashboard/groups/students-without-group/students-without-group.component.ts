@@ -24,10 +24,12 @@ export class StudentsWithoutGroupComponent implements OnInit {
   
   selectedGroup!: MemberGroup[]
   leaderSelected!: MemberGroup[]
+  
   @ViewChild('stepper') stepper!: MatStepper;
   onGroupCreated : EventEmitter<GroupWithNames> = new EventEmitter<GroupWithNames>()
 
   ngOnInit(): void {
+    console.log("Data recibida en modal", this.data);
     
   }
   onGroupsChange(auxGroup: MemberGroup[]) {
@@ -36,8 +38,10 @@ export class StudentsWithoutGroupComponent implements OnInit {
     }
   }
   onGroupSelected(){
-    console.log(this.selectedGroup);
-    
+    if(this.selectedGroup.length === 1){
+      this.openSnackBar("Debe seleccionar al menos un compañero para crear un grupo", "Cerrar")
+      return
+    }
     if(this.stepper.selected != undefined){
       this.stepper.selected.completed = true
       this.stepper.next();
@@ -47,7 +51,21 @@ export class StudentsWithoutGroupComponent implements OnInit {
     if(this.stepper.selected != undefined){
       console.log("Lider seleccionado", this.leaderSelected);
       console.log("Grupo seleccionado", this.selectedGroup);
+      //1. Sacar los estudiantes de Sin grupo
+      let groupRefs = this.selectedGroup.map(member => this.userSvc.getRefUser(member.getId()))
+      this.subjectSvc.takeOutStudents(groupRefs, this.data.subjectSelected.getId())
+      //2. Crear obj con el grupo establecido
       let leaderRef = this.userSvc.getRefUser(this.leaderSelected[0].getId())
+      let newGroup = new Group(groupRefs, leaderRef)
+      //3. Llamar al servicio para la creacion
+      this.groupSvc.createGroup(newGroup).then(res=>{
+        this.subjectSvc.getRefSubjectFromId(this.data.subjectSelected.getId())
+        this.subjectSvc.createGroup(res)
+        let groupCreated = new GroupWithNames(this.selectedGroup,this.leaderSelected[0].getId())
+        this.onGroupCreated.emit(groupCreated)
+      })
+
+      /* let leaderRef = this.userSvc.getRefUser(this.leaderSelected[0].getId())
       let groupRefs = this.selectedGroup.map(member => this.userSvc.getRefUser(member.getId()))
       this.subjectSvc.takeOutStudents(groupRefs, this.data.subjectSelected.getId())
       let newGroup = new Group(groupRefs, leaderRef)
@@ -57,7 +75,7 @@ export class StudentsWithoutGroupComponent implements OnInit {
         let groupCreated = new GroupWithNames(this.selectedGroup,this.leaderSelected[0].getId())
         console.log("Emitiendo desde modal", groupCreated);
         this.onGroupCreated.emit(groupCreated)
-      })
+      }) */
     }
   }
   onLeaderSelected(){

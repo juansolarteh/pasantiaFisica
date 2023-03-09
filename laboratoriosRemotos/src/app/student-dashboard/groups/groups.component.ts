@@ -37,7 +37,8 @@ export class GroupsComponent implements OnInit {
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.studentGroup = this.activatedRoute.snapshot.data['studentGroup']
     this.studentsWithOutGroup = this.activatedRoute.snapshot.data['studentsWithoutGroup']
-    console.log(this.studentsWithOutGroup);
+    console.log("Sin Grupo", this.studentsWithOutGroup);
+    console.log("Grupo del estudiante", this.studentGroup);
   }
 
   onCreateGroup(){
@@ -45,7 +46,7 @@ export class GroupsComponent implements OnInit {
       { data: {studentsWithOutGroup : this.studentsWithOutGroup, currentUser: this.currentUser, subjectSelected : this.subjectSelected},
       height: 'auto', width: '750px'} )
       const dialogSuscription = dialogRef.componentInstance.onGroupCreated.subscribe(groupCreated =>{
-        console.log("Recibiendo desde grupos",groupCreated);
+        console.log("Recibiendo desde Modal Creacion",groupCreated);
         this.studentGroup = new ObjectDB<GroupWithNames>(groupCreated,'new')
         this.openSnackBar("Grupo creado exitosamente","Cerrar")
         dialogSuscription.unsubscribe()

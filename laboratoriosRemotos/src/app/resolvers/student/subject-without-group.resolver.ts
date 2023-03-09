@@ -21,8 +21,8 @@ export class SubjectWithOutGroupResolverService implements Resolve<ObjectDB<Grou
       let currentUser = await this.userSvc.getCurrentUser();
       let users = await this.userSvc.getGroupMembers(refUsers);
       let groupWithNames = new GroupWithNames(users);
-      let aux = groupWithNames.getGrupo().filter(member => member.getId() !== currentUser.getId())
-      groupWithNames.setGrupo(aux)
+      //let aux = groupWithNames.getGrupo().filter(member => member.getId() !== currentUser.getId())
+      //groupWithNames.setGrupo(aux)
       return new ObjectDB<GroupWithNames>(groupWithNames, 'SG');
     });
   }
