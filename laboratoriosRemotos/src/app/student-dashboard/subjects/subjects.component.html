@@ -1,9 +1,14 @@
 <app-navbar></app-navbar>
 <div class="container">
     <div class="grid">
-        <div class="columna" *ngFor="let subject of subjects">
+        <ng-container *ngIf="subjects.length > 0 ; else saludo">
+            <div class="columna" *ngFor="let subject of subjects">
                 <app-card-subject [subjectTitle]="subject.getObjectDB().getNombre() | titlecase">
-                    <div extra-info>{{subject.getObjectDB().getDocente() | titlecase}}</div>
+                    <div extra-info>{{subject.getObjectDB().getDocente() | titlecase}}
+                        <br>
+                        Clave: {{subject.getObjectDB().getClave() | uppercase}}
+                    </div>
+                    
                     <div content>
                         {{subject.getObjectDB().getDescripcion()}}
                     </div>
@@ -12,8 +17,14 @@
                         <button mat-flat-button color="primary" (click)="goToPractices(subject)">Ver prácticas</button>
                     </div>
                 </app-card-subject>
-        </div>
-        <div class="columna">
-            <app-code-subject-card (onNewSubject)="setNewSubject($event)"></app-code-subject-card>
-        </div>
+            </div>
+            <div class="columna">
+                <app-code-subject-card (onNewSubject)="setNewSubject($event)"></app-code-subject-card>
+            </div>
+        </ng-container>
+        
+        <ng-template #saludo>
+            <h2>Ayy</h2>
+        </ng-template>
+        
     </div>

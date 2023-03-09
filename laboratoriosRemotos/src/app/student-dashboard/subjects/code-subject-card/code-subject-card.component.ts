@@ -27,21 +27,22 @@ export class CodeSubjectCardComponent implements OnInit {
   async handleRegister() {
     let userRef = this.userSvc.getUserLoggedRef()
     let subject = await this.subjectSvc.getSubjectByKey(this.codeSubject);
-    if (subject != undefined) {
-      let response = await this.subjectSvc.studentBelongToSubject(userRef, subject.getId())
-      if (response) {
-        this.openSnackBar("Ya estás matriculado en esta asignatura", "Cerrar")
-      }
-      else {
-        let newSubject = await this.subjectSvc.registerStudent(userRef, subject.getId())
-        let subjectAllInfo = await this.getAllInfo(newSubject)
-        this.onNewSubject.emit(subjectAllInfo)
-        this.openSnackBar("Te has matriculado exitosamente", "Cerrar")
-      }
-    } else {
+    if (!subject) {
       this.openSnackBar("El código de la materia no existe", "Cerrar")
+      return
     }
+    let response = await this.subjectSvc.studentBelongToSubject(userRef, subject.getId())
+    if (response) {
+      this.openSnackBar("Ya estás matriculado en esta asignatura", "Cerrar")
+      return
+    }
+    let newSubject = await this.subjectSvc.registerStudent(userRef, subject.getId())
+    let subjectAllInfo = await this.getAllInfo(newSubject)
+    this.onNewSubject.emit(subjectAllInfo)
+    this.openSnackBar("Te has matriculado exitosamente", "Cerrar")
+    this.codeSubject = ""
   }
+
   private async getAllInfo(subject: ObjectDB<SubjectTeacher>) {
     let name = await this.userSvc.getUserName(subject.getObjectDB().getDocente())
     let newSubject = new Subject(subject.getObjectDB().getClave(),
@@ -50,7 +51,7 @@ export class CodeSubjectCardComponent implements OnInit {
       subject.getObjectDB().getNumGrupos())
     return new ObjectDB<Subject>(newSubject, subject.getId())
   }
-  
+
   private openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
       duration: 3000,

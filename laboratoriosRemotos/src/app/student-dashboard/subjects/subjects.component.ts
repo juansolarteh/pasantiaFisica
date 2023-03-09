@@ -1,3 +1,4 @@
+import { SubjectTeacher } from './../../models/SubjectTeacher';
 import { GroupsService } from 'src/app/services/groups.service';
 import { DocumentReference } from '@firebase/firestore';
 import { UserService } from 'src/app/services/user.service';
@@ -16,22 +17,26 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SubjectsComponent implements OnInit {
 
-  subjects: ObjectDB<Subject>[] = [];
+  subjects: ObjectDB<Subject>[];
   
   constructor( private activatedRoute: ActivatedRoute, private readonly router: Router,
     private subjectSvc : SubjectService, private userSvc : UserService, private groupSvc : GroupsService,
     private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void{
-
+    
     this.subjects = this.activatedRoute.snapshot.data['subjects'];
+    console.log(this.subjects);
     
   }
+
+  
 
   goToPractices(subject:ObjectDB<Subject>){
     localStorage.setItem("subjectSelected",subject.getId())
     this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
   }
+
   async goToDeleteSubject(subject:ObjectDB<Subject>){
     const studentRef = this.userSvc.getUserLoggedRef()
     //1. Verificar si el estudiante tiene grupo
@@ -57,7 +62,10 @@ export class SubjectsComponent implements OnInit {
     
   }
   setNewSubject(newSubject : ObjectDB<Subject>){
-    this.subjects.push(newSubject)
+    console.log("Emitido" , newSubject);
+    if(newSubject){
+      this.subjects.push(newSubject)
+    }
   }
   private deleteSubjectOnArray(subject : ObjectDB<Subject>){
     this.subjects = this.subjects.filter(element => element.getId() != subject.getId())
