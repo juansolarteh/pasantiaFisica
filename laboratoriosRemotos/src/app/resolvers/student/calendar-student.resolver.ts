@@ -1,3 +1,10 @@
+import { DocumentData } from '@angular/fire/compat/firestore';
+import { UserService } from 'src/app/services/user.service';
+import { ObjectDB } from 'src/app/models/ObjectDB';
+import { GroupsService } from 'src/app/services/groups.service';
+import { ScheduleService } from 'src/app/services/schedule.service';
+import { PracticeService } from './../../services/practice.service';
+import { SubjectService } from 'src/app/services/subject.service';
 import { Injectable } from '@angular/core';
 import {
   Router, Resolve,
@@ -5,13 +12,34 @@ import {
   ActivatedRouteSnapshot
 } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { Group } from 'src/app/models/Group';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CalendarStudentResolver implements Resolve<boolean> {
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+export class CalendarStudentResolver implements Resolve<DocumentData> {
+  constructor(private practiceSvc : PracticeService, private subjectSvc: SubjectService, private scheduleSvc : ScheduleService,
+    private groupSvc : GroupsService, private userSvc : UserService){}
+  async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<DocumentData> {
     const subjectId = route.parent?.paramMap.get('subjectId')
-    return of(true);
+    const practiceId = route.paramMap.get('practiceId')
+    const userRef = this.userSvc.getUserLoggedRef()
+    let refSubject = this.subjectSvc.getRefSubjectFromId(subjectId)
+    let refPractice = await this.practiceSvc.getRefByPracticeId(practiceId)
+    let refsSubjectGroups = await this.subjectSvc.getRefGroupsFromSubjectId(subjectId)
+    let refGroup = await this.groupSvc.getGroupRefByStudentRef(refsSubjectGroups, userRef)
+    let response = await this.scheduleSvc.getBooking(refSubject,refPractice,refGroup)
+    return response
+    //let response = await this.scheduleSvc.getBooking(refSubject,refPractice)
+
+    //Para traer la refDelGrupo se deben traer los grupos de la materia y buscar el Id del estudiante en el Array de grupos,
+    //Debido a que el estudiante no mas puede pertenecer a un grupo
+    //console.log(response);
+    
+    
+  }
+
+  private findGroup(pGroups : ObjectDB<Group>[]){
+
   }
 }

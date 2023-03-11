@@ -24,7 +24,6 @@ export class SubjectsComponent implements OnInit {
     private _snackBar: MatSnackBar) { }
 
   ngOnInit(): void{
-    
     this.subjects = this.activatedRoute.snapshot.data['subjects'];
     console.log(this.subjects);
     

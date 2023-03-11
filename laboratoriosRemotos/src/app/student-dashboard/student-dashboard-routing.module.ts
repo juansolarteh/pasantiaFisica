@@ -25,7 +25,9 @@ const routes: Routes = [
         path: 'practice/:practiceId', component: PracticeComponent,
         resolve: {
           practiceSelected: PracticeSelectedResolverService,
-          subjectSelected: SubjectSelectedResolverService
+          subjectSelected: SubjectSelectedResolverService,
+          plantValidation : CalendarStudentResolver,
+          studentGroup : GroupStudentResolverService
         }
           
       },
