@@ -1,40 +1,72 @@
 <div class="container">
     <div class="grid">
         <div class="columna">
-            <div class="info-practica">
-                <div class="mat-display-1">
-                    Práctica de {{this.practiceSelected.getObjectDB().getNombre() | titlecase}} •
-                    {{this.subjectSelected.getObjectDB().getNombre() | titlecase}}</div>
-                <div class="mat-subheading-1">Creada por {{this.subjectSelected.getObjectDB().getDocente() | titlecase}}
-                    • {{this.practiceSelected.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}
-                    <br>
-                    Disponible desde {{this.practiceSelected.getObjectDB().getInicio().seconds * 1000 | date:
-                    'longDate'}} • {{this.practiceSelected.getObjectDB().getFin().seconds * 1000 | date: 'longDate'}}
+            <mat-card class="mat-elevation-z8">
+                <div class="info-practica">
+                    <div class="mat-display-1" id="nombrePractica">
+                        Práctica de {{this.practiceSelected.getObjectDB().getNombre() | titlecase}}</div>
+                    <h2>{{this.subjectSelected.getObjectDB().getNombre() | titlecase}}</h2>
+                    <div class="mat-body">Creada por {{this.subjectSelected.getObjectDB().getDocente() |
+                        titlecase}}
+                        • {{this.practiceSelected.getObjectDB().getFecha_creacion().seconds * 1000 | date: 'longDate'}}
+                        <br>
+                        Disponible desde {{this.practiceSelected.getObjectDB().getInicio().seconds * 1000 | date:
+                        'longDate'}} • {{this.practiceSelected.getObjectDB().getFin().seconds * 1000 | date:
+                        'longDate'}}
+                    </div>
                 </div>
                 <mat-divider></mat-divider>
-            </div>
-
-            <div class="info-practica">
-                <div class="mat-body-1">
-                    {{this.practiceSelected.getObjectDB().getDescripcion()}}
+                <div class="descripcion-practica">
+                    <div class="mat-body">
+                        {{this.practiceSelected.getObjectDB().getDescripcion()}}
+                    </div>
                 </div>
-            </div>
+            </mat-card>
         </div>
         <div class="columna">
-            <mat-card>
-                <div class="agendamiento">
-                    <div class="mat-title">
-                        Estado
+            <mat-card class="mat-elevation-z8">
+                    <div class="agend-encabezado">
+                        <div class="mat-title">
+                            Estado
+                        </div>
+                        <ng-container *ngIf="this.booking && this.booking['realizada']">
+                            <div class="mat-subheading-1">
+                                <mat-chip-list>
+                                    <mat-chip color="primary" selected>
+                                        Realizada
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="this.booking && !this.booking['realizada']">
+                            <div class="mat-subheading-1">
+                                <mat-chip-list>
+                                    <mat-chip color="primary" selected>
+                                        Agendada
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="!this.booking">
+                            <div class="mat-subheading-1">
+                                <mat-chip-list>
+                                    <mat-chip color="accent" [selectable]="false">
+                                        Sin Agendar
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                        </ng-container>
                     </div>
-                    <div class="mat-subheading-1">
-                        Sin Agendar
+                    <mat-divider></mat-divider>
+                    <div class="fecha-reserva" *ngIf="this.booking">
+                        Fecha: {{this.booking['fecha'].seconds * 1000 | date: 'medium'}}
                     </div>
-
-                </div>
-                <div class="botones">
-                    <button (click)="startPractice()" mat-flat-button color="primary">Iniciar Práctica</button>
-                    <button (click)="goToBookings()" mat-button color="primary">Ir A Agenda</button>
-                </div>
+                    <div class="botones">
+                        <button (click)="handleStartPractice()" mat-flat-button color="primary" [disabled]="this.booking['realizada']">Iniciar
+                            Práctica</button>
+                        <button (click)="goToBookings()" mat-button color="primary">Ir A Agenda</button>
+                    </div>
+   
             </mat-card>
         </div>
     </div>

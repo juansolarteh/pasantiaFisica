@@ -1,65 +1,84 @@
 .container {
-    padding-right: 40px;
-    padding-left: 40px;
-    margin-top: 20px;
-    margin-right: auto;
-    margin-left: auto;
+  padding-right: 40px;
+  padding-left: 40px;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
   }
-  @media (min-width: 768px) {
-    .container {
-      width: 750px;
-    }
+}
+
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
   }
-  @media (min-width: 992px) {
-    .container {
-      width: 970px;
-    }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1100px;
   }
-  @media (min-width: 1200px) {
-    .container {
-      width: 1100px;
-    }
-  }
-
-.grid{
-    display: grid;
-    grid-template-columns: 70% 30%;
-    grid-template-rows: auto;
 }
 
-.columna{
-    padding: 1rem;
+.grid {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-template-rows: auto;
 }
 
-.mat-display-1{
-    margin: 0;
+.columna {
+  padding: 1rem;
 }
 
-.mat-subheading-1{
-    color: gray;
+.mat-display-1 {
+  margin: 0;
 }
 
-.agendamiento{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.agend-encabezado{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
-.mat-body-1{
-    text-align: justify;
-}
-.botones{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    gap: 5px;
+.mat-body-1 {
+  text-align: justify;
 }
 
-.info-practica{
-    padding: 0.5rem;
+.botones {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-top: 1rem;
+  gap: 5px;
+  width: 100%;
+}
 
+.info-practica {
+  padding: 0.5rem;
+}
+.descripcion-practica{
+  margin-top: 1rem;
+  padding: 0.5rem;
 }
 
 .icon-display {
-    transform: scale(2);
- }
+  transform: scale(2);
+}
+
+.fecha-reserva{
+  margin-top: 1rem;
+}
+#nombrePractica {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+}
+.mat-divider{
+  border-top-width: 2px;
+
+}

@@ -98,17 +98,26 @@ export class GroupsService {
     return new ObjectDB(group, groupRef.id)
   }
 
-  async getGroupsByRefStudent(studentRef: DocumentReference) {
+  /* async getGroupsByRefStudent(studentRef: DocumentReference) {
     let idGroups: string[] = []
     let querySnapShot = this.col.where('grupo', 'array-contains', studentRef).get();
     (await querySnapShot).forEach(doc => {
       idGroups.push(doc.id)
     })
     return idGroups
-  }
+  } */
   async getGroupRefById(groupId: string) {
     let querySnapShot = await this.col.doc(groupId).get()
     return querySnapShot.ref
+  }
+
+  async getGroupRefByStudentRef(refGroups : DocumentReference[], refStudent : DocumentReference){
+    for(let refGroup of refGroups){
+      for(let member of (await refGroup.get()).data()['grupo']){
+        if(member.id == refStudent.id) return refGroup
+      }
+    }
+    return undefined
   }
 
   async deleteStudentFromGroup(refGroups: DocumentReference[], refStudent: DocumentReference) {

@@ -98,14 +98,22 @@ export class ScheduleService {
     return arrBookings
   }
 
-  async isGroupBooked(refGroup : DocumentReference, refPractice : DocumentReference){
+  async getBooking(subjectRef : DocumentReference, practiceRef : DocumentReference, groupRef : DocumentReference){
+    const querySnapShot = this.col.where('materia', '==', subjectRef).where('practica', '==', practiceRef).where('grupo','==',groupRef).get() 
+    return (await querySnapShot).size > 0 ? (await querySnapShot).docs[0].data() : undefined 
+  }
+
+  /* async isGroupBooked(refGroup : DocumentReference, refPractice : DocumentReference){
     let querySnapshot = await this.col.where('practica','==', refPractice).where('grupo','==',refGroup).get();
     if(querySnapshot.size > 0){
       return true
     }
     return false
-  }
+  } */
   updateBooking(idBooking : string, newDate: Timestamp){
     this.col.doc(idBooking).update('fecha',newDate)
   }
+
+
+  
 }
