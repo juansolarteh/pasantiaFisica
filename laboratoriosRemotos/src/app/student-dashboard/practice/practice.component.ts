@@ -36,41 +36,17 @@ export class PracticeComponent implements OnInit {
 
   handleStartPractice(){
     if(!this.studentGroup){
-      Swal.fire({
-        title: 'Error al iniciar práctica',
-        html: 'Debes pertenecer a un <b>grupo de trabajo</b> para poder realizar la práctica.',
-        icon: 'info',
-        showConfirmButton: false,
-        showCloseButton: true,
-        showCancelButton: true,
-        cancelButtonText: 'Cerrar'
-      })
+      this.openSwalAlert("Error al iniciar práctica","Debes pertenecer a un <b>grupo de trabajo</b> para poder realizar la práctica.", 'info')
       return
     }
     if(!this.booking){
-      Swal.fire({
-        title: 'Error al iniciar práctica',
-        html: 'Debes realizar un <b>agendamiento</b> para poder realizar la práctica.',
-        icon: 'info',
-        showConfirmButton: false,
-        showCloseButton: true,
-        showCancelButton: true,
-        cancelButtonText: 'Cerrar',
-      })
+      this.openSwalAlert("Error al iniciar práctica",'Debes realizar un <b>agendamiento</b> para poder realizar la práctica.', 'info')
       return
     }
     let date = this.booking['fecha'].seconds * 1000
     if(!this.isValidBookingDate(date)){
       let practiceExecutionDate = this.datePipe.transform(date, "medium")!
-      Swal.fire({
-        title: 'Error al iniciar práctica',
-        html: 'La fecha de reserva para realizar la práctica es la siguiente: <b>' + practiceExecutionDate + '</b><br><br>Intenta realizar la práctica en el horario correspondiente.',
-        icon: 'info',
-        showConfirmButton: false,
-        showCloseButton: true,
-        showCancelButton: true,
-        cancelButtonText: 'Cerrar'
-      })
+      this.openSwalAlert("Error al iniciar práctica",'La fecha de reserva para realizar la práctica es la siguiente: <b>' + practiceExecutionDate + '</b><br><br>Intenta realizar la práctica en el horario correspondiente.', 'info')
       return
     }
     console.log("Entrando a la practica");
@@ -104,5 +80,17 @@ export class PracticeComponent implements OnInit {
     let currentDate = this.datePipe.transform(new Date(), "yyyy-MM-ddTHH:mm:ss")!
     let limitExecution = moment(practiceExecutionDate).add(30,'minutes')
     return moment(currentDate).isAfter(practiceExecutionDate) && moment(currentDate).isBefore(limitExecution) ? true : false
+  }
+
+  private openSwalAlert(title : string,message: string, icon : any ) {
+    Swal.fire({
+      title: title,
+      html: message,
+      icon: icon,
+      showConfirmButton: false,
+      showCloseButton: true,
+      showCancelButton: true,
+      cancelButtonText: 'Cerrar'
+    })
   }
 }

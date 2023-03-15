@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'src/app/models/Subject';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-groups',
@@ -37,25 +38,34 @@ export class GroupsComponent implements OnInit {
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.studentGroup = this.activatedRoute.snapshot.data['studentGroup']
     this.studentsWithOutGroup = this.activatedRoute.snapshot.data['studentsWithoutGroup']
-    console.log("Sin Grupo", this.studentsWithOutGroup);
-    console.log("Grupo del estudiante", this.studentGroup);
   }
 
   onCreateGroup(){
+    if(this.studentsWithOutGroup.getObjectDB().getGrupo().length == 1 ){
+      this.openSwalAlert('Error al crear grupo','Eres el único estudiante sin grupo en esta asignatura, contacta a tu docente para solucionar este inconveniente.','info')
+      return
+    }
     let dialogRef = this.groupDialog.open(StudentsWithoutGroupComponent,
       { data: {studentsWithOutGroup : this.studentsWithOutGroup, currentUser: this.currentUser, subjectSelected : this.subjectSelected},
       height: 'auto', width: '750px'} )
       const dialogSuscription = dialogRef.componentInstance.onGroupCreated.subscribe(groupCreated =>{
         console.log("Recibiendo desde Modal Creacion",groupCreated);
         this.studentGroup = new ObjectDB<GroupWithNames>(groupCreated,'new')
-        this.openSnackBar("Grupo creado exitosamente","Cerrar")
+        this.openSwalAlert("Grupo creado","El grupo se ha creado exitosamente.", 'success')
         dialogSuscription.unsubscribe()
       })
   }
 
-  private openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
-      duration: 3000,
-    });
+
+  private openSwalAlert(title : string,message: string, icon : any ) {
+    Swal.fire({
+      title: title,
+      html: message,
+      icon: icon,
+      showConfirmButton: false,
+      showCloseButton: true,
+      showCancelButton: true,
+      cancelButtonText: 'Cerrar'
+    })
   }
 }
