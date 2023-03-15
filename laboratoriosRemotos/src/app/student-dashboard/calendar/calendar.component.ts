@@ -86,10 +86,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initializeView()
-    this.scheduleSvc.getBookingsStudentByPlantRef(this.practiceSelected.getObjectDB().getPlanta()).then(bookings => {
-      if (bookings.length > 0) this.setBookingsOnCalendar(bookings)
-    })
+    if (this.studentGroup) {
+      this.initializeView()
+      this.scheduleSvc.getBookingsStudentByPlantRef(this.practiceSelected.getObjectDB().getPlanta()).then(bookings => {
+        if (bookings.length > 0) this.setBookingsOnCalendar(bookings)
+      })
+    }
   }
 
   ngOnInit(): void {
@@ -100,7 +102,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
   onGoToGroups() {
     console.log(this.activatedRoute.url);
-    this.router.navigate(['../groups'], { relativeTo: this.activatedRoute })
+    this.router.navigate(['./groups'], { relativeTo: this.activatedRoute.parent })
   }
   async handleDateClick(arg: any) {
     let selectedDate = this.datePipe.transform(arg.startStr, "yyyy-MM-ddTHH:mm:ss")!
@@ -132,7 +134,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private onUpdateBooking(updatedBooking : Booking) {
+  private onUpdateBooking(updatedBooking: Booking) {
     let dateBookingStart = this.datePipe.transform(updatedBooking.fecha!.seconds * 1000, "yyyy-MM-ddTHH:mm:ss")
     let dateBookingEnd = this.datePipe.transform((updatedBooking.fecha!.seconds + 3600) * 1000, "yyyy-MM-ddTHH:mm:ss")
     let aux = this.auxBooking.filter((booking: Booking) => booking.id != updatedBooking.id)

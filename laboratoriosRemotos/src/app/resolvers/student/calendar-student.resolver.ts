@@ -18,8 +18,8 @@ import { Group } from 'src/app/models/Group';
   providedIn: 'root'
 })
 export class CalendarStudentResolver implements Resolve<DocumentData> {
-  constructor(private practiceSvc : PracticeService, private subjectSvc: SubjectService, private scheduleSvc : ScheduleService,
-    private groupSvc : GroupsService, private userSvc : UserService){}
+  constructor(private practiceSvc: PracticeService, private subjectSvc: SubjectService, private scheduleSvc: ScheduleService,
+    private groupSvc: GroupsService, private userSvc: UserService) { }
   async resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<DocumentData> {
     const subjectId = route.parent?.paramMap.get('subjectId')
     const practiceId = route.paramMap.get('practiceId')
@@ -28,18 +28,10 @@ export class CalendarStudentResolver implements Resolve<DocumentData> {
     let refPractice = await this.practiceSvc.getRefByPracticeId(practiceId)
     let refsSubjectGroups = await this.subjectSvc.getRefGroupsFromSubjectId(subjectId)
     let refGroup = await this.groupSvc.getGroupRefByStudentRef(refsSubjectGroups, userRef)
-    let response = await this.scheduleSvc.getBooking(refSubject,refPractice,refGroup)
+    if (!refGroup) {
+      return undefined
+    }
+    let response = await this.scheduleSvc.getBooking(refSubject, refPractice, refGroup)
     return response
-    //let response = await this.scheduleSvc.getBooking(refSubject,refPractice)
-
-    //Para traer la refDelGrupo se deben traer los grupos de la materia y buscar el Id del estudiante en el Array de grupos,
-    //Debido a que el estudiante no mas puede pertenecer a un grupo
-    //console.log(response);
-    
-    
-  }
-
-  private findGroup(pGroups : ObjectDB<Group>[]){
-
   }
 }

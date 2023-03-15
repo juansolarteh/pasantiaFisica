@@ -25,6 +25,7 @@ export class PracticesComponent implements OnInit {
   ngOnInit(): void {
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.practices = this.activatedRoute.snapshot.data['practices'];
+    //console.log(this.practices);
   }
   goToPracticeInfo(practice: ObjectDB<Practice>) {
     localStorage.setItem("practiceSelected", practice.getId())

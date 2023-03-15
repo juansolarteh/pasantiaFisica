@@ -1,5 +1,4 @@
 <mat-dialog-content>
-    <ng-container *ngIf="this.data.studentsWithOutGroup.getObjectDB().getGrupo().length > 1 ; else sinEstudiantes">
         <h2 mat-dialog-title>Crear grupo de trabajo</h2>
         <mat-stepper #stepper linear>
             <mat-step completed="false">
@@ -74,13 +73,12 @@
                 </div>
             </mat-step>
         </mat-stepper>
-    </ng-container>
-    <ng-template #sinEstudiantes>
+    <!-- <ng-template #sinEstudiantes>
         <h2 mat-dialog-title>Error al crear grupo</h2>
         <h3>Eres el único estudiante sin grupo en esta asignatura, contacta a tu docente para solucionar este
             inconveniente.</h3>
         <div class="buttons-stepper">
             <button mat-raised-button color="primary">Cerrar</button>
         </div>
-    </ng-template>
+    </ng-template> -->
 </mat-dialog-content>

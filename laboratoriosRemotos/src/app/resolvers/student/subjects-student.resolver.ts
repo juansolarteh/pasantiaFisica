@@ -18,7 +18,6 @@ export class SubjectsStudentResolverService implements Resolve<ObjectDB<Subject>
 
     async resolve(): Promise<ObjectDB<Subject>[]> {
         const studentRef = this.userSvc.getUserLoggedRef();
-        console.log(studentRef);
         return this.subjectSvc.getSubjectsByStudentRef(studentRef).then(async res => {
             let subjectsStudent = res.map(async element => {
                 let name = await this.userSvc.getUserName(element.getObjectDB().getDocente())

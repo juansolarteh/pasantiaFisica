@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { DocumentData } from '@angular/fire/compat/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-subjects',
@@ -21,21 +22,21 @@ export class SubjectsComponent implements OnInit {
   
   constructor( private activatedRoute: ActivatedRoute, private readonly router: Router,
     private subjectSvc : SubjectService, private userSvc : UserService, private groupSvc : GroupsService,
-    private _snackBar: MatSnackBar) { }
+    private _snackBar: MatSnackBar, private authService : AuthService) { }
 
   ngOnInit(): void{
     this.subjects = this.activatedRoute.snapshot.data['subjects'];
-    console.log(this.subjects);
-    
   }
-
-  
 
   goToPractices(subject:ObjectDB<Subject>){
     localStorage.setItem("subjectSelected",subject.getId())
     this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
   }
 
+  goToSubjectTopBar(subject:ObjectDB<Subject>){
+    localStorage.setItem("subjectSelected",subject.getId())
+    this.router.navigateByUrl(`studentDashboard/subject/${subject.getId()}`)
+  }
   async goToDeleteSubject(subject:ObjectDB<Subject>){
     const studentRef = this.userSvc.getUserLoggedRef()
     //1. Verificar si el estudiante tiene grupo
@@ -69,9 +70,12 @@ export class SubjectsComponent implements OnInit {
   private deleteSubjectOnArray(subject : ObjectDB<Subject>){
     this.subjects = this.subjects.filter(element => element.getId() != subject.getId())
   }
-  private openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
-      duration: 3000,
-    });
+
+  logOut(){
+    this.authService.logout().then(res => {
+      if (res.isApproved()){
+        this.router.navigate(['/'])
+      }
+    })
   }
 }

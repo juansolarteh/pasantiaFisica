@@ -1,33 +1,37 @@
-<!-- <app-navbar>
-  <div leftOptions>{{this.subjectSelected.getObjectDB().getNombre()}}</div>
-  <mat-tab-group midOptions animationDuration="0ms"  selectedIndex="0" (selectedTabChange)="changeTab($event)">
-    <mat-tab label="Prácticas"></mat-tab>
-    <mat-tab label="Calendario"></mat-tab>
-    <mat-tab label="Grupos"></mat-tab>
-  </mat-tab-group>
-</app-navbar>
-<div>
-  <router-outlet></router-outlet>
-</div> -->
-<nav mat-tab-nav-bar [backgroundColor]="background" [tabPanel]="tabPanel">
-
-  <div class="left-options">
-    <button mat-icon-button>
-      <mat-icon>menu</mat-icon>
-    </button>
-    <h2 id="subjectTitle">{{this.subjectSelected.getObjectDB().getNombre()}}</h2>
+<mat-toolbar color="primary" class="mat-elevation-z4">
+  <div class="toolbar-content">
+    <div class="left-options">
+      <button mat-icon-button [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger" (click)="menuTrigger.openMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" [overlapTrigger]="false">
+        <ng-container *ngFor="let subject of subjects">
+          <button mat-menu-item (click)="goToSubjectTopBar(subject)">
+            <mat-icon>book</mat-icon>
+            {{subject.getObjectDB().getNombre() | titlecase}}
+          </button>
+        </ng-container>
+      </mat-menu>
+      <a (click)="goToPractices()" >{{this.subjectSelected.getObjectDB().getNombre()}}</a>
+    </div>
+    <div class="center-options">
+      <button mat-button class="navigation-btn" (click)="goToPractices()">
+        <mat-icon>biotech</mat-icon>
+        Prácticas
+      </button>
+      <button mat-button class="navigation-btn" (click)="goToGroups()">
+        <mat-icon>groups</mat-icon>
+        Grupos
+      </button>
+    </div>
+    <div class="right-options">
+      <button mat-button class="navigation-btn" (click)="logOut()">
+        <mat-icon>logout</mat-icon>
+        Salir
+      </button>
+    </div>
   </div>
-  <span class="spacer"></span>
-  <a mat-tab-link *ngFor="let link of links; let i = index" (click)="changeLink(i)" [active]="activeLink == link"> {{link}} </a>
-  <span class="spacer"></span>
-  <div class="right-options">
-    <button mat-icon-button>
-      <mat-icon>logout</mat-icon>
-    </button>
-    <h2 id="subjectTitle" (click)="salir()">Salir</h2>
-  </div>
-</nav>
-<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+</mat-toolbar>
 <div>
   <router-outlet></router-outlet>
 </div>

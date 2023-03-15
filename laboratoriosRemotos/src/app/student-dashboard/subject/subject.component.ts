@@ -16,37 +16,29 @@ export class SubjectComponent implements OnInit {
 
   constructor(private readonly router: Router, private activatedRoute: ActivatedRoute, private authService : AuthService) { }
   subjectSelected!: ObjectDB<Subject>
-  links = ['Prácticas', 'Grupo'];
-  activeLink = ""
-  background: ThemePalette = undefined;
+  subjects: ObjectDB<Subject>[];
 
   ngOnInit(): void {
-    this.activeLink = this.links[0];
+    //this.activeLink = this.links[0];
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
+    this.subjects = this.activatedRoute.snapshot.data['subjects'];
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false; 
   }
-  /* changeTab(event:any){
-    switch(event.index){
-      case 0: this.router.navigate(['./practices'], {relativeTo: this.activatedRoute});
-      break;
-      case 1: this.router.navigate(['./calendar'], {relativeTo: this.activatedRoute})
-      break;
-      case 2: this.router.navigate(['./groups'], {relativeTo: this.activatedRoute})
-      break;
-      default: this.router.navigate(['/'], {relativeTo: this.activatedRoute})
-    }
-  } */
-  changeLink(link:number){
-    switch(link){
-      case 0: this.activeLink = this.links[0]; 
-      this.router.navigate(['./practices'], {relativeTo: this.activatedRoute});
-      break;
-      case 1: this.activeLink = this.links[1]; 
-      this.router.navigate(['./groups'], {relativeTo: this.activatedRoute})
-      break;
-      default: this.router.navigate(['/'], {relativeTo: this.activatedRoute})
-    }
+
+  goToSubjectTopBar(subject:ObjectDB<Subject>){
+    localStorage.setItem("subjectSelected",subject.getId())
+    this.router.navigateByUrl(`studentDashboard/subject/${subject.getId()}`)
   }
-  salir(){
+  
+  goToPractices(){
+    this.router.navigate(['./practices'], {relativeTo: this.activatedRoute});
+  }
+
+  goToGroups(){
+    this.router.navigate(['./groups'], {relativeTo: this.activatedRoute})
+  }
+
+  logOut(){
     this.authService.logout().then(res => {
       if (res.isApproved()){
         this.router.navigate(['/'])

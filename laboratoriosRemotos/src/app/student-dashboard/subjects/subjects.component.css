@@ -1,4 +1,5 @@
 .container {
+    margin-top: 10px;
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;
@@ -38,3 +39,27 @@
     background-image: url('../../../assets/imagenes/subject.png');
     background-size: cover;
 }
+
+.toolbar-content {
+    display: flex;
+    padding: 2px 8px;
+    width: 100%;
+}
+
+.left-options {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex: 1 1 0px;
+}
+
+.right-options {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    flex: 1 1 0px;
+}
+
+.navigation-btn:hover{
+    background-color: midnightblue;
+  }

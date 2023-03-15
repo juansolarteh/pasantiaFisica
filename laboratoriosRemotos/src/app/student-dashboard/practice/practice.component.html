@@ -62,11 +62,10 @@
                         Fecha: {{this.booking['fecha'].seconds * 1000 | date: 'medium'}}
                     </div>
                     <div class="botones">
-                        <button (click)="handleStartPractice()" mat-flat-button color="primary" [disabled]="this.booking['realizada']">Iniciar
+                        <button (click)="handleStartPractice()" mat-flat-button color="primary" [disabled]="this.booking && this.booking['realizada']">Iniciar
                             Práctica</button>
-                        <button (click)="goToBookings()" mat-button color="primary">Ir A Agenda</button>
+                        <button (click)="goToBookings()" mat-button color="primary" [disabled]="this.booking && this.booking['realizada']">Ir A Agenda</button>
                     </div>
-   
             </mat-card>
         </div>
     </div>

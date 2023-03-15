@@ -20,7 +20,7 @@ const routes: Routes = [
 
   {
     path: 'subject/:subjectId', component: SubjectComponent,
-    resolve: { subjectSelected: SubjectSelectedResolverService }, children: [
+    resolve: { subjectSelected: SubjectSelectedResolverService, subjects: SubjectsStudentResolverService }, children: [
       {
         path: 'practice/:practiceId', component: PracticeComponent,
         resolve: {

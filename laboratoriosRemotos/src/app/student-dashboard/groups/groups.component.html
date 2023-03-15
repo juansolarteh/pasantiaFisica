@@ -1,11 +1,7 @@
 <div class="container">
     <div class="columna">
-        <div class="header-groups">
-            <div id="label-groups" class="mat-display-1">Grupo de trabajo</div>
-            <mat-icon *ngIf="!this.studentGroup" (click)="onCreateGroup()" id="icon-create-group"
-                matTooltip="Crear grupo" mat-list-icon>group_add</mat-icon>
-        </div>
         <ng-container *ngIf="this.studentGroup; else noGroup">
+            <div id="label-groups" class="mat-display-1">Grupo de trabajo</div>
             <mat-divider></mat-divider>
             <mat-list>
                 <ng-container *ngFor="let member of studentGroup.getObjectDB().getGrupo()">
@@ -26,7 +22,6 @@
         </ng-container>
 
         <ng-template #noGroup>
-            <mat-divider></mat-divider>
             <div class="no-group">
                 <img src="../../../assets/imagenes/nogroup.png" alt="" id="no-group-svg">
                 <div class="mat-body-1">No tienes grupo de trabajo</div>
