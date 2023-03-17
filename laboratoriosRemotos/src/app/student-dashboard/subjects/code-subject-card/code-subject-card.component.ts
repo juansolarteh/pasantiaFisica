@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ObjectDB } from 'src/app/models/ObjectDB';
 import { Subject } from 'src/app/models/Subject';
 import { SubjectTeacher } from 'src/app/models/SubjectTeacher';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-code-subject-card',
@@ -28,18 +29,18 @@ export class CodeSubjectCardComponent implements OnInit {
     let userRef = this.userSvc.getUserLoggedRef()
     let subject = await this.subjectSvc.getSubjectByKey(this.codeSubject);
     if (!subject) {
-      this.openSnackBar("El código de la materia no existe", "Cerrar")
+      this.openSwalAlert("Error al matricular", `El código <b>${this.codeSubject}</b> no está asociado a ninguna materia.`, 'error')
       return
     }
     let response = await this.subjectSvc.studentBelongToSubject(userRef, subject.getId())
     if (response) {
-      this.openSnackBar("Ya estás matriculado en esta asignatura", "Cerrar")
+      this.openSwalAlert("Error al matricular", `Ya estás matriculado en una materia que tiene código <b>${this.codeSubject}.</b>`, 'warning')
       return
     }
     let newSubject = await this.subjectSvc.registerStudent(userRef, subject.getId())
     let subjectAllInfo = await this.getAllInfo(newSubject)
-    this.onNewSubject.emit(subjectAllInfo)
-    this.openSnackBar("Te has matriculado exitosamente", "Cerrar")
+    await this.onNewSubject.emit(subjectAllInfo)
+    this.openSwalAlert("Operación exitosa", `Te has matriculado a <b>${subjectAllInfo.getObjectDB().getNombre()}</b> exitosamente.`, 'success')
     this.codeSubject = ""
   }
 
@@ -52,10 +53,15 @@ export class CodeSubjectCardComponent implements OnInit {
     return new ObjectDB<Subject>(newSubject, subject.getId())
   }
 
-  private openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
-      duration: 3000,
-    });
+  private openSwalAlert(title: string, message: string, icon: any) {
+    Swal.fire({
+      title: title,
+      html: message,
+      icon: icon,
+      showConfirmButton: false,
+      showCloseButton: true,
+      showCancelButton: true,
+      cancelButtonText: 'Cerrar'
+    })
   }
-
 }

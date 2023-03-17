@@ -86,18 +86,22 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+
     if (this.studentGroup) {
       this.initializeView()
       this.scheduleSvc.getBookingsStudentByPlantRef(this.practiceSelected.getObjectDB().getPlanta()).then(bookings => {
         if (bookings.length > 0) this.setBookingsOnCalendar(bookings)
       })
     }
+
   }
 
   ngOnInit(): void {
     this.practiceSelected = this.activatedRoute.snapshot.data['practiceSelected'];
     this.studentGroup = this.activatedRoute.snapshot.data['studentGroup']
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
+    //console.log(this.studentGroup);
+
   }
 
   onGoToGroups() {
