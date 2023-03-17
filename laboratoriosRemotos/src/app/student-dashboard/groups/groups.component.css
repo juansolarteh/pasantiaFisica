@@ -67,3 +67,10 @@
 #icon-create-group:hover{
   cursor: pointer;
 }
+.mat-display-1 {
+  margin: 0;
+}
+.mat-divider{
+  border-top-width: 2px;
+
+}

@@ -1,26 +1,28 @@
 <div class="container">
     <div class="columna">
         <ng-container *ngIf="this.studentGroup; else noGroup">
-            <div id="label-groups" class="mat-display-1">Grupo de trabajo</div>
-            <mat-divider></mat-divider>
-            <mat-list>
-                <ng-container *ngFor="let member of studentGroup.getObjectDB().getGrupo()">
-                        <mat-list-item  *ngIf="member.getId() == studentGroup.getObjectDB().getLider() ; else memberGroup">
+            <mat-card class="mat-elevation-z4">
+                <div id="label-groups" class="mat-display-1">Grupo de trabajo</div>
+                <mat-divider></mat-divider>
+                <mat-list>
+                    <ng-container *ngFor="let member of studentGroup.getObjectDB().getGrupo()">
+                        <mat-list-item
+                            *ngIf="member.getId() == studentGroup.getObjectDB().getLider() ; else memberGroup">
                             <mat-icon mat-list-icon class="icon-display">badge</mat-icon>
                             <div mat-line>{{member.getName()}}</div>
                             <div mat-line>Lider</div>
                         </mat-list-item>
-                    <ng-template #memberGroup>
-                        <mat-list-item>
-                            <mat-icon mat-list-icon class="icon-display">person</mat-icon>
-                            <div mat-line>{{member.getName()}}</div>
-                            <div mat-line>Miembro</div>
-                        </mat-list-item>
-                    </ng-template>
-                </ng-container>
-            </mat-list>
+                        <ng-template #memberGroup>
+                            <mat-list-item>
+                                <mat-icon mat-list-icon class="icon-display">person</mat-icon>
+                                <div mat-line>{{member.getName()}}</div>
+                                <div mat-line>Miembro</div>
+                            </mat-list-item>
+                        </ng-template>
+                    </ng-container>
+                </mat-list>
+            </mat-card>
         </ng-container>
-
         <ng-template #noGroup>
             <div class="no-group">
                 <img src="../../../assets/imagenes/nogroup.png" alt="" id="no-group-svg">

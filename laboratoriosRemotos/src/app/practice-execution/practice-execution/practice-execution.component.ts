@@ -18,6 +18,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { GroupWithNames } from 'src/app/models/Group';
 import { Subject } from 'src/app/models/Subject';
 import { Practice } from 'src/app/models/Practice';
+import { ScheduleService } from 'src/app/services/schedule.service';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -54,7 +55,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     public dialogReportAnomaly: MatDialog,
     private readonly router: Router,
-    private userSvc : UserService
+    private userSvc : UserService, private scheduleSvc: ScheduleService
   ) { }
 
   ngOnDestroy(): void {
@@ -146,8 +147,14 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       url: this.src
     }).then(() => {
       this.finished = true
+      this.userSvc.getCurrentUserFullInfo().then(user => {
+        if(user['rol'] == "Estudiante"){
+         let idBooking = localStorage.getItem("idBooking")
+         this.scheduleSvc.practiceFinished(idBooking)
+        }
+      })
       //Se debe habilitar la linea de abajo para que cambie de ruta y salga de la vista de práctica en ejecución
-      //this.router.navigate(['/'], { relativeTo: this.route }) });
+      this.router.navigate(['/'], { relativeTo: this.activatedRoute });
     })
   }
 
@@ -305,7 +312,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     }
     const pdf = pdfMake.createPdf(pdfDefinition)
     pdf.download()
-    this.router.navigate(['/'], { relativeTo: this.activatedRoute });
+    //this.router.navigate(['/'], { relativeTo: this.activatedRoute });
   }
   
   

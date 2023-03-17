@@ -203,7 +203,9 @@ export class SubjectService {
     withoutGroup.push(studentRef)
     this.col.doc(idSubject).update('estudiantes',students)
     this.col.doc(idSubject).update('sinGrupo',withoutGroup)
-    return new ObjectDB(convertTo(SubjectTeacher,subject),idSubject)
+    let aux = new ObjectDB(convertTo(SubjectTeacher,subject),idSubject)
+    aux.getObjectDB().setDocente(subject['docente'])
+    return aux
   }
 
   async unregisterStudent(studentRef: DocumentReference, idSubject : string){

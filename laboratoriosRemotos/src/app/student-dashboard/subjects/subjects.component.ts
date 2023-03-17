@@ -10,6 +10,8 @@ import { ObjectDB } from 'src/app/models/ObjectDB';
 import { DocumentData } from '@angular/fire/compat/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth.service';
+import Swal from 'sweetalert2';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-subjects',
@@ -19,63 +21,60 @@ import { AuthService } from 'src/app/services/auth.service';
 export class SubjectsComponent implements OnInit {
 
   subjects: ObjectDB<Subject>[];
-  
-  constructor( private activatedRoute: ActivatedRoute, private readonly router: Router,
-    private subjectSvc : SubjectService, private userSvc : UserService, private groupSvc : GroupsService,
-    private _snackBar: MatSnackBar, private authService : AuthService) { }
 
-  ngOnInit(): void{
+  constructor(private activatedRoute: ActivatedRoute, private readonly router: Router,
+    private subjectSvc: SubjectService, private userSvc: UserService,
+    private cdr: ChangeDetectorRef, private authService: AuthService) { }
+
+  ngOnInit(): void {
     this.subjects = this.activatedRoute.snapshot.data['subjects'];
   }
 
-  goToPractices(subject:ObjectDB<Subject>){
-    localStorage.setItem("subjectSelected",subject.getId())
-    this.router.navigate(['../subject',subject.getId()], {relativeTo: this.activatedRoute})
+  goToPractices(subject: ObjectDB<Subject>) {
+    localStorage.setItem("subjectSelected", subject.getId())
+    this.router.navigate(['../subject', subject.getId()], { relativeTo: this.activatedRoute })
   }
 
-  goToSubjectTopBar(subject:ObjectDB<Subject>){
-    localStorage.setItem("subjectSelected",subject.getId())
+  goToSubjectTopBar(subject: ObjectDB<Subject>) {
+    localStorage.setItem("subjectSelected", subject.getId())
     this.router.navigateByUrl(`studentDashboard/subject/${subject.getId()}`)
   }
-  async goToDeleteSubject(subject:ObjectDB<Subject>){
+  async goToDeleteSubject(subject: ObjectDB<Subject>) {
     const studentRef = this.userSvc.getUserLoggedRef()
-    //1. Verificar si el estudiante tiene grupo
-    const validation = await this.subjectSvc.studentBelongToWithoutGroup(studentRef,subject.getId())
-    //2. Eliminar estudiante de la colección Materias en Arreglo estudiantes y el arreglo sinGrupo en caso de que exista ahí.
-    if(validation){
-      await this.subjectSvc.unregisterStudent(studentRef,subject.getId())
-      this.deleteSubjectOnArray(subject)
-      this._snackBar.open("Te has desmatriculado exitosamente")
-      return
-    }
-    //4. Si está con grupo se debe buscar el grupo y eliminarlo del grupo.
-    const refGroups = await this.subjectSvc.getRefGroupsFromSubjectId(subject.getId())
-    const validate = await this.groupSvc.deleteStudentFromGroup(refGroups,studentRef)
-    
-    //4.1 Si el grupo queda vacío se elimina el grupo.
-
-    //4.2 Si hay agendamientos para ese grupo, se debe eliminar de los agendamientos.
-    //
-    
-    //let validate = await this.groupSvc.studentBelongAnyGroup(studentRef,refGroups)
-    //console.log(validate);
-    
+    //2. Eliminar estudiante de la colección Materias, en Arreglo estudiantes y el arreglo sinGrupo en caso de que exista ahí.
+    await this.subjectSvc.unregisterStudent(studentRef, subject.getId())
+    this.deleteSubjectOnArray(subject)
+    this.openSwalAlert("Operación exitosa", `Te has desmatriculado de <b>${subject.getObjectDB().getNombre()}</b> exitosamente`, 'success')
+    //Nota: No es seguro si se debe eliminar del grupo o de los agendamientos ya que podria afectar a los demas compañeros.
+    //Esto queda como Nota para los desarrolladores y dueños del producto.
   }
-  setNewSubject(newSubject : ObjectDB<Subject>){
-    console.log("Emitido" , newSubject);
-    if(newSubject){
+  setNewSubject(newSubject: ObjectDB<Subject>) {
+    if (newSubject) {
       this.subjects.push(newSubject)
     }
   }
-  private deleteSubjectOnArray(subject : ObjectDB<Subject>){
-    this.subjects = this.subjects.filter(element => element.getId() != subject.getId())
+  private deleteSubjectOnArray(subject: ObjectDB<Subject>) {
+    this.subjects = this.subjects.filter(element => element.getId() !== subject.getId())
+    this.cdr.detectChanges();
   }
 
-  logOut(){
+  logOut() {
     this.authService.logout().then(res => {
-      if (res.isApproved()){
+      if (res.isApproved()) {
         this.router.navigate(['/'])
       }
+    })
+  }
+
+  private openSwalAlert(title: string, message: string, icon: any) {
+    Swal.fire({
+      title: title,
+      html: message,
+      icon: icon,
+      showConfirmButton: false,
+      showCloseButton: true,
+      showCancelButton: true,
+      cancelButtonText: 'Cerrar'
     })
   }
 }

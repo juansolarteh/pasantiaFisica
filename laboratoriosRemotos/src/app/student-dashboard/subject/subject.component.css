@@ -46,9 +46,13 @@
   }
 
   .navigation-btn:hover{
-    background-color: midnightblue;
+    background-color: rgb(31, 31, 124);
   }
   a:hover {
     cursor: pointer;
     text-decoration: underline;
+  }
+  .selected {
+    background-color: rgb(31, 31, 124);
+    color: white;
   }

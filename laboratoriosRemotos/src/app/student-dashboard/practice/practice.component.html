@@ -20,52 +20,70 @@
                     <div class="mat-body">
                         {{this.practiceSelected.getObjectDB().getDescripcion()}}
                     </div>
+                    <ng-container *ngIf="files && files.length > 0">
+                        <div class="mat-body-strong">
+                            Archivos adjuntos
+                        </div>
+                        <ng-container *ngFor="let file of files" >
+                            <div class="file-container mat-elevation-z2">
+                                <img [src]="getFileIcon(file.fileExtension)" alt="Icono extension" class="icon-image">
+                                <div>
+                                    <div class="mat-body-strong">Archivo {{file.fileExtension | uppercase}}</div>
+                                    <a [href]="file.urlDownload | async">{{ file.nameFile }}</a>
+                                </div>
+                                
+                            </div>
+                        </ng-container>
+                    </ng-container>
+
                 </div>
             </mat-card>
         </div>
         <div class="columna">
             <mat-card class="mat-elevation-z8">
-                    <div class="agend-encabezado">
-                        <div class="mat-title">
-                            Estado
+                <div class="agend-encabezado">
+                    <div class="mat-title">
+                        Estado
+                    </div>
+                    <ng-container *ngIf="this.booking && this.booking['realizada']">
+                        <div class="mat-subheading-1">
+                            <mat-chip-list>
+                                <mat-chip color="primary" selected>
+                                    Realizada
+                                </mat-chip>
+                            </mat-chip-list>
                         </div>
-                        <ng-container *ngIf="this.booking && this.booking['realizada']">
-                            <div class="mat-subheading-1">
-                                <mat-chip-list>
-                                    <mat-chip color="primary" selected>
-                                        Realizada
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="this.booking && !this.booking['realizada']">
-                            <div class="mat-subheading-1">
-                                <mat-chip-list>
-                                    <mat-chip color="primary" selected>
-                                        Agendada
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="!this.booking">
-                            <div class="mat-subheading-1">
-                                <mat-chip-list>
-                                    <mat-chip color="accent" [selectable]="false">
-                                        Sin Agendar
-                                    </mat-chip>
-                                </mat-chip-list>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <mat-divider></mat-divider>
-                    <div class="fecha-reserva" *ngIf="this.booking">
-                        Fecha: {{this.booking['fecha'].seconds * 1000 | date: 'medium'}}
-                    </div>
-                    <div class="botones">
-                        <button (click)="handleStartPractice()" mat-flat-button color="primary" [disabled]="this.booking && this.booking['realizada']">Iniciar
-                            Práctica</button>
-                        <button (click)="goToBookings()" mat-button color="primary" [disabled]="this.booking && this.booking['realizada']">Ir A Agenda</button>
-                    </div>
+                    </ng-container>
+                    <ng-container *ngIf="this.booking && !this.booking['realizada']">
+                        <div class="mat-subheading-1">
+                            <mat-chip-list>
+                                <mat-chip color="primary" selected>
+                                    Agendada
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="!this.booking">
+                        <div class="mat-subheading-1">
+                            <mat-chip-list>
+                                <mat-chip color="accent" [selectable]="false">
+                                    Sin Agendar
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                    </ng-container>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="fecha-reserva" *ngIf="this.booking">
+                    Fecha: {{this.booking['fecha'].seconds * 1000 | date: 'medium'}}
+                </div>
+                <div class="botones">
+                    <button (click)="handleStartPractice()" mat-flat-button color="primary"
+                        [disabled]="this.booking && this.booking['realizada']">Iniciar
+                        Práctica</button>
+                    <button (click)="goToBookings()" mat-button color="primary"
+                        [disabled]="this.booking && this.booking['realizada']">Ir A Agenda</button>
+                </div>
             </mat-card>
         </div>
     </div>

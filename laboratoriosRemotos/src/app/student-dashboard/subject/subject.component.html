@@ -5,21 +5,28 @@
         <mat-icon>menu</mat-icon>
       </button>
       <mat-menu #menu="matMenu" [overlapTrigger]="false">
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="goToHome()">
+          <mat-icon>home</mat-icon>
+          Inicio
+        </button>
+        <mat-divider></mat-divider>
         <ng-container *ngFor="let subject of subjects">
           <button mat-menu-item (click)="goToSubjectTopBar(subject)">
             <mat-icon>book</mat-icon>
             {{subject.getObjectDB().getNombre() | titlecase}}
           </button>
+          <mat-divider></mat-divider>
         </ng-container>
       </mat-menu>
       <a (click)="goToPractices()" >{{this.subjectSelected.getObjectDB().getNombre()}}</a>
     </div>
     <div class="center-options">
-      <button mat-button class="navigation-btn" (click)="goToPractices()">
+      <button mat-button class="navigation-btn" (click)="goToPractices() " [ngClass]="{ 'selected': navigationService.practicasSelected }">
         <mat-icon>biotech</mat-icon>
         Prácticas
       </button>
-      <button mat-button class="navigation-btn" (click)="goToGroups()">
+      <button mat-button class="navigation-btn" (click)="goToGroups()" [ngClass]="{ 'selected': navigationService.gruposSelected }">
         <mat-icon>groups</mat-icon>
         Grupos
       </button>

@@ -12,6 +12,8 @@ import { Subject } from 'src/app/models/Subject';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Swal from 'sweetalert2';
+import { ChangeDetectorRef } from '@angular/core';
+import { NavigationService } from 'src/app/services/navigation.service';
 
 @Component({
   selector: 'app-groups',
@@ -22,10 +24,8 @@ export class GroupsComponent implements OnInit {
 
   @ViewChild('btnAddGroup') btnAddGroup!: MatButton
   constructor(private activatedRoute: ActivatedRoute,
-    private userSvc: UserService, 
-    private groupSvc: GroupsService,
-    private subjectSvc: SubjectService,
-    private _snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
+    private navigationService: NavigationService,
     public groupDialog: MatDialog) { }
 
   currentUser!: MemberGroup
@@ -49,13 +49,14 @@ export class GroupsComponent implements OnInit {
       { data: {studentsWithOutGroup : this.studentsWithOutGroup, currentUser: this.currentUser, subjectSelected : this.subjectSelected},
       height: 'auto', width: '750px'} )
       const dialogSuscription = dialogRef.componentInstance.onGroupCreated.subscribe(groupCreated =>{
-        console.log("Recibiendo desde Modal Creacion",groupCreated);
         this.studentGroup = new ObjectDB<GroupWithNames>(groupCreated,'new')
+        this.cdr.detectChanges()
+        this.navigationService.practicasSelected = false;
+        this.navigationService.gruposSelected = true;
         this.openSwalAlert("Grupo creado","El grupo se ha creado exitosamente.", 'success')
         dialogSuscription.unsubscribe()
       })
   }
-
 
   private openSwalAlert(title : string,message: string, icon : any ) {
     Swal.fire({

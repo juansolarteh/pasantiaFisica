@@ -80,5 +80,18 @@
 }
 .mat-divider{
   border-top-width: 2px;
-
+}
+.icon-image{
+  height: 40px;
+  width: auto;
+}
+.file-container{
+  margin-top: 10px;
+  border-radius: 10px;
+  height: 70px;
+  border: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  gap: 20px;
 }
