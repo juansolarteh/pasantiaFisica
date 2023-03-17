@@ -60,6 +60,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.suscription.unsubscribe()
+    
   }
 
   /**
@@ -82,21 +83,25 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     this.practiceForm = this.initForm()
     this.plantRef = this.db.object('/plantas/' + this.plantName)
     this.suscription = this.plantRef.valueChanges().subscribe(event => {
-      if (event.terminado) {
+      if (event.Terminado === 1) {
         console.log('---- SIMULACIÓN -----')
-        console.log('Automaticamente en este proceso se cambia terminado a false')
+        console.log('Automaticamente en este proceso se cambia Terminado a 1')
         console.log('Ha finalizado la repetición... El resultado es: ' + event.Resultado)
         this.repResult = event.Resultado
         let objAux = {}
         Object.entries(event).forEach(([key, value]) => {
-          if (key != 'iniciar' && key != 'terminado') {
+          if (key != 'Inicio' && key != 'Terminado') {
             objAux[key] = value
           }
         })
+        //this.processing = false 
         this.pdfData.push(objAux)
         this.plantRef.update({
-          terminado: false,
-        }).then(() => { this.processing = false })
+          Terminado : 0
+        })
+        /* this.plantRef.update({
+          Terminado: 0,
+        }).then(() => { this.processing = false }) */
       }
     })
 
@@ -151,6 +156,7 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
         if(user['rol'] == "Estudiante"){
          let idBooking = localStorage.getItem("idBooking")
          this.scheduleSvc.practiceFinished(idBooking)
+         this.createPdf()
         }
       })
       //Se debe habilitar la linea de abajo para que cambie de ruta y salga de la vista de práctica en ejecución
@@ -198,11 +204,13 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       let value = this.practiceForm.get(cons.getId())?.value
       Object.defineProperty(obj, cons.getId(), { value: value, enumerable: true })
     })
-    this.plantRef.update(obj).then(() => {
-      this.plantRef.update({ iniciar: true }).then(() => {
+    obj['Inicio'] = 1
+    this.processing = true
+    this.plantRef.update(obj)
+    /* this.plantRef.update(obj).then(() => {
+      this.plantRef.update({ Inicio: 1 }).then(() => {
         this.processing = true
-      })
-    })
+      }) */
   }
 
   /**
@@ -212,10 +220,11 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
    * Por el momento el resultado está quemado y es "25".
    */
   stopPlant() {
+    this.processing = false
     this.plantRef.update({
-      iniciar: false,
+      Inicio: 0,
       Resultado: 25,
-      terminado: true,
+      Terminado: 1,
     })
   }
 

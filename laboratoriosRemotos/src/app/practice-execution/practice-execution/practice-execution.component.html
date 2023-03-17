@@ -46,14 +46,13 @@
             <div class="buttons">
                 <button mat-button color="link" (click)="startPlant()" [disabled]="practiceForm.invalid || processing || close || finished">Iniciar
                     repetición</button>
-                <button [disabled]="practiceForm.invalid || finished" mat-button color="link" (click)="stopPlant()">Finalizar repetición</button>
+                <button [disabled]="practiceForm.invalid || finished || close" mat-button color="link" (click)="stopPlant()">Finalizar repetición</button>
                 <button mat-flat-button color="primary" (click)="finalizarPractica()" [disabled]="processing || finished">Terminar práctica</button>
                 <button (click)="onReportAnomaly()" [disabled]="processing" mat-flat-button color="warn">Reportar anomalía</button>
-                <button [disabled]="!finished" (click)="createPdf()" mat-flat-button color="warn">Descargar resultados</button>
             </div>
             <br>
             <div class="mat-body-2">
-                Nota: Al terminar la práctica se deben descargar los resultados para su análisis.
+                Nota: Al terminar la práctica se descargarán los resultados automáticamente y serás redireccionado a Inicio.
             </div>
         </div>
     </div>

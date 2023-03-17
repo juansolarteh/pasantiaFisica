@@ -34,7 +34,6 @@ export class PracticeComponent implements OnInit {
     this.subjectSelected = this.activatedRoute.snapshot.data['subjectSelected']
     this.studentGroup = this.activatedRoute.snapshot.data['studentGroup']
     this.booking = this.activatedRoute.snapshot.data['plantValidation']
-    console.log(this.booking);
     
     if (this.practiceSelected.getObjectDB().getDocumentos()) {
       this.files = this.getFiles()
@@ -53,10 +52,9 @@ export class PracticeComponent implements OnInit {
     let date = this.booking['fecha'].seconds * 1000
     if (!this.isValidBookingDate(date)) {
       let practiceExecutionDate = this.datePipe.transform(date, "medium")!
-      this.openSwalAlert("Error al iniciar práctica", 'La fecha de reserva para realizar la práctica es la siguiente: <b>' + practiceExecutionDate + '</b><br>Intenta realizar la práctica en el horario correspondiente.<br>Recuerda que tienes un margen de 30 minutos para ingresar a partir de la hora agendada.', 'info')
+      this.openSwalAlert("Error al iniciar práctica", 'La fecha de reserva para realizar la práctica es la siguiente: <b>' + practiceExecutionDate + '</b><br><br>Intenta realizar la práctica en el horario correspondiente.<br><br>Recuerda que tienes un margen de 30 minutos para ingresar a partir de la hora agendada.', 'info')
       return
     }
-    console.log("Entrando a la practica");
     this.startPractice()
   }
 

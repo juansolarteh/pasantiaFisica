@@ -29,7 +29,7 @@
                                 <img [src]="getFileIcon(file.fileExtension)" alt="Icono extension" class="icon-image">
                                 <div>
                                     <div class="mat-body-strong">Archivo {{file.fileExtension | uppercase}}</div>
-                                    <a [href]="file.urlDownload | async">{{ file.nameFile }}</a>
+                                    <a [href]="file.urlDownload | async" target="_blank">{{ file.nameFile }}</a>
                                 </div>
                                 
                             </div>
@@ -74,8 +74,8 @@
                     </ng-container>
                 </div>
                 <mat-divider></mat-divider>
-                <div class="fecha-reserva" *ngIf="this.booking">
-                    Fecha: {{this.booking['fecha'].seconds * 1000 | date: 'medium'}}
+                <div class="fecha-reserva mat-body-strong" *ngIf="this.booking">
+                    Fecha reserva: {{this.booking['fecha'].seconds * 1000 | date: 'medium'}}
                 </div>
                 <div class="botones">
                     <button (click)="handleStartPractice()" mat-flat-button color="primary"
