@@ -30,3 +30,6 @@
   .buttons > button{
     flex: 40%;
   }
+  #result{
+    color: rgb(11, 158, 11);
+  }
