@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ReportAnomalyComponent } from './../report-anomaly/report-anomaly.component';
 import { Subscription } from 'rxjs';
 import { PracticeExecution } from './../../models/PracticeExecution';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from '@angular/fire/compat/database';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -55,7 +55,8 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     public dialogReportAnomaly: MatDialog,
     private readonly router: Router,
-    private userSvc : UserService, private scheduleSvc: ScheduleService
+    private userSvc : UserService, private scheduleSvc: ScheduleService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnDestroy(): void {
@@ -83,10 +84,9 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
     this.practiceForm = this.initForm()
     this.plantRef = this.db.object('/plantas/' + this.plantName)
     this.suscription = this.plantRef.valueChanges().subscribe(event => {
-      if (event.Terminado === 1) {
-        console.log('---- SIMULACIÓN -----')
-        console.log('Automaticamente en este proceso se cambia Terminado a 1')
-        console.log('Ha finalizado la repetición... El resultado es: ' + event.Resultado)
+      if (event.Terminado == 1) {
+        //console.log('La planta ha establecido terminado = 1... datos: ', event)
+        this.processing = false 
         this.repResult = event.Resultado
         let objAux = {}
         Object.entries(event).forEach(([key, value]) => {
@@ -94,14 +94,12 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
             objAux[key] = value
           }
         })
-        //this.processing = false 
         this.pdfData.push(objAux)
         this.plantRef.update({
-          Terminado : 0
+          Terminado : 0,
+          Inicio : 0
         })
-        /* this.plantRef.update({
-          Terminado: 0,
-        }).then(() => { this.processing = false }) */
+        this.cdr.detectChanges();
       }
     })
 
@@ -199,13 +197,13 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
    * Método que implementa la lógica para iniciar la repetición de la planta
    */
   startPlant() {
+    this.processing = true
     let obj: Object = new Object();
     this.constants.forEach(cons => {
       let value = this.practiceForm.get(cons.getId())?.value
       Object.defineProperty(obj, cons.getId(), { value: value, enumerable: true })
     })
     obj['Inicio'] = 1
-    this.processing = true
     this.plantRef.update(obj)
     /* this.plantRef.update(obj).then(() => {
       this.plantRef.update({ Inicio: 1 }).then(() => {
@@ -219,14 +217,14 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
    * en el método ngOnInit se captura el evento cuando la planta arroja "terminado = true", y es ahí donde se captura el resultado.
    * Por el momento el resultado está quemado y es "25".
    */
-  stopPlant() {
+  /* stopPlant() {
     this.processing = false
     this.plantRef.update({
       Inicio: 0,
       Resultado: 25,
       Terminado: 1,
     })
-  }
+  } */
 
   /**
    * Método para validar y obtener mensajes de error de los campos de entrada.
