@@ -204,6 +204,8 @@ export class PracticeExecutionComponent implements OnInit, OnDestroy {
       Object.defineProperty(obj, cons.getId(), { value: value, enumerable: true })
     })
     obj['Inicio'] = 1
+   
+    
     this.plantRef.update(obj)
     /* this.plantRef.update(obj).then(() => {
       this.plantRef.update({ Inicio: 1 }).then(() => {

@@ -16,7 +16,7 @@
                         appearance="fill">
                         <mat-label>{{const.getId()}} ({{units[const.getId()]}})</mat-label>
                         <mat-select formControlName={{const.getId()}}>
-                            <mat-option *ngFor="let val of const.getObjectDB(); let i = index " [value]="i+1">{{val}}
+                            <mat-option *ngFor="let val of const.getObjectDB(); let i = index " [value]="val">{{val}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
